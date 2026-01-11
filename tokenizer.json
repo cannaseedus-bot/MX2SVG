@@ -1,0 +1,117 @@
+{
+  "version": "1.0",
+
+  "normalizer": {
+    "type": "NFKC"
+  },
+
+  "pre_tokenizer": {
+    "type": "ByteLevel",
+    "add_prefix_space": false
+  },
+
+  "model": {
+    "type": "BPE",
+    "unk_token": "<|unk|>",
+    "fuse_unk": false,
+    "dropout": null,
+    "continuing_subword_prefix": "",
+    "end_of_word_suffix": "",
+
+    "vocab": "INHERIT_QWEN2_BASE_VOCAB",
+    "merges": "INHERIT_QWEN2_BASE_MERGES"
+  },
+
+  "added_tokens": [
+    /* ================================
+       KUHUL / XCFE PHASE TOKENS
+       ================================ */
+
+    { "content": "[Pop]", "single_word": true },
+    { "content": "[Wo]", "single_word": true },
+    { "content": "[Ch'en]", "single_word": true },
+    { "content": "[Yax]", "single_word": true },
+    { "content": "[Sek]", "single_word": true },
+    { "content": "[Xul]", "single_word": true },
+
+    /* ================================
+       PHASE + PAYLOAD ATOMS
+       (workflow-stable)
+       ================================ */
+
+    { "content": "[Pop shard_processor]", "single_word": false },
+    { "content": "[Pop hive_collaboration]", "single_word": false },
+    { "content": "[Pop frontend_expert]", "single_word": false },
+    { "content": "[Pop backend_expert]", "single_word": false },
+    { "content": "[Pop design_expert]", "single_word": false },
+
+    { "content": "[Wo api_request]", "single_word": false },
+    { "content": "[Wo project_spec]", "single_word": false },
+    { "content": "[Wo design_spec]", "single_word": false },
+    { "content": "[Wo api_spec]", "single_word": false },
+    { "content": "[Wo design_brief]", "single_word": false },
+
+    { "content": "[Ch'en request]", "single_word": false },
+    { "content": "[Ch'en spec]", "single_word": false },
+    { "content": "[Ch'en brief]", "single_word": false },
+
+    { "content": "[Yax request]", "single_word": false },
+    { "content": "[Yax shard_response]", "single_word": false },
+    { "content": "[Yax hive]", "single_word": false },
+    { "content": "[Yax schemas]", "single_word": false },
+    { "content": "[Yax logic]", "single_word": false },
+    { "content": "[Yax compressed]", "single_word": false },
+    { "content": "[Yax ui]", "single_word": false },
+    { "content": "[Yax apis]", "single_word": false },
+    { "content": "[Yax design]", "single_word": false },
+
+    { "content": "[Sek route_to_shard]", "single_word": false },
+    { "content": "[Sek process_data]", "single_word": false },
+    { "content": "[Sek send_response]", "single_word": false },
+    { "content": "[Sek klh_create_hive]", "single_word": false },
+    { "content": "[Sek klh_add_shards]", "single_word": false },
+    { "content": "[Sek xjson_generate_schemas]", "single_word": false },
+    { "content": "[Sek xjson_validate_all]", "single_word": false },
+    { "content": "[Sek kuhul_compile_logic]", "single_word": false },
+    { "content": "[Sek kuhul_optimize_execution]", "single_word": false },
+    { "content": "[Sek scx_compress_all]", "single_word": false },
+    { "content": "[Sek scx_analyze_ratio]", "single_word": false },
+    { "content": "[Sek generate_ui_ast]", "single_word": false },
+    { "content": "[Sek compile_to_kuhul]", "single_word": false },
+    { "content": "[Sek deploy_interface]", "single_word": false },
+    { "content": "[Sek backend_create_apis]", "single_word": false },
+    { "content": "[Sek backend_optimize_performance]", "single_word": false },
+    { "content": "[Sek generate_design_system]", "single_word": false },
+    { "content": "[Sek create_3d_elements]", "single_word": false },
+    { "content": "[Sek apply_animations]", "single_word": false },
+    { "content": "[Sek deploy_complete_system]", "single_word": false },
+
+    /* ================================
+       PIPELINE OPERATOR
+       ================================ */
+
+    { "content": "→", "single_word": true },
+
+    /* ================================
+       KLH / XJSON STRUCTURAL ANCHORS
+       ================================ */
+
+    { "content": "\"@shard\"", "single_word": true },
+    { "content": "\"@html\"", "single_word": true },
+    { "content": "\"@body\"", "single_word": true },
+    { "content": "\"@node\"", "single_word": true },
+
+    { "content": "virtual-rest", "single_word": true },
+
+    /* ================================
+       COMMON API METHODS
+       ================================ */
+
+    { "content": "GET", "single_word": true },
+    { "content": "POST", "single_word": true }
+  ],
+
+  "decoder": {
+    "type": "ByteLevel"
+  }
+}

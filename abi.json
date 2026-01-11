@@ -1,0 +1,10 @@
+{
+  "base_model": "Qwen/Qwen2-1.5B",
+  "tokenizer_extension": "mx2lm-kuhul-klh",
+  "phase_tokens": 6,
+  "pipeline_atoms": 30,
+  "operator_tokens": 1,
+  "structure_tokens": 6,
+  "abi_rule": "append-only-added-tokens",
+  "execution_guard": "REFUSE_IF_HASH_MISMATCH"
+}
