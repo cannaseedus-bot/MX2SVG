@@ -1,0 +1,90 @@
+{
+  "model_name": "qwen",
+  "model_type": "transformer",
+  "model_path": "./qwen",
+  "model_files": {
+    "config": "config.json",
+    "tokenizer": "tokenizer.json",
+    "tokenizer_config": "tokenizer_config.json",
+    "model": "model.safetensors",
+    "special_tokens": "special_tokens_map.json",
+    "added_tokens": "added_tokens.json",
+    "vocab": "vocab.json",
+    "merges": "merges.txt",
+    "generation_config": "generation_config.json",
+    "chat_template": "chat_template.jinja"
+  },
+  "model_architecture": "Qwen2ForCausalLM",
+  "model_parameters": {
+    "hidden_size": 896,
+    "num_hidden_layers": 24,
+    "num_attention_heads": 14,
+    "vocab_size": 151936,
+    "max_position_embeddings": 32768,
+    "torch_dtype": "float32"
+  },
+  "tokenizer_class": "Qwen2Tokenizer",
+  "tokenizer_parameters": {
+    "eos_token": "<|im_end|>",
+    "pad_token": "<|endoftext|>",
+    "max_length": 131072,
+    "truncation_side": "right",
+    "padding_side": "right"
+  },
+  "usage": {
+    "primary_model": true,
+    "model_priority": 1,
+    "recommended_for": ["general_tasks", "conversation", "reasoning", "code_completion"],
+    "fallback_order": 1,
+    "memory_requirements": "~2GB VRAM",
+    "inference_speed": "fast"
+  },
+  "integration": {
+    "transformers_js_compatible": true,
+    "ollama_compatible": false,
+    "huggingface_hub_id": "Qwen/Qwen2-1.5B-Instruct",
+    "local_usage": "transformers.js or PyTorch",
+    "browser_support": "via Transformers.js WebAssembly"
+  },
+  "features": {
+    "chat_format": true,
+    "multimodal": true,
+    "tool_calling": true,
+    "fim_support": true,
+    "long_context": true,
+    "special_tokens": [
+      "<|im_start|>",
+      "<|im_end|>",
+      "<|endoftext|>",
+      "<tool_call>",
+      "</tool_call>",
+      "<|fim_prefix|>",
+      "<|fim_middle|>",
+      "<|fim_suffix|>"
+    ]
+  },
+  "performance": {
+    "estimated_size": "1.5B parameters",
+    "quantization": "float32",
+    "recommended_quantization": ["float16", "int8", "int4"],
+    "inference_time_estimate": "50-100 tokens/sec on modern GPU",
+    "memory_usage": "~3.5GB RAM (float32)"
+  },
+  "setup_instructions": {
+    "browser_usage": {
+      "method": "Transformers.js",
+      "example": "await pipeline('text-generation', 'Xenova/qwen2-1.5b-instruct')",
+      "cdn_url": "https://cdn.jsdelivr.net/npm/@xenova/transformers@latest"
+    },
+    "local_python_usage": {
+      "method": "transformers library",
+      "example": "AutoModelForCausalLM.from_pretrained('./qwen')",
+      "requirements": ["torch", "transformers", "accelerate"]
+    },
+    "ollama_usage": {
+      "method": "Not applicable (use local files)",
+      "alternative": "Pull from HuggingFace: ollama pull qwen2"
+    }
+  },
+  "notes": "This is a local Qwen2 1.5B model with full capabilities. For best performance, use with GPU acceleration. The model supports advanced features like tool calling, FIM, and multimodal inputs."
+}
