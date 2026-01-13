@@ -1,14 +1,14 @@
 {
-  "name": "K'uhul Model Runner - Ollama PWA",
-  "short_name": "K'uhul lam.o",
-  "description": "K'uhul Multi Hive OS Model Runner with XJSON Contract - Powered by Ollama",
+  "name": "MX2SVG Experimental Tokenization Inference",
+  "short_name": "MX2SVG Lab",
+  "description": "Experimental PWA wrapper for SVG/JSON tokenization and model orchestration with optional lam.o runner support.",
   "version": "1.0.0",
-  "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#00ff88",
+  "start_url": "./",
+  "scope": "./",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
   "orientation": "any",
-  "scope": "/",
   "lang": "en-US",
   "categories": ["productivity", "developer", "utilities"],
   "icons": [
@@ -91,6 +91,23 @@
       "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
     }
   ],
+  "tokenization": {
+    "svg_tokens": [],
+    "json_tokens": [],
+    "vocabulary": {
+      "source": "tokenizer.json",
+      "notes": "Populate with tokenizer outputs at runtime."
+    },
+    "constraints": {
+      "no_simulated_data": true,
+      "model_weights": "model.safetensors"
+    }
+  },
+  "orchestration": {
+    "service_worker": "sw.js",
+    "ui": "index.html",
+    "transformers_runtime": "service worker"
+  },
   "related_applications": [],
   "prefer_related_applications": false,
   "kuhul": {
