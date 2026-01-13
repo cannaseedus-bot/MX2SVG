@@ -10,7 +10,11 @@
   "background_color": "#0f172a",
   "orientation": "any",
   "lang": "en-US",
-  "categories": ["productivity", "developer", "utilities"],
+  "categories": [
+    "productivity",
+    "developer",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "icons/icon-72.png",
@@ -81,14 +85,24 @@
       "short_name": "Chat",
       "description": "Start a new model inference session",
       "url": "/?action=new-chat",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Model Status",
       "short_name": "Status",
       "description": "Check lam.o model runner status",
       "url": "/?action=status",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
   "tokenization": {
@@ -112,41 +126,184 @@
     "@type": "mx2svg.server.manifest.v1",
     "notes": "Static local REST API layout and SW instruction channels for extended capabilities.",
     "routes": {
-      "health": { "method": "POST", "path": "/api/lam.o/health" },
-      "describe": { "method": "POST", "path": "/api/lam.o/describe" },
-      "infer": { "method": "POST", "path": "/api/lam.o/infer", "contract": "xjson://contract/lam.o.infer/v1" },
-      "session_export": { "method": "POST", "path": "/api/lam.o/session/export" },
-      "session_clear": { "method": "POST", "path": "/api/lam.o/session/clear" }
+      "health": {
+        "method": "POST",
+        "path": "/api/lam.o/health"
+      },
+      "describe": {
+        "method": "POST",
+        "path": "/api/lam.o/describe"
+      },
+      "infer": {
+        "method": "POST",
+        "path": "/api/lam.o/infer",
+        "contract": "xjson://contract/lam.o.infer/v1"
+      },
+      "session_export": {
+        "method": "POST",
+        "path": "/api/lam.o/session/export"
+      },
+      "session_clear": {
+        "method": "POST",
+        "path": "/api/lam.o/session/clear"
+      }
     },
     "instruction_channels": {
       "sw_kernel": {
         "transport": "postMessage",
-        "expects": ["LOAD_MODEL", "TOKENIZE", "LAMO_ROUTE"],
-        "returns": ["status", "tokenization", "lamo_response"]
+        "expects": [
+          "LOAD_MODEL",
+          "TOKENIZE",
+          "LAMO_ROUTE"
+        ],
+        "returns": [
+          "status",
+          "tokenization",
+          "lamo_response"
+        ]
       },
       "server_tasks": {
         "transport": "rest",
-        "paths": ["/api/lam.o/*"],
+        "paths": [
+          "/api/lam.o/*"
+        ],
         "policy": "same_origin_only"
       }
     },
     "capabilities": {
       "file_management": {
         "mode": "cli_bridge",
-        "commands": ["ls", "cat", "stat", "mkdir", "rm"],
+        "commands": [
+          "ls",
+          "cat",
+          "stat",
+          "mkdir",
+          "rm"
+        ],
         "sandbox": "service_worker_controlled",
         "notes": "Declarative intent only; execution depends on SW kernel policy."
       },
       "ast_language": {
         "mode": "ast_pipeline",
-        "engines": ["json_ast", "svg_ast"],
-        "transforms": ["parse", "lint", "rewrite", "emit"]
+        "engines": [
+          "json_ast",
+          "svg_ast"
+        ],
+        "transforms": [
+          "parse",
+          "lint",
+          "rewrite",
+          "emit"
+        ]
       },
       "data_orchestration": {
         "links": true,
         "routes": true,
         "contracts": true
       }
+    }
+  },
+  "kuhul_server": {
+    "v": "1.0.0",
+    "authority": "manifest.json",
+    "routes": {
+      "/api/qwen/health": {
+        "method": "POST",
+        "handler": "K010",
+        "cap": "model.qwen.health"
+      },
+      "/api/qwen/infer": {
+        "method": "POST",
+        "handler": "K011",
+        "cap": "model.qwen.infer",
+        "contract": "xjson://contract/qwen.infer/v1"
+      },
+      "/api/lam.o/health": {
+        "method": "POST",
+        "handler": "K020",
+        "cap": "model.ollama.health"
+      },
+      "/api/lam.o/infer": {
+        "method": "POST",
+        "handler": "K021",
+        "cap": "model.ollama.infer",
+        "contract": "xjson://contract/lam.o.infer/v1"
+      },
+      "/api/fs/list": {
+        "method": "POST",
+        "handler": "K110",
+        "cap": "fs.list",
+        "contract": "xjson://contract/fs.list/v1"
+      },
+      "/api/fs/read": {
+        "method": "POST",
+        "handler": "K111",
+        "cap": "fs.read",
+        "contract": "xjson://contract/fs.read/v1"
+      },
+      "/api/fs/write": {
+        "method": "POST",
+        "handler": "K112",
+        "cap": "fs.write",
+        "contract": "xjson://contract/fs.write/v1"
+      },
+      "/api/cli/run": {
+        "method": "POST",
+        "handler": "K130",
+        "cap": "cli.run",
+        "contract": "xjson://contract/cli.run/v1"
+      },
+      "/api/ast/parse": {
+        "method": "POST",
+        "handler": "K210",
+        "cap": "ast.parse",
+        "contract": "xjson://contract/ast.parse/v1"
+      }
+    },
+    "caps": {
+      "model.qwen.infer": {
+        "kind": "local_model",
+        "primary": true,
+        "provider": "qwen"
+      },
+      "model.ollama.infer": {
+        "kind": "addon_model",
+        "provider": "ollama"
+      },
+      "fs.list": {
+        "kind": "vfs",
+        "scope": "app"
+      },
+      "fs.read": {
+        "kind": "vfs",
+        "scope": "app"
+      },
+      "fs.write": {
+        "kind": "vfs",
+        "scope": "app",
+        "requires": [
+          "proof.pin"
+        ]
+      },
+      "cli.run": {
+        "kind": "tool",
+        "policy": "allowlist"
+      },
+      "ast.parse": {
+        "kind": "language",
+        "engine": "kuhul-ast"
+      }
+    },
+    "policies": {
+      "proof.pin": {
+        "type": "pin",
+        "hash": "h:________"
+      },
+      "cli.allow": [
+        "kql",
+        "scxq2",
+        "git.status"
+      ]
     }
   },
   "related_applications": [],
@@ -158,7 +315,11 @@
         "t": "model_runner",
         "e": "http://localhost:61683/api/infer",
         "p": 61683,
-        "ca": ["multiple_models", "local_inference", "model_management"],
+        "ca": [
+          "multiple_models",
+          "local_inference",
+          "model_management"
+        ],
         "st": "live"
       }
     },
@@ -167,12 +328,26 @@
       "name": "Ollama Model Runner Pack",
       "role": "model_runner_backend",
       "fold": "AI",
-      "functions": ["lam.o.describe", "lam.o.infer", "lam.o.health"]
+      "functions": [
+        "lam.o.describe",
+        "lam.o.infer",
+        "lam.o.health"
+      ]
     },
     "runner_caps": {
       "lam.o": {
-        "models": ["deepseek-r1", "llama3", "qwen2.5", "janus"],
-        "modes": ["chat", "reasoning", "analysis", "image_gen"],
+        "models": [
+          "deepseek-r1",
+          "llama3",
+          "qwen2.5",
+          "janus"
+        ],
+        "modes": [
+          "chat",
+          "reasoning",
+          "analysis",
+          "image_gen"
+        ],
         "max_tokens": 8192,
         "streaming": true
       }
