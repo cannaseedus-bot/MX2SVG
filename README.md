@@ -19,6 +19,11 @@ All files live in the repository root (there are no subdirectories). The list be
 | `MX2SVG_ENHANCEMENT_SUMMARY.md` | Summary of the PWA enhancement entries. |
 | `MX2SVG_ORIGIN.svg` | Original SVG visualization that inspired the MX2SVG name and cluster concept. |
 | `ABR_BLACK_CODE_SPEC_v2.0.0.md` | ABR Black Code v2.0.0 full draft specification with π verifier and SCXQ2 framing examples. |
+| `ggltensors_pack_v1.json` | Frozen Plane-2 ggltensors pack contract describing inputs, outputs, and proof hash rules. |
+| `scxq2_ggl_frames_layout_v1.js` | SCXQ2 binary lane layout and schema mapping for GGL frame streams. |
+| `transformers_py_to_ggl_v1.py` | Python adapter for sealed Plane-2 GGL inference with pack hashing and SCXQ2 frame stubs. |
+| `ggl_sealed_compute_v1.js` | Contract, hashing, and kernel hook scaffolding for sealed GGL inference plus minimal verifier. |
+| `ggl_sealed_locks_v1.js` | Locked contracts, lane layout, barrier policy, and adapter ABI rules for Plane-2 sealed compute. |
 | `manifest.json` | Experimental PWA manifest that stores SVG/JSON tokenization payloads. |
 | `index.html` | Experimental PWA UI with chat form and service worker messaging. |
 | `sw.js` | Service worker orchestration for tokenization and model loading. |
