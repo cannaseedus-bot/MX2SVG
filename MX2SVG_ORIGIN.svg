@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>K'UHUL Complete Brain Cluster - 28 Nodes + RLHF Storage</title>
+  <title>K'UHUL Complete Brain Cluster - 28 ABRs + RLHF Storage</title>
   
   <defs>
     <!-- CSS Styles -->
@@ -129,6 +129,7 @@
       
       <!-- 2,1 ATTENTION -->
       <g id="brain-attention" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="attention-ring" data-ring="attention"/>
         <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="attention-ring"/>
         <path d="M14 32c4-5 11-11 18-11s14 6 18 11c-4 5-11 11-18 11S18 37 14 32z" class="brain-line"/>
         <circle cx="32" cy="32" r="5" class="brain-fill"/>
@@ -139,6 +140,7 @@
       
       <!-- 3,1 REASONING -->
       <g id="brain-reason" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="reason-ring" data-ring="reason"/>
         <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="reason-ring"/>
         <path d="M18 40c3-7 6-11 11-11 7 0 5 10 12 10 4 0 7-3 10-8" class="brain-line"/>
         <circle cx="20" cy="22" r="3" class="brain-fill"/>
@@ -155,6 +157,7 @@
     <g transform="translate(20, 128)">
       <!-- 0,2 ROUTING -->
       <g id="brain-routing" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="routing-ring" data-ring="routing"/>
         <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="routing-ring"/>
         <circle cx="32" cy="32" r="5" class="brain-fill"/>
         <path d="M32 32L18 18M32 32L46 18M32 32L18 46M32 32L46 46" class="brain-line"/>
@@ -168,6 +171,7 @@
       
       <!-- 1,2 EXECUTION -->
       <g id="brain-exec" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="exec-ring" data-ring="exec"/>
         <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="exec-ring"/>
         <rect x="18" y="22" width="28" height="20" rx="3" class="brain-ring"/>
         <polygon points="24,24 38,32 24,40" class="brain-fill"/>
@@ -178,6 +182,7 @@
       
       <!-- 2,2 COMPRESSION -->
       <g id="brain-compress" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="compress-ring" data-ring="compress"/>
         <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="compress-ring"/>
         <rect x="14" y="20" width="14" height="10" rx="2" class="brain-ring"/>
         <rect x="40" y="34" width="14" height="10" rx="2" class="brain-fill"/>
@@ -190,6 +195,7 @@
       
       <!-- 3,2 MEMORY -->
       <g id="brain-memory" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="memory-ring" data-ring="memory"/>
         <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="memory-ring"/>
         <rect x="18" y="20" width="18" height="24" rx="3" class="brain-ring"/>
         <rect x="32" y="20" width="18" height="24" rx="3" class="brain-ring" opacity="0.6"/>
@@ -205,6 +211,7 @@
     <g transform="translate(20, 192)">
       <!-- 0,3 SAFETY -->
       <g id="brain-safety" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="safety-ring" data-ring="safety"/>
         <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="safety-ring"/>
         <path d="M32 16l12 7v10c0 8-6 14-12 16-6-2-12-8-12-16V23z" class="brain-line"/>
         <circle cx="32" cy="29" r="4" class="brain-fill"/>
@@ -215,6 +222,7 @@
       
       <!-- 1,3 GENERATION -->
       <g id="brain-generate" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="generate-ring" data-ring="generate"/>
         <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="generate-ring"/>
         <path d="M20 40c3-6 7-9 11-9 5 0 8 3 12 3 4 0 8-3 11-7" class="brain-line"/>
         <circle cx="22" cy="24" r="3" class="brain-fill"/>
@@ -227,6 +235,7 @@
       
       <!-- 2,3 SELF-CORRECTION -->
       <g id="brain-correct" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="correct-ring" data-ring="correct"/>
         <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="correct-ring"/>
         <path d="M20 38c3-7 7-11 12-11 6 0 10 4 13 11" class="brain-line"/>
         <path d="M22 24l8 6 14-14" class="brain-line" stroke-width="2.5"/>
@@ -238,6 +247,7 @@
       
       <!-- 3,3 KNOWLEDGE -->
       <g id="brain-knowledge" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="knowledge-ring" data-ring="knowledge"/>
         <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="knowledge-ring"/>
         <path d="M18 40V26l8-3 8 3 8-3 8 3v14" class="brain-line"/>
         <line x1="26" y1="23" x2="26" y2="42" class="brain-line" stroke-width="1.5"/>
@@ -251,6 +261,7 @@
     <g transform="translate(20, 256)">
       <!-- 0,4 CURRICULUM PHASES -->
       <g id="brain-curriculum" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="curriculum-ring" data-ring="curriculum"/>
         <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="curriculum-ring"/>
         <rect x="18" y="20" width="10" height="8" rx="2" class="brain-fill" opacity="0.4"/>
         <rect x="24" y="28" width="10" height="8" rx="2" class="brain-fill" opacity="0.7"/>
@@ -262,6 +273,7 @@
       
       <!-- 1,4 SKILL ACQUISITION -->
       <g id="brain-skill" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="skill-ring" data-ring="skill"/>
         <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="skill-ring"/>
         <circle cx="22" cy="28" r="4" class="brain-fill"/>
         <circle cx="42" cy="28" r="4" class="brain-fill" opacity="0.7"/>
@@ -274,6 +286,7 @@
       
       <!-- 2,4 SYMBOLIC COMPRESSION -->
       <g id="brain-symbolic" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="symbolic-ring" data-ring="symbolic"/>
         <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="symbolic-ring"/>
         <rect x="16" y="20" width="12" height="8" rx="2" class="brain-ring"/>
         <rect x="36" y="38" width="12" height="8" rx="2" class="brain-fill"/>
@@ -285,6 +298,7 @@
       
       <!-- 3,4 FEEDBACK INTEGRATION -->
       <g id="brain-feedback" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="feedback-ring" data-ring="feedback"/>
         <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="feedback-ring"/>
         <path d="M22 24c4-4 16-4 20 2" class="brain-line"/>
         <polygon points="42,26 44,18 48,22" class="brain-fill"/>
@@ -299,6 +313,7 @@
     <g transform="translate(20, 320)">
       <!-- 0,5 TOOL INTERFACES -->
       <g id="brain-tools" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="tools-ring" data-ring="tools"/>
         <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="tools-ring"/>
         <rect x="18" y="22" width="10" height="20" rx="2" class="brain-ring"/>
         <rect x="34" y="22" width="10" height="8" rx="2" class="brain-fill"/>
@@ -310,6 +325,7 @@
       
       <!-- 1,5 SANDBOXED SIMULATION -->
       <g id="brain-sandbox" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="sandbox-ring" data-ring="sandbox"/>
         <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="sandbox-ring"/>
         <rect x="18" y="22" width="28" height="20" rx="4" class="brain-line"/>
         <circle cx="26" cy="32" r="4" class="brain-fill" opacity="0.7"/>
@@ -321,6 +337,7 @@
       
       <!-- 2,5 STATE PERSISTENCE -->
       <g id="brain-state" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="state-ring" data-ring="state"/>
         <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="state-ring"/>
         <ellipse cx="32" cy="24" rx="10" ry="5" class="brain-line"/>
         <path d="M22 24v12c0 3 4 5 10 5s10-2 10-5V24" class="brain-line"/>
@@ -332,6 +349,7 @@
       
       <!-- 3,5 MESH AWARENESS -->
       <g id="brain-mesh" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="mesh-ring" data-ring="mesh"/>
         <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="mesh-ring"/>
         <circle cx="32" cy="32" r="5" class="brain-fill"/>
         <circle cx="18" cy="24" r="3" class="brain-ring"/>
@@ -348,6 +366,7 @@
     <g transform="translate(20, 384)">
       <!-- 0,6 SPLASH BOOT RITUAL -->
       <g id="brain-splash" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="splash-ring" data-ring="splash"/>
         <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="splash-ring"/>
         <circle cx="32" cy="32" r="4" class="brain-fill"/>
         <path d="M32 16v6M32 42v6M16 32h6M42 32h6" class="brain-line"/>
@@ -358,6 +377,7 @@
       
       <!-- 1,6 COGNITIVE FINGERPRINT -->
       <g id="brain-fingerprint" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="fingerprint-ring" data-ring="fingerprint"/>
         <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="fingerprint-ring"/>
         <circle cx="32" cy="32" r="4" class="brain-fill"/>
         <path d="M24 32c0-4 3-7 8-7 5 0 8 3 8 7 0 6-4 9-8 9-3 0-5-2-6-4" class="brain-line" opacity="0.7"/>
@@ -368,6 +388,7 @@
       
       <!-- 2,6 RUNTIME PERSONA -->
       <g id="brain-persona" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="persona-ring" data-ring="persona"/>
         <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="persona-ring"/>
         <path d="M20 24h24v12c0 6-5 10-12 10s-12-4-12-10V24z" class="brain-line"/>
         <circle cx="26" cy="30" r="2.5" class="brain-fill"/>
@@ -377,6 +398,9 @@
         <text x="32" y="62" text-anchor="middle" class="stats-text" id="persona-stats">0</text>
       </g>
       
+      <!-- 3,6 ABR HERALDRY -->
+      <g id="brain-heraldry" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="heraldry-ring" data-ring="heraldry"/>
       <!-- 3,6 NODE HERALDRY -->
       <g id="brain-heraldry" transform="translate(288,0)">
         <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="heraldry-ring"/>
@@ -384,6 +408,7 @@
         <path d="M24 24h16" class="brain-line"/>
         <path d="M32 18v26" class="brain-line" opacity="0.7"/>
         <path d="M28 30l4 4 4-4" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">ABR Heraldry</text>
         <text x="32" y="56" text-anchor="middle" class="brain-text">Node Heraldry</text>
         <text x="32" y="62" text-anchor="middle" class="stats-text" id="heraldry-stats">0</text>
       </g>
@@ -400,6 +425,7 @@
     <text x="0" y="-50" text-anchor="middle" class="brain-text" font-size="9">RLHF Storage</text>
     <text x="0" y="-40" text-anchor="middle" class="stats-text" id="storage-status">IndexedDB: Ready</text>
     <text x="0" y="40" text-anchor="middle" class="brain-text" font-size="8" id="total-activity">0 total events</text>
+    <text x="0" y="50" text-anchor="middle" class="stats-text" id="active-blocks">0 active ABRs</text>
     <text x="0" y="50" text-anchor="middle" class="stats-text" id="active-nodes">0 active nodes</text>
     <text x="0" y="60" text-anchor="middle" class="log-text" id="last-event">Ready</text>
   </g>
@@ -442,6 +468,7 @@
   <g transform="translate(256, 450)">
     <rect x="-200" y="-15" width="400" height="30" rx="6" fill="rgba(5,7,11,0.7)" stroke="#f5c451" stroke-width="1"/>
     <text x="-190" y="-2" text-anchor="start" class="log-text">Activity:</text>
+    <text x="-160" y="-2" text-anchor="start" class="log-text" id="current-activity">Complete ABR cluster ready</text>
     <text x="-160" y="-2" text-anchor="start" class="log-text" id="current-activity">Complete brain cluster ready</text>
     <text x="190" y="-2" text-anchor="end" class="log-text" id="activity-time">-</text>
   </g>
@@ -449,6 +476,11 @@
   <!-- Embedded RLHF Brain Cluster Runtime -->
   <script type="application/javascript">
 <![CDATA[
+    // K'UHUL Complete Brain Cluster - 28 ABRs + RLHF Storage
+    class CompleteBrainCluster {
+      constructor() {
+        // All 28 atomic block runtimes organized by layer
+        this.abrBlocks = {
     // K'UHUL Complete Brain Cluster - 28 Nodes + RLHF Storage
     class CompleteBrainCluster {
       constructor() {
@@ -503,6 +535,7 @@
           ready: false,
           stats: {
             totalEvents: 0,
+            activeBlocks: 0,
             activeNodes: 0,
             lastUpdate: null,
             sessionId: this.generateSessionId()
