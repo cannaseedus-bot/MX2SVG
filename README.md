@@ -18,6 +18,7 @@ All files live in the repository root (there are no subdirectories). The list be
 | `MX2SVG_PWA_README.md` | Guide to the PWA enhancements and configuration references. |
 | `MX2SVG_ENHANCEMENT_SUMMARY.md` | Summary of the PWA enhancement entries. |
 | `MX2SVG_ORIGIN.svg` | Original SVG visualization that inspired the MX2SVG name and cluster concept. |
+| `ABR_BLACK_CODE_SPEC_v2.0.0.md` | ABR Black Code v2.0.0 full draft specification with π verifier and SCXQ2 framing examples. |
 | `manifest.json` | Experimental PWA manifest that stores SVG/JSON tokenization payloads. |
 | `index.html` | Experimental PWA UI with chat form and service worker messaging. |
 | `sw.js` | Service worker orchestration for tokenization and model loading. |
