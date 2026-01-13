@@ -108,6 +108,47 @@
     "ui": "index.html",
     "transformers_runtime": "service worker"
   },
+  "server_manifest": {
+    "@type": "mx2svg.server.manifest.v1",
+    "notes": "Static local REST API layout and SW instruction channels for extended capabilities.",
+    "routes": {
+      "health": { "method": "POST", "path": "/api/lam.o/health" },
+      "describe": { "method": "POST", "path": "/api/lam.o/describe" },
+      "infer": { "method": "POST", "path": "/api/lam.o/infer", "contract": "xjson://contract/lam.o.infer/v1" },
+      "session_export": { "method": "POST", "path": "/api/lam.o/session/export" },
+      "session_clear": { "method": "POST", "path": "/api/lam.o/session/clear" }
+    },
+    "instruction_channels": {
+      "sw_kernel": {
+        "transport": "postMessage",
+        "expects": ["LOAD_MODEL", "TOKENIZE", "LAMO_ROUTE"],
+        "returns": ["status", "tokenization", "lamo_response"]
+      },
+      "server_tasks": {
+        "transport": "rest",
+        "paths": ["/api/lam.o/*"],
+        "policy": "same_origin_only"
+      }
+    },
+    "capabilities": {
+      "file_management": {
+        "mode": "cli_bridge",
+        "commands": ["ls", "cat", "stat", "mkdir", "rm"],
+        "sandbox": "service_worker_controlled",
+        "notes": "Declarative intent only; execution depends on SW kernel policy."
+      },
+      "ast_language": {
+        "mode": "ast_pipeline",
+        "engines": ["json_ast", "svg_ast"],
+        "transforms": ["parse", "lint", "rewrite", "emit"]
+      },
+      "data_orchestration": {
+        "links": true,
+        "routes": true,
+        "contracts": true
+      }
+    }
+  },
   "related_applications": [],
   "prefer_related_applications": false,
   "kuhul": {

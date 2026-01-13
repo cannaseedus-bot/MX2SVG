@@ -13,15 +13,21 @@
 
 'use strict';
 
+/* [01] CORE + CACHE ==================================================== */
+
 const CACHE = 'mx2svg-pwa-v2';
 const CORE_ASSETS = ['./', './index.html', './manifest.json', './abr_engine.js'];
 
-'use strict';
+/* [02] ABR ENGINE BOOTSTRAP ============================================ */
 
-const CACHE = 'kuhul-lam-o-pwa-v1';
-const CORE_ASSETS = [
-  '/', '/index.html', '/manifest.json'
-];
+importScripts('./abr_engine.js');
+
+/* [03] MX2SVG MODEL STATE ============================================== */
+
+let modelLoaded = false;
+let transformers = null;
+
+/* [04] LAM.O ENDPOINTS ================================================== */
 
 // ---- lam.o endpoints (from manifest) ----
 const LAMO = {
@@ -33,6 +39,8 @@ const LAMO = {
   ps:   '/api/ps'            // running models
   // health = simple fetch to base or /api/tags
 };
+
+/* [05] SERVICE WORKER LIFECYCLE ======================================== */
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -75,89 +83,29 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-/* =====================================================================
-   SCXQ2 STREAM CAPTURE (minimal, deterministic)
-   Frame kinds:
-     1 HDR, 2 TICK, 3 REQ, 4 RES, 5 ERR, 6 END
-   Notes:
-   - This is a *canonical* binary stream envelope.
-   - It is NOT compression-heavy; it is frame-faithful.
-   - Plug your full SCXQ2 lane packer later without changing ABI.
-   ===================================================================== */
+/* [06] TRANSFORMERS LOADER ============================================= */
 
-const FRAME = Object.freeze({ HDR:1, TICK:2, REQ:3, RES:4, ERR:5, END:6 });
-
-/** In-memory session streams keyed by session_id (also mirrored into IDB) */
-const SESSION = {
-  // session_id -> { frames: Uint8Array[], started_ms: number, last_tick: number }
-  map: new Map()
-};
-
-/** Very small deterministic hash (FNV-1a 32-bit) */
-function fnv1a32(str) {
-  const s = String(str);
-  let h = 0x811c9dc5;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = (h + ((h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24))) >>> 0;
+async function ensureTransformers() {
+  if (transformers) {
+    return transformers;
   }
   return h >>> 0;
 }
 function hex8(u32){ return u32.toString(16).padStart(8,'0'); }
 
-/** Stable JSON stringify */
-function stableStringify(value) {
-  const seen = new Set();
-  const walk = (v) => {
-    if (v === null) return 'null';
-    const t = typeof v;
-    if (t === 'number') return Number.isFinite(v) ? String(v) : '0';
-    if (t === 'boolean') return v ? 'true' : 'false';
-    if (t === 'string') return JSON.stringify(v);
-    if (Array.isArray(v)) return '[' + v.map(walk).join(',') + ']';
-    if (t === 'object') {
-      if (seen.has(v)) return '"[circular]"';
-      seen.add(v);
-      const keys = Object.keys(v).sort();
-      const body = keys.map(k => JSON.stringify(k)+':'+walk(v[k])).join(',');
-      seen.delete(v);
-      return '{' + body + '}';
-    }
-    return '""';
-  };
-  return walk(value);
+/* [07] MX2SVG MODEL LOAD =============================================== */
+
+async function handleLoadModel(weights) {
+  await ensureTransformers();
+  modelLoaded = Boolean(weights);
+  return `Model load requested: ${weights}`;
 }
 
-/** Frame encoder: [kind:u8][tick:u32le][len:u32le][payload:bytes] */
-function encFrame(kind, tick, payloadBytes) {
-  const len = payloadBytes ? payloadBytes.byteLength : 0;
-  const out = new Uint8Array(1 + 4 + 4 + len);
-  out[0] = kind & 0xff;
-  const dv = new DataView(out.buffer);
-  dv.setUint32(1, tick >>> 0, true);
-  dv.setUint32(5, len >>> 0, true);
-  if (len) out.set(new Uint8Array(payloadBytes), 9);
-  return out;
-}
+/* [08] MX2SVG TOKENIZE ================================================== */
 
-function utf8(s){ return new TextEncoder().encode(String(s)); }
-
-/** Ensure session exists */
-function ensureSession(session_id) {
-  const id = String(session_id || 'session_default');
-  let s = SESSION.map.get(id);
-  if (!s) {
-    s = { frames: [], started_ms: Date.now(), last_tick: 0 };
-    // HDR frame
-    const hdr = {
-      '@type': 'scxq2.stream.hdr.v1',
-      magic: 'SCX2',
-      stream: 'lam.o.infer',
-      policy: 'xjson://contract/lam.o.infer/v1',
-      created_ms: s.started_ms
-    };
-    s.frames.push(encFrame(FRAME.HDR, 0, utf8(stableStringify(hdr))));
-    SESSION.map.set(id, s);
+async function handleTokenize(text) {
+  if (!modelLoaded) {
+    return { error: 'Model not loaded. Provide model.safetensors before tokenization.' };
   }
   return s;
 }
@@ -184,125 +132,20 @@ function clearSession(session_id) {
   SESSION.map.delete(String(session_id || 'session_default'));
 }
 
-/* =====================================================================
-   XJSON CONTRACT — lam.o.infer (v1)
-   Deterministic, API-in/API-out. No UI, no model hardcoding.
-   ===================================================================== */
+/* [09] CLIENT BROADCAST ================================================= */
 
-const LAMO_INFER_CONTRACT = Object.freeze({
-  '@id': 'xjson://contract/lam.o.infer/v1',
-  '@type': 'xjson.contract',
-  '@name': 'lam.o.infer',
-  '@mode': 'api_in_api_out',
-  '@transport': 'ollama_http_v1',
-  '@rules': {
-    // invariants
-    no_async_semantics: true,
-    no_side_effects_outside_stream: true,
-    deterministic_hashing: 'fnv1a32'
-  },
-  '@input.schema': {
-    '@type': 'lam.o.infer.request.v1',
-    // model is required but caller decides what
-    model: 'string',
-    // one of: chat|reasoning|analysis|image_gen (you listed)
-    mode: 'string',
-    // unified prompt/messages
-    prompt: 'string?',
-    messages: 'array?',
-    // generation controls
-    options: 'object?',
-    stream: 'boolean?',
-    // session capture
-    session_id: 'string?',
-    tick: 'u32?'
-  },
-  '@output.schema': {
-    '@type': 'lam.o.infer.response.v1',
-    ok: 'boolean',
-    model: 'string',
-    mode: 'string',
-    created_ms: 'u64',
-    // response payload mirrors Ollama generate/chat output (normalized)
-    data: 'object?',
-    error: 'object?',
-    // stream proof anchors
-    session_id: 'string?',
-    req_hash: 'h:hex8?',
-    res_hash: 'h:hex8?'
-  }
-});
-
-/* =====================================================================
-   ROUTER
-   ===================================================================== */
-
-async function handleLamO(req) {
-  const url = new URL(req.url);
-  const path = url.pathname;
-
-  try {
-    if (req.method !== 'POST') return json({ ok:false, error:{ code:'METHOD', message:'POST only' } }, 405);
-
-    if (path === '/api/lam.o/health') return await lamHealth(req);
-    if (path === '/api/lam.o/describe') return await lamDescribe(req);
-    if (path === '/api/lam.o/infer') return await lamInfer(req);
-
-    if (path === '/api/lam.o/session/export') return await sessionExport(req);
-    if (path === '/api/lam.o/session/clear') return await sessionClear(req);
-
-    return json({ ok:false, error:{ code:'NOT_FOUND', message:'Unknown lam.o route' } }, 404);
-  } catch (err) {
-    return json({ ok:false, error:{ code:'SW_ERR', message:String(err?.message||err), detail:String(err?.stack||'') } }, 500);
-  }
-}
-
-function json(obj, status=200, headers={}) {
-  return new Response(JSON.stringify(obj), {
-    status,
-    headers: { 'content-type':'application/json', ...headers }
+function broadcast(message) {
+  self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+    clients.forEach((client) => client.postMessage(message));
   });
 }
 
-async function readJson(req) {
-  const txt = await req.text();
-  if (!txt) return null;
-  try { return JSON.parse(txt); } catch { return { __raw: txt }; }
-}
+/* [10] MESSAGE ROUTER =================================================== */
 
-/* =====================================================================
-   lam.o.health
-   ===================================================================== */
-
-async function lamHealth(_req) {
-  // simplest reliable: hit /api/tags
-  const r = await fetch(LAMO.base + LAMO.tags, { method:'GET' });
-  const ok = r.ok;
-  let data = null;
-  try { data = await r.json(); } catch { data = null; }
-  return json({
-    ok,
-    server: LAMO.base,
-    protocol: 'ollama_http_v1',
-    tags: data || null
-  }, ok ? 200 : 503);
-}
-
-/* =====================================================================
-   lam.o.describe
-   body: { model?: string }
-   - if model omitted -> list tags
-   - else -> /api/show
-   ===================================================================== */
-
-async function lamDescribe(req) {
-  const body = await readJson(req) || {};
-  const model = body.model ? String(body.model) : null;
-
-  if (!model) {
-    const r = await fetch(LAMO.base + LAMO.tags, { method:'GET' });
-    const data = await safeJson(r);
-    return json({ ok: r.ok, data }, r.ok ? 200 : 502);
+self.addEventListener('message', (event) => {
+  const { type, payload } = event.data || {};
+  if (!type) {
+    return;
   }
 
   const r = await fetch(LAMO.base + LAMO.show, {
@@ -608,15 +451,185 @@ const LAMO_INFER_CONTRACT = Object.freeze({
 });
 
 /* =====================================================================
-   ROUTER
+   [11] SCXQ2 STREAM CAPTURE (minimal, deterministic)
+   Frame kinds:
+     1 HDR, 2 TICK, 3 REQ, 4 RES, 5 ERR, 6 END
+   Notes:
+   - This is a *canonical* binary stream envelope.
+   - It is NOT compression-heavy; it is frame-faithful.
+   - Plug your full SCXQ2 lane packer later without changing ABI.
    ===================================================================== */
+
+const FRAME = Object.freeze({ HDR:1, TICK:2, REQ:3, RES:4, ERR:5, END:6 });
+
+/** In-memory session streams keyed by session_id (also mirrored into IDB) */
+const SESSION = {
+  // session_id -> { frames: Uint8Array[], started_ms: number, last_tick: number }
+  map: new Map()
+};
+
+/** Very small deterministic hash (FNV-1a 32-bit) */
+function fnv1a32(str) {
+  const s = String(str);
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = (h + ((h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24))) >>> 0;
+  }
+  return h >>> 0;
+}
+function hex8(u32){ return u32.toString(16).padStart(8,'0'); }
+
+/** Stable JSON stringify */
+function stableStringify(value) {
+  const seen = new Set();
+  const walk = (v) => {
+    if (v === null) return 'null';
+    const t = typeof v;
+    if (t === 'number') return Number.isFinite(v) ? String(v) : '0';
+    if (t === 'boolean') return v ? 'true' : 'false';
+    if (t === 'string') return JSON.stringify(v);
+    if (Array.isArray(v)) return '[' + v.map(walk).join(',') + ']';
+    if (t === 'object') {
+      if (seen.has(v)) return '"[circular]"';
+      seen.add(v);
+      const keys = Object.keys(v).sort();
+      const body = keys.map(k => JSON.stringify(k)+':'+walk(v[k])).join(',');
+      seen.delete(v);
+      return '{' + body + '}';
+    }
+    return '""';
+  };
+  return walk(value);
+}
+
+/** Frame encoder: [kind:u8][tick:u32le][len:u32le][payload:bytes] */
+function encFrame(kind, tick, payloadBytes) {
+  const len = payloadBytes ? payloadBytes.byteLength : 0;
+  const out = new Uint8Array(1 + 4 + 4 + len);
+  out[0] = kind & 0xff;
+  const dv = new DataView(out.buffer);
+  dv.setUint32(1, tick >>> 0, true);
+  dv.setUint32(5, len >>> 0, true);
+  if (len) out.set(new Uint8Array(payloadBytes), 9);
+  return out;
+}
+
+function utf8(s){ return new TextEncoder().encode(String(s)); }
+
+/** Ensure session exists */
+function ensureSession(session_id) {
+  const id = String(session_id || 'session_default');
+  let s = SESSION.map.get(id);
+  if (!s) {
+    s = { frames: [], started_ms: Date.now(), last_tick: 0 };
+    // HDR frame
+    const hdr = {
+      '@type': 'scxq2.stream.hdr.v1',
+      magic: 'SCX2',
+      stream: 'lam.o.infer',
+      policy: 'xjson://contract/lam.o.infer/v1',
+      created_ms: s.started_ms
+    };
+    s.frames.push(encFrame(FRAME.HDR, 0, utf8(stableStringify(hdr))));
+    SESSION.map.set(id, s);
+  }
+  return s;
+}
+
+function pushFrame(session_id, kind, tick, obj) {
+  const s = ensureSession(session_id);
+  const t = (tick >>> 0);
+  s.last_tick = Math.max(s.last_tick, t);
+  const payload = obj == null ? '' : stableStringify(obj);
+  s.frames.push(encFrame(kind, t, utf8(payload)));
+}
+
+/** Export stream bytes: concatenation of frames */
+function exportStream(session_id) {
+  const s = ensureSession(session_id);
+  const total = s.frames.reduce((a,b)=>a+b.byteLength,0);
+  const out = new Uint8Array(total);
+  let off = 0;
+  for (const f of s.frames) { out.set(f, off); off += f.byteLength; }
+  return out;
+}
+
+function clearSession(session_id) {
+  SESSION.map.delete(String(session_id || 'session_default'));
+}
+
+/* =====================================================================
+   [12] XJSON CONTRACT — lam.o.infer (v1)
+   Deterministic, API-in/API-out. No UI, no model hardcoding.
+   ===================================================================== */
+
+const LAMO_INFER_CONTRACT = Object.freeze({
+  '@id': 'xjson://contract/lam.o.infer/v1',
+  '@type': 'xjson.contract',
+  '@name': 'lam.o.infer',
+  '@mode': 'api_in_api_out',
+  '@transport': 'ollama_http_v1',
+  '@rules': {
+    // invariants
+    no_async_semantics: true,
+    no_side_effects_outside_stream: true,
+    deterministic_hashing: 'fnv1a32'
+  },
+  '@input.schema': {
+    '@type': 'lam.o.infer.request.v1',
+    // model is required but caller decides what
+    model: 'string',
+    // one of: chat|reasoning|analysis|image_gen (you listed)
+    mode: 'string',
+    // unified prompt/messages
+    prompt: 'string?',
+    messages: 'array?',
+    // generation controls
+    options: 'object?',
+    stream: 'boolean?',
+    // session capture
+    session_id: 'string?',
+    tick: 'u32?'
+  },
+  '@output.schema': {
+    '@type': 'lam.o.infer.response.v1',
+    ok: 'boolean',
+    model: 'string',
+    mode: 'string',
+    created_ms: 'u64',
+    // response payload mirrors Ollama generate/chat output (normalized)
+    data: 'object?',
+    error: 'object?',
+    // stream proof anchors
+    session_id: 'string?',
+    req_hash: 'h:hex8?',
+    res_hash: 'h:hex8?'
+  }
+});
+
+/* =====================================================================
+   [13] ROUTER
+   ===================================================================== */
+
+const SECTION = Object.freeze({
+  ROUTER: '13',
+  JSON: '14',
+  HEALTH: '15',
+  DESCRIBE: '16',
+  INFER: '17',
+  EXPORT: '18',
+  CLEAR: '19'
+});
 
 async function handleLamO(req) {
   const url = new URL(req.url);
   const path = url.pathname;
 
   try {
-    if (req.method !== 'POST') return json({ ok:false, error:{ code:'METHOD', message:'POST only' } }, 405);
+    if (req.method !== 'POST') {
+      return json({ ok:false, error:{ code:'METHOD', message:'POST only', section: SECTION.ROUTER } }, 405);
+    }
 
     if (path === '/api/lam.o/health') return await lamHealth(req);
     if (path === '/api/lam.o/describe') return await lamDescribe(req);
@@ -625,11 +638,16 @@ async function handleLamO(req) {
     if (path === '/api/lam.o/session/export') return await sessionExport(req);
     if (path === '/api/lam.o/session/clear') return await sessionClear(req);
 
-    return json({ ok:false, error:{ code:'NOT_FOUND', message:'Unknown lam.o route' } }, 404);
+    return json({ ok:false, error:{ code:'NOT_FOUND', message:'Unknown lam.o route', section: SECTION.ROUTER } }, 404);
   } catch (err) {
-    return json({ ok:false, error:{ code:'SW_ERR', message:String(err?.message||err), detail:String(err?.stack||'') } }, 500);
+    return json({
+      ok:false,
+      error:{ code:'SW_ERR', message:String(err?.message||err), detail:String(err?.stack||''), section: SECTION.ROUTER }
+    }, 500);
   }
 }
+
+/* [14] JSON HELPERS ===================================================== */
 
 function json(obj, status=200, headers={}) {
   return new Response(JSON.stringify(obj), {
@@ -645,7 +663,7 @@ async function readJson(req) {
 }
 
 /* =====================================================================
-   lam.o.health
+   [15] lam.o.health
    ===================================================================== */
 
 async function lamHealth(_req) {
@@ -658,12 +676,13 @@ async function lamHealth(_req) {
     ok,
     server: LAMO.base,
     protocol: 'ollama_http_v1',
-    tags: data || null
+    tags: data || null,
+    section: SECTION.HEALTH
   }, ok ? 200 : 503);
 }
 
 /* =====================================================================
-   lam.o.describe
+   [16] lam.o.describe
    body: { model?: string }
    - if model omitted -> list tags
    - else -> /api/show
@@ -676,7 +695,7 @@ async function lamDescribe(req) {
   if (!model) {
     const r = await fetch(LAMO.base + LAMO.tags, { method:'GET' });
     const data = await safeJson(r);
-    return json({ ok: r.ok, data }, r.ok ? 200 : 502);
+    return json({ ok: r.ok, data, section: SECTION.DESCRIBE }, r.ok ? 200 : 502);
   }
 
   const r = await fetch(LAMO.base + LAMO.show, {
@@ -685,7 +704,7 @@ async function lamDescribe(req) {
     body: JSON.stringify({ name: model })
   });
   const data = await safeJson(r);
-  return json({ ok: r.ok, model, data }, r.ok ? 200 : 502);
+  return json({ ok: r.ok, model, data, section: SECTION.DESCRIBE }, r.ok ? 200 : 502);
 }
 
 async function safeJson(r) {
@@ -693,7 +712,7 @@ async function safeJson(r) {
 }
 
 /* =====================================================================
-   lam.o.infer
+   [17] lam.o.infer
    Input must satisfy contract. Produces:
    - req_hash/res_hash
    - SCXQ2 stream frames: REQ / RES / ERR (+ END optional)
@@ -707,7 +726,11 @@ async function lamInfer(req) {
     const session_id = String(body.session_id || 'session_default');
     const tick = (body.tick >>> 0) || 0;
     pushFrame(session_id, FRAME.ERR, tick, { code:'CONTRACT', errors: v.errors });
-    return json({ ok:false, error:{ code:'CONTRACT', errors: v.errors }, contract: LAMO_INFER_CONTRACT['@id'] }, 400);
+    return json({
+      ok:false,
+      error:{ code:'CONTRACT', errors: v.errors, section: SECTION.INFER },
+      contract: LAMO_INFER_CONTRACT['@id']
+    }, 400);
   }
 
   const session_id = String(body.session_id || 'session_default');
@@ -753,7 +776,7 @@ async function lamInfer(req) {
         created_ms,
         session_id,
         req_hash,
-        error:{ code:'UPSTREAM', status:r.status, body: errText }
+        error:{ code:'UPSTREAM', status:r.status, body: errText, section: SECTION.INFER }
       }, 502);
     }
 
@@ -818,7 +841,8 @@ async function lamInfer(req) {
       data: resEnv.data,
       session_id,
       req_hash,
-      res_hash
+      res_hash,
+      section: SECTION.INFER
     }, 200);
   }
 
@@ -839,7 +863,7 @@ async function lamInfer(req) {
       created_ms,
       session_id,
       req_hash,
-      error:{ code:'UPSTREAM', status:r.status, data: upstream }
+      error:{ code:'UPSTREAM', status:r.status, data: upstream, section: SECTION.INFER }
     }, 502);
   }
 
@@ -866,7 +890,8 @@ async function lamInfer(req) {
     data: resEnv.data,
     session_id,
     req_hash,
-    res_hash
+    res_hash,
+    section: SECTION.INFER
   }, 200);
 }
 
@@ -926,7 +951,7 @@ function normalizeOllama(upstream) {
 }
 
 /* =====================================================================
-   Session export / clear
+   [18] Session export
    ===================================================================== */
 
 async function sessionExport(req) {
@@ -944,16 +969,21 @@ async function sessionExport(req) {
     status: 200,
     headers: {
       'content-type': 'application/octet-stream',
-      'x-scxq2-meta': JSON.stringify(meta)
+      'x-scxq2-meta': JSON.stringify(meta),
+      'x-scxq2-section': SECTION.EXPORT
     }
   });
 }
+
+/* =====================================================================
+   [19] Session clear
+   ===================================================================== */
 
 async function sessionClear(req) {
   const body = await readJson(req) || {};
   const session_id = String(body.session_id || 'session_default');
   clearSession(session_id);
-  return json({ ok:true, session_id }, 200);
+  return json({ ok:true, session_id, section: SECTION.CLEAR }, 200);
 }
 
 /* =====================================================================
