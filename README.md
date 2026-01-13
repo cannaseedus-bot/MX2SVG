@@ -2,13 +2,13 @@
 
 ## 🎉 Local Qwen Model Available!
 
-This directory contains a **complete Qwen2 1.5B model** with all necessary files for local inference. No need to download additional models!
+This directory contains an almost **complete Qwen2 1.5B model** with all necessary files for local inference. NYou just need to download the model.safetensors sile!
 
 ## 📁 Model Files
 
 | File | Size | Description |
 |------|------|-------------|
-| `model.safetensors` | 1.9 GB | Main model weights (float32) |
+| `model.safetensors` | 1.9 GB | Main model weights (float32) |   <----DOWNLOAD THIS FILE HERE: https://mx2lm.app/model.safetensors
 | `tokenizer.json` | 11.4 MB | Tokenizer configuration |
 | `config.json` | 1.3 KB | Model architecture config |
 | `tokenizer_config.json` | 4.9 KB | Tokenizer settings |
@@ -272,5 +272,6 @@ const answer = await pipeline('text-generation', 'qwen', {
 ---
 
 > "This local Qwen model provides excellent performance and reliability without requiring external API calls or additional downloads."
+
 
 **Enjoy using your local Qwen2 model! 🎉**
