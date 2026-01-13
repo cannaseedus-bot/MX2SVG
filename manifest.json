@@ -388,5 +388,24 @@
     },
     "scx_version": "SCXQ2-v1",
     "protocol": "ollama_http_v1"
+  },
+  "xjson_manifest": {
+    "merge_strategy": "always_merge_never_replace",
+    "intent": "tokenizer_server_orchestrator",
+    "scope": "manifest.json",
+    "notes": [
+      "Do not frame this manifest as a PWA app or OS.",
+      "Treat this as a tokenizer server and orchestration manifest that aggregates XJSON/KUHUL runtime specs."
+    ],
+    "sources": [
+      {
+        "path": "MX2SVG.json",
+        "role": "primary_orchestrator_spec"
+      },
+      {
+        "path": "MX2SVG_PWA_ENHANCED.json",
+        "role": "legacy_pwa_overlay_reference"
+      }
+    ]
   }
 }
