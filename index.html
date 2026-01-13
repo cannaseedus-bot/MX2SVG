@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f172a">
+    <title>MX2SVG Experimental Tokenization Inference</title>
+    <link rel="manifest" href="./manifest.json">
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+      }
+      body {
+        margin: 0;
+        padding: 32px;
+        display: grid;
+        gap: 24px;
+      }
+      header {
+        display: grid;
+        gap: 8px;
+      }
+      .panel {
+        border: 1px solid #1e293b;
+        border-radius: 12px;
+        padding: 16px;
+        background: #111827;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      textarea {
+        width: 100%;
+        min-height: 140px;
+        background: #0f172a;
+        color: #e2e8f0;
+        border: 1px solid #1e293b;
+        border-radius: 8px;
+        padding: 12px;
+      }
+      button {
+        background: #22d3ee;
+        color: #0f172a;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button.secondary {
+        background: #1e293b;
+        color: #e2e8f0;
+      }
+      pre {
+        white-space: pre-wrap;
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-radius: 8px;
+        padding: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>MX2SVG Experimental Tokenization Inference</h1>
+      <p>
+        This PWA routes tokenization requests through a service worker. The manifest holds
+        the SVG/JSON tokenization payloads, while the service worker orchestrates model loading
+        and inference once <code>model.safetensors</code> is available.
+      </p>
+    </header>
+
+    <section class="panel">
+      <h2>Framework Critique</h2>
+      <p>
+        The goal is to show where model-first frameworks break down: orchestration, file-based
+        tokenization, and deployment constraints should drive the design, not just model weights.
+        This interface keeps orchestration visible and configurable.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Chat + Tokenization</h2>
+      <form id="chat-form" class="row">
+        <textarea id="chat-input" placeholder="Enter SVG or JSON to tokenize..."></textarea>
+        <div class="row">
+          <button type="submit">Send to Service Worker</button>
+          <button type="button" class="secondary" id="load-model">Load model.safetensors</button>
+        </div>
+      </form>
+      <h3>Status</h3>
+      <pre id="status">Waiting for service worker registration...</pre>
+    </section>
+
+    <section class="panel">
+      <h2>Tokenization Output</h2>
+      <pre id="output">No output yet.</pre>
+    </section>
+
+    <script>
+      const statusEl = document.getElementById('status');
+      const outputEl = document.getElementById('output');
+      const form = document.getElementById('chat-form');
+      const input = document.getElementById('chat-input');
+      const loadButton = document.getElementById('load-model');
+
+      function updateStatus(message) {
+        statusEl.textContent = message;
+      }
+
+      function updateOutput(payload) {
+        outputEl.textContent = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+      }
+
+      async function registerServiceWorker() {
+        if (!('serviceWorker' in navigator)) {
+          updateStatus('Service worker unavailable in this environment.');
+          return;
+        }
+
+        const registration = await navigator.serviceWorker.register('./sw.js');
+        await navigator.serviceWorker.ready;
+        updateStatus(`Service worker ready: ${registration.active?.state ?? 'unknown'}`);
+      }
+
+      function sendMessage(message) {
+        if (!navigator.serviceWorker.controller) {
+          updateStatus('No active service worker controller yet.');
+          return;
+        }
+        navigator.serviceWorker.controller.postMessage(message);
+      }
+
+      navigator.serviceWorker?.addEventListener('message', (event) => {
+        const { type, payload } = event.data || {};
+        if (type === 'status') {
+          updateStatus(payload);
+        }
+        if (type === 'tokenization') {
+          updateOutput(payload);
+        }
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const text = input.value.trim();
+        if (!text) {
+          updateStatus('Input is empty.');
+          return;
+        }
+        sendMessage({ type: 'TOKENIZE', payload: { text } });
+      });
+
+      loadButton.addEventListener('click', () => {
+        sendMessage({ type: 'LOAD_MODEL', payload: { weights: 'model.safetensors' } });
+      });
+
+      registerServiceWorker();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "MX2SVG Experimental Tokenization Inference",
+  "short_name": "MX2SVG Lab",
+  "description": "Experimental PWA wrapper for SVG/JSON tokenization and model orchestration.",
+  "display": "standalone",
+  "start_url": "./",
+  "scope": "./",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "tokenization": {
+    "svg_tokens": [],
+    "json_tokens": [],
+    "vocabulary": {
+      "source": "tokenizer.json",
+      "notes": "Populate with tokenizer outputs at runtime."
+    },
+    "constraints": {
+      "no_simulated_data": true,
+      "model_weights": "model.safetensors"
+    }
+  },
+  "orchestration": {
+    "service_worker": "sw.js",
+    "ui": "index.html",
+    "transformers_runtime": "service worker"
+  }
+}

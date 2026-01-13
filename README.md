@@ -18,6 +18,9 @@ All files live in the repository root (there are no subdirectories). The list be
 | `MX2SVG_PWA_README.md` | Guide to the PWA enhancements and configuration references. |
 | `MX2SVG_ENHANCEMENT_SUMMARY.md` | Summary of the PWA enhancement entries. |
 | `MX2SVG_ORIGIN.svg` | Original SVG visualization that inspired the MX2SVG name and cluster concept. |
+| `manifest.json` | Experimental PWA manifest that stores SVG/JSON tokenization payloads. |
+| `index.html` | Experimental PWA UI with chat form and service worker messaging. |
+| `sw.js` | Service worker orchestration for tokenization and model loading. |
 | `tokenizer.json` | Tokenizer definition (normalization, BPE setup, and added tokens) for MX2SVG-related workflows. |
 | `tokenizer.py` | Script that loads the Qwen2 base model/tokenizer, adds custom tokens, and saves updated artifacts. |
 | `abi.json` | ABI metadata describing the base model, token counts, and compatibility rules. |
