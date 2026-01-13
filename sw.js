@@ -1,5 +1,7 @@
 const CACHE_NAME = 'mx2svg-pwa-v1';
-const CORE_ASSETS = ['./', './index.html', './manifest.json'];
+const CORE_ASSETS = ['./', './index.html', './manifest.json', './abr_engine.js'];
+
+importScripts('./abr_engine.js');
 
 let modelLoaded = false;
 let transformers = null;
