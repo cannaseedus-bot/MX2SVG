@@ -205,27 +205,28 @@
   },
   "kuhul_server": {
     "v": "1.0.0",
+    "kind": "static_server_contract",
     "authority": "manifest.json",
     "routes": {
       "/api/qwen/health": {
         "method": "POST",
-        "handler": "K010",
+        "handler": "K020",
         "cap": "model.qwen.health"
       },
       "/api/qwen/infer": {
         "method": "POST",
-        "handler": "K011",
+        "handler": "K021",
         "cap": "model.qwen.infer",
         "contract": "xjson://contract/qwen.infer/v1"
       },
       "/api/lam.o/health": {
         "method": "POST",
-        "handler": "K020",
+        "handler": "K030",
         "cap": "model.ollama.health"
       },
       "/api/lam.o/infer": {
         "method": "POST",
-        "handler": "K021",
+        "handler": "K031",
         "cap": "model.ollama.infer",
         "contract": "xjson://contract/lam.o.infer/v1"
       },
@@ -294,10 +295,43 @@
         "engine": "kuhul-ast"
       }
     },
+    "contracts": {
+      "xjson://contract/qwen.infer/v1": {
+        "$schema": "xjson://schema/core/v1",
+        "@type": "model.infer",
+        "provider": "qwen",
+        "input": {
+          "prompt": "string",
+          "mode": [
+            "chat",
+            "reasoning",
+            "analysis"
+          ],
+          "max_tokens": "int?"
+        },
+        "output": {
+          "text": "string",
+          "tokens_used": "int"
+        }
+      },
+      "xjson://contract/lam.o.infer/v1": {
+        "$schema": "xjson://schema/core/v1",
+        "@type": "model.infer",
+        "provider": "ollama",
+        "input": {
+          "model": "string",
+          "prompt": "string",
+          "stream": "bool?"
+        },
+        "output": {
+          "response": "string"
+        }
+      }
+    },
     "policies": {
       "proof.pin": {
         "type": "pin",
-        "hash": "h:________"
+        "hash": "h:00000000"
       },
       "cli.allow": [
         "kql",

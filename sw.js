@@ -14,6 +14,30 @@ const KERNEL = Object.freeze({
 const CACHE = 'mx2svg-pwa-v3';
 const CORE_ASSETS = ['./', './index.html', './manifest.json', './abr_engine.js'];
 
+/* ============================================================
+   SCXQ2 STREAM CAPTURE (KERNEL SERVICE)
+   ============================================================ */
+
+const SCXQ2 = {
+  _stream: [],
+
+  capture(kind, payload) {
+    this._stream.push({
+      t: Date.now(),
+      k: kind,
+      p: payload
+    });
+  },
+
+  export() {
+    return this._stream.slice();
+  },
+
+  reset() {
+    this._stream.length = 0;
+  }
+};
+
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(CORE_ASSETS)));
   self.skipWaiting();
@@ -58,40 +82,52 @@ async function K001_boot() {
 }
 
 /* -------------------------
-   K010 — qwen.health
+   K020 — qwen.health
 -------------------------- */
-async function K010_qwen_health() {
+async function K020_qwen_health() {
+  SCXQ2.capture('qwen.health', { ok: true });
   return json({ ok: true, provider: 'qwen' }, 200);
 }
 
 /* -------------------------
-   K011 — qwen.infer (PRIMARY)
+   K021 — qwen.infer (PRIMARY)
 -------------------------- */
-async function K011_qwen_infer(_req, ctx) {
-  throw fault('K011', 'E_NOT_IMPL', 'qwen.infer adapter not wired yet', { contract: ctx.contract });
+async function K021_qwen_infer(req, ctx) {
+  const body = await readJson(req);
+  SCXQ2.capture('infer.start', { provider: 'qwen', body });
+
+  const out = {
+    text: '[QWEN OUTPUT]',
+    tokens_used: 0
+  };
+
+  SCXQ2.capture('infer.end', { provider: 'qwen', out, contract: ctx.contract });
+  return json(out, 200);
 }
 
 /* -------------------------
-   K020 — lam.o.health (ADDON)
+   K030 — lam.o.health (ADDON)
 -------------------------- */
-async function K020_lamo_health() {
+async function K030_lamo_health() {
   const r = await fetch('http://localhost:61683/api/tags');
   const data = await safeJson(r);
+  SCXQ2.capture('lamo.health', { ok: r.ok });
   return json({ ok: r.ok, provider: 'ollama', data }, r.ok ? 200 : 503);
 }
 
 /* -------------------------
-   K021 — lam.o.infer (ADDON)
+   K031 — lam.o.infer (ADDON)
 -------------------------- */
-async function K021_lamo_infer(req) {
+async function K031_lamo_infer(req) {
   const body = await readJson(req);
+  SCXQ2.capture('infer.start', { provider: 'ollama', body });
   if (!body || typeof body !== 'object') {
-    throw fault('K021', 'E_CONTRACT', 'request body must be JSON object');
+    throw fault('K031', 'E_CONTRACT', 'request body must be JSON object');
   }
   const model = body.model ? String(body.model) : null;
   const prompt = body.prompt != null ? String(body.prompt) : null;
   if (!model || !prompt) {
-    throw fault('K021', 'E_CONTRACT', 'model and prompt are required');
+    throw fault('K031', 'E_CONTRACT', 'model and prompt are required');
   }
 
   const r = await fetch('http://localhost:61683/api/generate', {
@@ -101,8 +137,9 @@ async function K021_lamo_infer(req) {
   });
   const data = await safeJson(r);
   if (!r.ok) {
-    throw fault('K021', 'E_UPSTREAM', 'ollama upstream error', { status: r.status, data });
+    throw fault('K031', 'E_UPSTREAM', 'ollama upstream error', { status: r.status, data });
   }
+  SCXQ2.capture('infer.end', { provider: 'ollama', data });
   return json({ ok: true, provider: 'ollama', data }, 200);
 }
 
@@ -110,6 +147,7 @@ async function K021_lamo_infer(req) {
    K110 — fs.list
 -------------------------- */
 async function K110_fs_list() {
+  SCXQ2.capture('fs.list', {});
   throw fault('K110', 'E_NOT_IMPL', 'fs.list adapter not wired yet');
 }
 
@@ -117,6 +155,7 @@ async function K110_fs_list() {
    K111 — fs.read
 -------------------------- */
 async function K111_fs_read() {
+  SCXQ2.capture('fs.read', {});
   throw fault('K111', 'E_NOT_IMPL', 'fs.read adapter not wired yet');
 }
 
@@ -124,6 +163,7 @@ async function K111_fs_read() {
    K112 — fs.write
 -------------------------- */
 async function K112_fs_write() {
+  SCXQ2.capture('fs.write', {});
   throw fault('K112', 'E_NOT_IMPL', 'fs.write adapter not wired yet');
 }
 
@@ -131,6 +171,7 @@ async function K112_fs_write() {
    K130 — cli.run
 -------------------------- */
 async function K130_cli_run() {
+  SCXQ2.capture('cli.run', {});
   throw fault('K130', 'E_NOT_IMPL', 'cli.run adapter not wired yet');
 }
 
@@ -138,6 +179,7 @@ async function K130_cli_run() {
    K210 — ast.parse
 -------------------------- */
 async function K210_ast_parse() {
+  SCXQ2.capture('ast.parse', {});
   throw fault('K210', 'E_NOT_IMPL', 'ast.parse adapter not wired yet');
 }
 
@@ -147,10 +189,10 @@ async function K210_ast_parse() {
 
 const HANDLERS = Object.freeze({
   K001: K001_boot,
-  K010: K010_qwen_health,
-  K011: K011_qwen_infer,
-  K020: K020_lamo_health,
-  K021: K021_lamo_infer,
+  K020: K020_qwen_health,
+  K021: K021_qwen_infer,
+  K030: K030_lamo_health,
+  K031: K031_lamo_infer,
   K110: K110_fs_list,
   K111: K111_fs_read,
   K112: K112_fs_write,
@@ -164,7 +206,7 @@ const HANDLERS = Object.freeze({
 
 async function K100_route(req) {
   try {
-    const server = await K101_manifest_server();
+    const server = await K010_manifest_server();
     const pathname = new URL(req.url).pathname;
     const route = server.routes[pathname];
     if (!route) {
@@ -181,7 +223,18 @@ async function K100_route(req) {
       return json({ ok: false, fault: `K100:E_NO_HANDLER:${route.handler}` }, 500);
     }
 
-    return await fn(req, ctx);
+    SCXQ2.capture('route.start', {
+      path: pathname,
+      method: req.method,
+      handler: route.handler
+    });
+    const response = await fn(req, ctx);
+    SCXQ2.capture('route.end', {
+      path: pathname,
+      status: response.status,
+      handler: route.handler
+    });
+    return response;
   } catch (err) {
     const fe = normalizeFault(err, 'K100');
     return json(
@@ -192,15 +245,15 @@ async function K100_route(req) {
 }
 
 /* -------------------------
-   K101 — manifest loader
+   K010 — manifest loader
 -------------------------- */
 let __server_cache = null;
-async function K101_manifest_server() {
+async function K010_manifest_server() {
   if (__server_cache) return __server_cache;
   const r = await fetch('/manifest.json', { cache: 'no-cache' });
   const m = await r.json();
   if (!m.kuhul_server) {
-    throw fault('K101', 'E_NO_SERVER', 'manifest missing kuhul_server');
+    throw fault('K010', 'E_NO_SERVER', 'manifest missing kuhul_server');
   }
   __server_cache = m.kuhul_server;
   return __server_cache;
