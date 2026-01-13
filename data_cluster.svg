@@ -1,0 +1,2599 @@
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>PRIME MX2LM - Complete Brain Cluster with Universal Data Ingestion</title>
+  
+  <defs>
+    <!-- CSS Styles -->
+    <style><![CDATA[
+      .brain-ring { fill: none; stroke: #00ffd0; stroke-width: 2.5; }
+      .brain-line { fill: none; stroke: #00ffd0; stroke-width: 2; }
+      .brain-fill { fill: #00ffd0; }
+      .active { stroke: #ff3366; stroke-width: 3; }
+      .learning { animation: pulse 2s infinite; }
+      .storing { animation: glow 1.5s infinite; }
+      .meta-layer { stroke: #a78bfa; }
+      .core-layer { stroke: #00ffd0; }
+      .op-layer { stroke: #f5c451; }
+      .safety-layer { stroke: #ff3366; }
+      .learn-layer { stroke: #16f2aa; }
+      .exec-layer { stroke: #9966ff; }
+      .id-layer { stroke: #00e0ff; }
+      
+      /* Data type colors */
+      .jar-file { stroke: #ffaa00; }
+      .python-file { stroke: #3572A5; }
+      .js-file { stroke: #f1e05a; }
+      .php-file { stroke: #4F5D95; }
+      .json-file { stroke: #ff4081; }
+      .pdf-file { stroke: #ff1744; }
+      .zip-file { stroke: #00e676; }
+      .text-file { stroke: #80cbc4; }
+      .html-file { stroke: #e34c26; }
+      .git-file { stroke: #f05032; }
+      
+      @keyframes pulse { 
+        0%, 100% { opacity: 0.7; } 
+        50% { opacity: 1; } 
+      }
+      @keyframes glow { 
+        0%, 100% { filter: drop-shadow(0 0 5px #00ffd0); } 
+        50% { filter: drop-shadow(0 0 15px #00ffd0); } 
+      }
+      @keyframes ingest { 
+        0% { transform: translateY(-10px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      
+      .brain-text { font-family: monospace; font-size: 7px; fill: #00ffd0; }
+      .stats-text { font-family: monospace; font-size: 6px; fill: #ff3366; }
+      .log-text { font-family: monospace; font-size: 6px; fill: #f5c451; }
+      .layer-text { font-family: monospace; font-size: 8px; fill: #ffffff; font-weight: bold; }
+      .file-type { font-family: monospace; font-size: 5px; fill: #80cbc4; }
+    ]]></style>
+    
+    <!-- Gradients -->
+    <linearGradient id="storageGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00ffd0" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#00aaff" stop-opacity="0.4"/>
+    </linearGradient>
+    
+    <linearGradient id="brainMeterGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff3366"/>
+      <stop offset="0.3" stop-color="#ffaa00"/>
+      <stop offset="0.6" stop-color="#00ffd0"/>
+      <stop offset="1" stop-color="#00aaff"/>
+    </linearGradient>
+    
+    <!-- Database icon -->
+    <g id="icon-db">
+      <rect x="-12" y="-8" width="24" height="16" rx="3" fill="#00ffd0" opacity="0.2" stroke="#00ffd0" stroke-width="1"/>
+      <rect x="-10" y="-6" width="20" height="4" rx="1" fill="#00ffd0" opacity="0.5"/>
+      <rect x="-8" y="2" width="16" height="4" rx="1" fill="#00ffd0" opacity="0.3"/>
+    </g>
+    
+    <!-- File type icons -->
+    <g id="icon-jar">
+      <rect x="-6" y="-6" width="12" height="12" rx="2" fill="#ffaa00" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="6" fill="#000">.jar</text>
+    </g>
+    
+    <g id="icon-py">
+      <circle cx="0" cy="0" r="6" fill="#3572A5" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="5" fill="#fff">PY</text>
+    </g>
+    
+    <g id="icon-js">
+      <rect x="-6" y="-6" width="12" height="12" rx="6" fill="#f1e05a" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="5" fill="#000">JS</text>
+    </g>
+    
+    <g id="icon-json">
+      <rect x="-6" y="-6" width="12" height="12" rx="2" fill="#ff4081" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="5" fill="#fff">{}</text>
+    </g>
+    
+    <g id="icon-pdf">
+      <rect x="-6" y="-6" width="12" height="12" rx="1" fill="#ff1744" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="5" fill="#fff">PDF</text>
+    </g>
+    
+    <g id="icon-zip">
+      <polygon points="-6,-6 6,-6 6,6 -2,6" fill="#00e676" opacity="0.7"/>
+      <polygon points="-6,-6 -6,6 -2,6" fill="#00e676" opacity="0.9"/>
+    </g>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="#05070b"/>
+  
+  <!-- PRIME MX2LM Title -->
+  <text x="256" y="20" text-anchor="middle" font-family="monospace" font-size="14" fill="#00ffd0">
+    🧠 PRIME MX2LM - UNIVERSAL BRAIN CLUSTER
+  </text>
+  
+  <!-- Universal Data Ingestion Status -->
+  <g transform="translate(256, 40)">
+    <rect x="-120" y="-10" width="240" height="20" rx="4" fill="rgba(5,7,11,0.8)" stroke="#00ffd0" stroke-width="1"/>
+    <text x="-110" y="3" text-anchor="start" font-family="monospace" font-size="8" fill="#00ffd0">Data Ingestion: </text>
+    <text x="110" y="3" text-anchor="end" font-family="monospace" font-size="8" fill="#ff3366" id="ingestion-status">READY</text>
+    
+    <!-- File Type Indicators -->
+    <g transform="translate(-80, 20)">
+      <use xlink:href="#icon-jar" x="-30" y="0"/>
+      <use xlink:href="#icon-py" x="-15" y="0"/>
+      <use xlink:href="#icon-js" x="0" y="0"/>
+      <use xlink:href="#icon-json" x="15" y="0"/>
+      <use xlink:href="#icon-pdf" x="30" y="0"/>
+      <use xlink:href="#icon-zip" x="45" y="0"/>
+    </g>
+  </g>
+  
+  <!-- Brain Meter -->
+  <g transform="translate(256, 70)">
+    <rect x="-120" y="-5" width="240" height="10" rx="5" fill="rgba(0,0,0,0.5)" stroke="#00ffd0" stroke-width="1"/>
+    <rect x="-118" y="-3" width="0" height="6" rx="3" fill="url(#brainMeterGradient)" id="brain-meter-fill"/>
+    <text x="-110" y="20" text-anchor="start" font-family="monospace" font-size="7" fill="#00ffd0">Brain Capacity: </text>
+    <text x="110" y="20" text-anchor="end" font-family="monospace" font-size="7" fill="#ff3366" id="brain-meter-text">0%</text>
+  </g>
+  
+  <!-- Recent Ingestion Log -->
+  <g transform="translate(256, 100)">
+    <rect x="-120" y="-8" width="240" height="16" rx="3" fill="rgba(5,7,11,0.7)" stroke="#f5c451" stroke-width="1"/>
+    <text x="-110" y="3" text-anchor="start" font-family="monospace" font-size="7" fill="#f5c451">Recent: </text>
+    <text x="-70" y="3" text-anchor="start" font-family="monospace" font-size="7" fill="#80cbc4" id="recent-ingestion">No files ingested yet</text>
+  </g>
+  
+  <!-- Complete Brain Cluster Grid (4 columns x 7 rows) -->
+  <g transform="translate(32, 120)">
+    
+    <!-- LAYER LABELS -->
+    <text x="-10" y="20" text-anchor="end" class="layer-text" transform="rotate(-90,-10,20)">META-COGNITION</text>
+    <text x="-10" y="84" text-anchor="end" class="layer-text" transform="rotate(-90,-10,84)">CORE TRANSFORMER</text>
+    <text x="-10" y="148" text-anchor="end" class="layer-text" transform="rotate(-90,-10,148)">OPERATIONAL</text>
+    <text x="-10" y="212" text-anchor="end" class="layer-text" transform="rotate(-90,-10,212)">SAFETY & GENERATIVE</text>
+    <text x="-10" y="276" text-anchor="end" class="layer-text" transform="rotate(-90,-10,276)">LEARNING & ADAPTATION</text>
+    <text x="-10" y="340" text-anchor="end" class="layer-text" transform="rotate(-90,-10,340)">EXECUTION ENVIRONMENT</text>
+    <text x="-10" y="404" text-anchor="end" class="layer-text" transform="rotate(-90,-10,404)">IDENTITY & RITUAL</text>
+    
+    <!-- ROW 0: Meta-Cognition Layer -->
+    <g transform="translate(20, 0)">
+      <!-- 0,0 INTROSPECTION -->
+      <g id="brain-introspect" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring meta-layer" id="introspect-ring" data-ring="introspect"/>
+        <circle cx="32" cy="32" r="8" class="brain-fill" opacity="0.7"/>
+        <path d="M20 20c6-6 18-6 24 0" class="brain-line" opacity="0.6"/>
+        <path d="M20 44c6 6 18 6 24 0" class="brain-line" opacity="0.6"/>
+        <circle cx="32" cy="32" r="3" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Introspect</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="introspect-stats">0</text>
+      </g>
+      
+      <!-- 1,0 UNCERTAINTY -->
+      <g id="brain-uncertainty" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring meta-layer" id="uncertainty-ring" data-ring="uncertainty"/>
+        <path d="M22 28c2-6 10-6 12 0 2 6-4 8-4 12" class="brain-line"/>
+        <circle cx="30" cy="46" r="3" class="brain-fill"/>
+        <path d="M18 20h28" class="brain-line" stroke-dasharray="3 2"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Uncertainty</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="uncertainty-stats">0</text>
+      </g>
+      
+      <!-- 2,0 GOAL ALIGNMENT -->
+      <g id="brain-goal" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring meta-layer" id="goal-ring" data-ring="goal"/>
+        <polygon points="32,18 42,32 32,46 22,32" class="brain-line"/>
+        <circle cx="32" cy="32" r="6" class="brain-fill"/>
+        <line x1="32" y1="18" x2="32" y2="10" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Goal Align</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="goal-stats">0</text>
+      </g>
+      
+      <!-- 3,0 MODE SWITCHING -->
+      <g id="brain-mode" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring meta-layer" id="mode-ring" data-ring="mode"/>
+        <rect x="20" y="20" width="24" height="24" rx="4" class="brain-line"/>
+        <circle cx="26" cy="26" r="4" class="brain-fill"/>
+        <circle cx="38" cy="26" r="4" class="brain-fill" opacity="0.6"/>
+        <circle cx="32" cy="38" r="4" class="brain-fill" opacity="0.4"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Mode Switch</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="mode-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 1: Core Transformer Layer -->
+    <g transform="translate(20, 64)">
+      <!-- 0,1 TOKENIZATION -->
+      <g id="brain-tokenize" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="tokenize-ring" data-ring="tokenize"/>
+        <rect x="14" y="20" width="14" height="9" rx="2" class="brain-fill"/>
+        <rect x="32" y="16" width="15" height="10" rx="2" class="brain-ring"/>
+        <rect x="49" y="20" width="12" height="9" rx="2" class="brain-ring"/>
+        <rect x="20" y="34" width="16" height="9" rx="2" class="brain-fill"/>
+        <rect x="42" y="36" width="15" height="9" rx="2" class="brain-ring"/>
+        <circle cx="32" cy="32" r="3" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Tokenization</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="tokenize-stats">0</text>
+      </g>
+      
+      <!-- 1,1 CONTEXT -->
+      <g id="brain-context" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="context-ring" data-ring="context"/>
+        <rect x="16" y="20" width="32" height="24" rx="4" class="brain-ring"/>
+        <rect x="20" y="22" width="16" height="6" rx="2" class="brain-fill"/>
+        <rect x="20" y="30" width="22" height="4" rx="2" class="brain-fill" opacity="0.7"/>
+        <rect x="20" y="37" width="18" height="4" rx="2" class="brain-fill" opacity="0.5"/>
+        <rect x="20" y="44" width="14" height="4" rx="2" class="brain-fill" opacity="0.3"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Context</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="context-stats">0</text>
+      </g>
+      
+      <!-- 2,1 ATTENTION -->
+      <g id="brain-attention" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="attention-ring" data-ring="attention"/>
+        <path d="M14 32c4-5 11-11 18-11s14 6 18 11c-4 5-11 11-18 11S18 37 14 32z" class="brain-line"/>
+        <circle cx="32" cy="32" r="5" class="brain-fill"/>
+        <circle cx="32" cy="32" r="10" class="brain-ring" opacity="0.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Attention</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="attention-stats">0</text>
+      </g>
+      
+      <!-- 3,1 REASONING -->
+      <g id="brain-reason" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="reason-ring" data-ring="reason"/>
+        <path d="M18 40c3-7 6-11 11-11 7 0 5 10 12 10 4 0 7-3 10-8" class="brain-line"/>
+        <circle cx="20" cy="22" r="3" class="brain-fill"/>
+        <circle cx="30" cy="27" r="3" class="brain-fill"/>
+        <circle cx="40" cy="24" r="3" class="brain-fill"/>
+        <line x1="20" y1="22" x2="30" y2="27" class="brain-line" stroke-width="1.5"/>
+        <line x1="30" y1="27" x2="40" y2="24" class="brain-line" stroke-width="1.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Reasoning</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="reason-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 2: Operational Layer -->
+    <g transform="translate(20, 128)">
+      <!-- 0,2 ROUTING -->
+      <g id="brain-routing" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="routing-ring" data-ring="routing"/>
+        <circle cx="32" cy="32" r="5" class="brain-fill"/>
+        <path d="M32 32L18 18M32 32L46 18M32 32L18 46M32 32L46 46" class="brain-line"/>
+        <circle cx="18" cy="18" r="3.5" class="brain-ring"/>
+        <circle cx="46" cy="18" r="3.5" class="brain-ring"/>
+        <circle cx="18" cy="46" r="3.5" class="brain-ring"/>
+        <circle cx="46" cy="46" r="3.5" class="brain-ring"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Routing</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="routing-stats">0</text>
+      </g>
+      
+      <!-- 1,2 EXECUTION -->
+      <g id="brain-exec" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="exec-ring" data-ring="exec"/>
+        <rect x="18" y="22" width="28" height="20" rx="3" class="brain-ring"/>
+        <polygon points="24,24 38,32 24,40" class="brain-fill"/>
+        <rect x="20" y="44" width="24" height="3" rx="1.5" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Execution</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="exec-stats">0</text>
+      </g>
+      
+      <!-- 2,2 COMPRESSION -->
+      <g id="brain-compress" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="compress-ring" data-ring="compress"/>
+        <rect x="14" y="20" width="14" height="10" rx="2" class="brain-ring"/>
+        <rect x="40" y="34" width="14" height="10" rx="2" class="brain-fill"/>
+        <path d="M28 25h6l2.5 5 2.5-5h6" class="brain-line"/>
+        <path d="M34 38h-5" class="brain-line"/>
+        <path d="M40 26L48 32" class="brain-line" stroke-dasharray="3 2"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Compression</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="compress-stats">0</text>
+      </g>
+      
+      <!-- 3,2 MEMORY -->
+      <g id="brain-memory" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="memory-ring" data-ring="memory"/>
+        <rect x="18" y="20" width="18" height="24" rx="3" class="brain-ring"/>
+        <rect x="32" y="20" width="18" height="24" rx="3" class="brain-ring" opacity="0.6"/>
+        <line x1="20" y1="25" x2="34" y2="25" class="brain-line"/>
+        <line x1="20" y1="31" x2="34" y2="31" class="brain-line"/>
+        <line x1="34" y1="25" x2="46" y2="25" class="brain-line" opacity="0.7"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Memory</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="memory-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 3: Safety & Generative Layer -->
+    <g transform="translate(20, 192)">
+      <!-- 0,3 SAFETY -->
+      <g id="brain-safety" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="safety-ring" data-ring="safety"/>
+        <path d="M32 16l12 7v10c0 8-6 14-12 16-6-2-12-8-12-16V23z" class="brain-line"/>
+        <circle cx="32" cy="29" r="4" class="brain-fill"/>
+        <rect x="28" y="35" width="8" height="9" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Safety</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="safety-stats">0</text>
+      </g>
+      
+      <!-- 1,3 GENERATION -->
+      <g id="brain-generate" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="generate-ring" data-ring="generate"/>
+        <path d="M20 40c3-6 7-9 11-9 5 0 8 3 12 3 4 0 8-3 11-7" class="brain-line"/>
+        <circle cx="22" cy="24" r="3" class="brain-fill"/>
+        <circle cx="32" cy="23" r="3" class="brain-fill"/>
+        <circle cx="42" cy="26" r="3" class="brain-fill"/>
+        <path d="M38 16l3 4 4 1.5-4 1.5-3 4-1.5-4-4-1.5 4-1.5z" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Generation</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="generate-stats">0</text>
+      </g>
+      
+      <!-- 2,3 SELF-CORRECTION -->
+      <g id="brain-correct" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="correct-ring" data-ring="correct"/>
+        <path d="M20 38c3-7 7-11 12-11 6 0 10 4 13 11" class="brain-line"/>
+        <path d="M22 24l8 6 14-14" class="brain-line" stroke-width="2.5"/>
+        <circle cx="22" cy="24" r="3" class="brain-fill"/>
+        <circle cx="44" cy="16" r="3" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Correction</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="correct-stats">0</text>
+      </g>
+      
+      <!-- 3,3 KNOWLEDGE -->
+      <g id="brain-knowledge" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="knowledge-ring" data-ring="knowledge"/>
+        <path d="M18 40V26l8-3 8 3 8-3 8 3v14" class="brain-line"/>
+        <line x1="26" y1="23" x2="26" y2="42" class="brain-line" stroke-width="1.5"/>
+        <line x1="38" y1="20" x2="38" y2="42" class="brain-line" stroke-width="1.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Knowledge</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="knowledge-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 4: Learning & Adaptation Layer -->
+    <g transform="translate(20, 256)">
+      <!-- 0,4 CURRICULUM PHASES -->
+      <g id="brain-curriculum" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="curriculum-ring" data-ring="curriculum"/>
+        <rect x="18" y="20" width="10" height="8" rx="2" class="brain-fill" opacity="0.4"/>
+        <rect x="24" y="28" width="10" height="8" rx="2" class="brain-fill" opacity="0.7"/>
+        <rect x="30" y="36" width="10" height="8" rx="2" class="brain-fill"/>
+        <path d="M18 22h-4M24 30h-4M30 38h-4" class="brain-line" opacity="0.6"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Curriculum</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="curriculum-stats">0</text>
+      </g>
+      
+      <!-- 1,4 SKILL ACQUISITION -->
+      <g id="brain-skill" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="skill-ring" data-ring="skill"/>
+        <circle cx="22" cy="28" r="4" class="brain-fill"/>
+        <circle cx="42" cy="28" r="4" class="brain-fill" opacity="0.7"/>
+        <circle cx="32" cy="40" r="4" class="brain-fill"/>
+        <path d="M22 28L32 40L42 28" class="brain-line"/>
+        <path d="M42 18v6M39 21h6" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Skill Acquire</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="skill-stats">0</text>
+      </g>
+      
+      <!-- 2,4 SYMBOLIC COMPRESSION -->
+      <g id="brain-symbolic" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="symbolic-ring" data-ring="symbolic"/>
+        <rect x="16" y="20" width="12" height="8" rx="2" class="brain-ring"/>
+        <rect x="36" y="38" width="12" height="8" rx="2" class="brain-fill"/>
+        <path d="M28 24l4 4 4-4" class="brain-line"/>
+        <path d="M32 28v5" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Symbolic</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="symbolic-stats">0</text>
+      </g>
+      
+      <!-- 3,4 FEEDBACK INTEGRATION -->
+      <g id="brain-feedback" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="feedback-ring" data-ring="feedback"/>
+        <path d="M22 24c4-4 16-4 20 2" class="brain-line"/>
+        <polygon points="42,26 44,18 48,22" class="brain-fill"/>
+        <path d="M42 40c-4 4-16 4-20-2" class="brain-line"/>
+        <polygon points="22,38 20,46 16,42" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Feedback</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="feedback-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 5: Execution-Environment Layer -->
+    <g transform="translate(20, 320)">
+      <!-- 0,5 TOOL INTERFACES -->
+      <g id="brain-tools" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="tools-ring" data-ring="tools"/>
+        <rect x="18" y="22" width="10" height="20" rx="2" class="brain-ring"/>
+        <rect x="34" y="22" width="10" height="8" rx="2" class="brain-fill"/>
+        <rect x="34" y="34" width="10" height="8" rx="2" class="brain-fill" opacity="0.7"/>
+        <path d="M28 32h6" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Tool Interfaces</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="tools-stats">0</text>
+      </g>
+      
+      <!-- 1,5 SANDBOXED SIMULATION -->
+      <g id="brain-sandbox" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="sandbox-ring" data-ring="sandbox"/>
+        <rect x="18" y="22" width="28" height="20" rx="4" class="brain-line"/>
+        <circle cx="26" cy="32" r="4" class="brain-fill" opacity="0.7"/>
+        <circle cx="38" cy="32" r="4" class="brain-fill" opacity="0.4"/>
+        <path d="M22 26h20" class="brain-line" opacity="0.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Sandbox</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="sandbox-stats">0</text>
+      </g>
+      
+      <!-- 2,5 STATE PERSISTENCE -->
+      <g id="brain-state" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="state-ring" data-ring="state"/>
+        <ellipse cx="32" cy="24" rx="10" ry="5" class="brain-line"/>
+        <path d="M22 24v12c0 3 4 5 10 5s10-2 10-5V24" class="brain-line"/>
+        <line x1="32" y1="24" x2="32" y2="30" class="brain-line"/>
+        <line x1="32" y1="30" x2="38" y2="30" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">State Persist</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="state-stats">0</text>
+      </g>
+      
+      <!-- 3,5 MESH AWARENESS -->
+      <g id="brain-mesh" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="mesh-ring" data-ring="mesh"/>
+        <circle cx="32" cy="32" r="5" class="brain-fill"/>
+        <circle cx="18" cy="24" r="3" class="brain-ring"/>
+        <circle cx="46" cy="24" r="3" class="brain-ring"/>
+        <circle cx="22" cy="42" r="3" class="brain-ring"/>
+        <circle cx="42" cy="42" r="3" class="brain-ring"/>
+        <path d="M32 32L18 24L22 42L32 32L46 24L42 42Z" class="brain-line" opacity="0.7"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Mesh Aware</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="mesh-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 6: Identity & Ritual Layer -->
+    <g transform="translate(20, 384)">
+      <!-- 0,6 SPLASH BOOT RITUAL -->
+      <g id="brain-splash" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="splash-ring" data-ring="splash"/>
+        <circle cx="32" cy="32" r="4" class="brain-fill"/>
+        <path d="M32 16v6M32 42v6M16 32h6M42 32h6" class="brain-line"/>
+        <path d="M22 20l4 4M42 20l-4 4M22 44l4-4M42 44l-4-4" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Splash Boot</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="splash-stats">0</text>
+      </g>
+      
+      <!-- 1,6 COGNITIVE FINGERPRINT -->
+      <g id="brain-fingerprint" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="fingerprint-ring" data-ring="fingerprint"/>
+        <circle cx="32" cy="32" r="4" class="brain-fill"/>
+        <path d="M24 32c0-4 3-7 8-7 5 0 8 3 8 7 0 6-4 9-8 9-3 0-5-2-6-4" class="brain-line" opacity="0.7"/>
+        <path d="M26 28c0-3 2-5 6-5 4 0 6 2 6 5" class="brain-line" opacity="0.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Cog Fingerprint</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="fingerprint-stats">0</text>
+      </g>
+      
+      <!-- 2,6 RUNTIME PERSONA -->
+      <g id="brain-persona" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="persona-ring" data-ring="persona"/>
+        <path d="M20 24h24v12c0 6-5 10-12 10s-12-4-12-10V24z" class="brain-line"/>
+        <circle cx="26" cy="30" r="2.5" class="brain-fill"/>
+        <circle cx="38" cy="30" r="2.5" class="brain-fill"/>
+        <path d="M28 36c2 2 4 2 6 0" class="brain-line" opacity="0.8"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Runtime Persona</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="persona-stats">0</text>
+      </g>
+      
+      <!-- 3,6 NODE HERALDRY -->
+      <g id="brain-heraldry" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="heraldry-ring" data-ring="heraldry"/>
+        <path d="M24 18h16v12c0 8-5 12-8 14-3-2-8-6-8-14V18z" class="brain-line"/>
+        <path d="M24 24h16" class="brain-line"/>
+        <path d="M32 18v26" class="brain-line" opacity="0.7"/>
+        <path d="M28 30l4 4 4-4" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Node Heraldry</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="heraldry-stats">0</text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- RLHF Storage & Control Panel -->
+  <g transform="translate(400, 256)">
+    <!-- Storage Hub -->
+    <circle cx="0" cy="0" r="40" fill="none" stroke="url(#storageGradient)" stroke-width="4" opacity="0.3"/>
+    <use xlink:href="#icon-db" x="0" y="0"/>
+    
+    <!-- Storage Stats -->
+    <text x="0" y="-50" text-anchor="middle" class="brain-text" font-size="9">PRIME MX2LM Storage</text>
+    <text x="0" y="-40" text-anchor="middle" class="stats-text" id="storage-status">IndexedDB: Ready</text>
+    <text x="0" y="40" text-anchor="middle" class="brain-text" font-size="8" id="total-activity">0 total events</text>
+    <text x="0" y="50" text-anchor="middle" class="stats-text" id="active-nodes">0 active nodes</text>
+    <text x="0" y="60" text-anchor="middle" class="log-text" id="last-event">Ready</text>
+  </g>
+  
+  <!-- Control Panel -->
+  <g transform="translate(400, 350)">
+    <rect x="-80" y="-15" width="160" height="30" rx="6" fill="rgba(5,7,11,0.8)" stroke="#00ffd0" stroke-width="1"/>
+    
+    <!-- Universal Data Ingestion -->
+    <g transform="translate(-60, 0)" style="cursor: pointer" id="ingest-data-btn">
+      <circle cx="0" cy="0" r="6" fill="#16f2aa" opacity="0.7"/>
+      <path d="M-3,-3 L3,3 M-3,3 L3,-3" stroke="#05070b" stroke-width="1.5"/>
+      <text x="0" y="15" text-anchor="middle" class="log-text">Ingest Data</text>
+    </g>
+    
+    <!-- Simulate Activity -->
+    <g transform="translate(-20, 0)" style="cursor: pointer" id="simulate-activity-btn">
+      <circle cx="0" cy="0" r="6" fill="#ff3366" opacity="0.7"/>
+      <polygon points="-3,2 3,2 0,-2" fill="#05070b"/>
+      <text x="0" y="15" text-anchor="middle" class="log-text">Simulate</text>
+    </g>
+    
+    <!-- Train Brain -->
+    <g transform="translate(20, 0)" style="cursor: pointer" id="train-brain-btn">
+      <circle cx="0" cy="0" r="6" fill="#00e0ff" opacity="0.7"/>
+      <path d="M0,-4 L0,4 M-3,0 L3,0" stroke="#05070b" stroke-width="1.5"/>
+      <text x="0" y="15" text-anchor="middle" class="log-text">Train</text>
+    </g>
+    
+    <!-- Export Data -->
+    <g transform="translate(60, 0)" style="cursor: pointer" id="export-data-btn">
+      <circle cx="0" cy="0" r="6" fill="#a78bfa" opacity="0.7"/>
+      <rect x="-2" y="-2" width="4" height="4" fill="#05070b"/>
+      <path d="M0,-4 L0,-1" stroke="#05070b" stroke-width="1.5"/>
+      <text x="0" y="15" text-anchor="middle" class="log-text">Export</text>
+    </g>
+  </g>
+  
+  <!-- Activity Log -->
+  <g transform="translate(256, 450)">
+    <rect x="-200" y="-15" width="400" height="30" rx="6" fill="rgba(5,7,11,0.7)" stroke="#f5c451" stroke-width="1"/>
+    <text x="-190" y="-2" text-anchor="start" class="log-text">Activity:</text>
+    <text x="-160" y="-2" text-anchor="start" class="log-text" id="current-activity">PRIME MX2LM Brain Cluster ready for universal data ingestion</text>
+    <text x="190" y="-2" text-anchor="end" class="log-text" id="activity-time">-</text>
+  </g>
+  
+  <!-- Embedded PRIME MX2LM Brain Cluster Runtime -->
+  <script type="application/javascript">
+<![CDATA[
+    // PRIME MX2LM Complete Brain Cluster with Universal Data Ingestion
+    class PrimeMX2LMBrainCluster {
+      constructor() {
+        this.MAX_BRAIN_CAPACITY = 1000000; // 1M tokens capacity
+        
+        // All 28 brain nodes organized by layer
+        this.brainNodes = {
+          // Meta-Cognition Layer
+          'introspect': { count: 0, lastActive: 0, layer: 'meta', dataTypes: ['meta', 'reflection'] },
+          'uncertainty': { count: 0, lastActive: 0, layer: 'meta', dataTypes: ['uncertain', 'probabilistic'] },
+          'goal': { count: 0, lastActive: 0, layer: 'meta', dataTypes: ['objective', 'purpose'] },
+          'mode': { count: 0, lastActive: 0, layer: 'meta', dataTypes: ['context', 'state'] },
+          
+          // Core Transformer Layer
+          'tokenize': { count: 0, lastActive: 0, layer: 'core', dataTypes: ['text', 'code', 'binary'] },
+          'context': { count: 0, lastActive: 0, layer: 'core', dataTypes: ['semantic', 'relational'] },
+          'attention': { count: 0, lastActive: 0, layer: 'core', dataTypes: ['focus', 'importance'] },
+          'reason': { count: 0, lastActive: 0, layer: 'core', dataTypes: ['logic', 'inference'] },
+          
+          // Operational Layer
+          'routing': { count: 0, lastActive: 0, layer: 'op', dataTypes: ['distribution', 'network'] },
+          'exec': { count: 0, lastActive: 0, layer: 'op', dataTypes: ['action', 'implementation'] },
+          'compress': { count: 0, lastActive: 0, layer: 'op', dataTypes: ['compression', 'optimization'] },
+          'memory': { count: 0, lastActive: 0, layer: 'op', dataTypes: ['storage', 'recall'] },
+          
+          // Safety & Generative Layer
+          'safety': { count: 0, lastActive: 0, layer: 'safety', dataTypes: ['validation', 'security'] },
+          'generate': { count: 0, lastActive: 0, layer: 'safety', dataTypes: ['creation', 'synthesis'] },
+          'correct': { count: 0, lastActive: 0, layer: 'safety', dataTypes: ['error', 'repair'] },
+          'knowledge': { count: 0, lastActive: 0, layer: 'safety', dataTypes: ['facts', 'information'] },
+          
+          // Learning & Adaptation Layer
+          'curriculum': { count: 0, lastActive: 0, layer: 'learn', dataTypes: ['progression', 'education'] },
+          'skill': { count: 0, lastActive: 0, layer: 'learn', dataTypes: ['ability', 'competence'] },
+          'symbolic': { count: 0, lastActive: 0, layer: 'learn', dataTypes: ['abstraction', 'representation'] },
+          'feedback': { count: 0, lastActive: 0, layer: 'learn', dataTypes: ['evaluation', 'improvement'] },
+          
+          // Execution Environment Layer
+          'tools': { count: 0, lastActive: 0, layer: 'exec', dataTypes: ['interface', 'integration'] },
+          'sandbox': { count: 0, lastActive: 0, layer: 'exec', dataTypes: ['isolation', 'simulation'] },
+          'state': { count: 0, lastActive: 0, layer: 'exec', dataTypes: ['persistence', 'continuity'] },
+          'mesh': { count: 0, lastActive: 0, layer: 'exec', dataTypes: ['network', 'distribution'] },
+          
+          // Identity & Ritual Layer
+          'splash': { count: 0, lastActive: 0, layer: 'id', dataTypes: ['initiation', 'ceremony'] },
+          'fingerprint': { count: 0, lastActive: 0, layer: 'id', dataTypes: ['identity', 'signature'] },
+          'persona': { count: 0, lastActive: 0, layer: 'id', dataTypes: ['character', 'role'] },
+          'heraldry': { count: 0, lastActive: 0, layer: 'id', dataTypes: ['symbolism', 'tradition'] }
+        };
+        
+        // Universal Data Ingestion Registry
+        this.dataTypes = {
+          '.jar': { processor: 'java', color: '#ffaa00', icon: 'icon-jar' },
+          '.py': { processor: 'python', color: '#3572A5', icon: 'icon-py' },
+          '.js': { processor: 'javascript', color: '#f1e05a', icon: 'icon-js' },
+          '.php': { processor: 'php', color: '#4F5D95', icon: null },
+          '.json': { processor: 'json', color: '#ff4081', icon: 'icon-json' },
+          '.pdf': { processor: 'pdf', color: '#ff1744', icon: 'icon-pdf' },
+          '.zip': { processor: 'archive', color: '#00e676', icon: 'icon-zip' },
+          '.tar': { processor: 'archive', color: '#00e676', icon: null },
+          '.pack': { processor: 'git', color: '#f05032', icon: null },
+          '.rev': { processor: 'git', color: '#f05032', icon: null },
+          '.idx': { processor: 'git', color: '#f05032', icon: null },
+          '.html': { processor: 'html', color: '#e34c26', icon: null },
+          '.md': { processor: 'markdown', color: '#80cbc4', icon: null },
+          '.txt': { processor: 'text', color: '#80cbc4', icon: null },
+          '*': { processor: 'unknown', color: '#666666', icon: null }
+        };
+        
+        // Ingestion History
+        this.ingestionHistory = [];
+        this.totalTokensIngested = 0;
+        this.brainMeterPercentage = 0;
+        
+        // RLHF Storage
+        this.storage = {
+          db: null,
+          ready: false,
+          stats: {
+            totalEvents: 0,
+            activeNodes: 0,
+            lastUpdate: null,
+            sessionId: this.generateSessionId()
+          }
+        };
+
+        this.PRIME_DB_VERSION = 4;
+        
+        // Initialize
+        this.initRLHFStorage();
+        this.setupEventHandlers();
+        this.startBrainActivity();
+        this.updateAllDisplays();
+        
+        console.log('🧠 PRIME MX2LM Brain Cluster (28 nodes) initialized');
+      }
+      
+      // Initialize IndexedDB
+      async initRLHFStorage() {
+        try {
+          if (!window.indexedDB) {
+            this.updateStorageStatus('IndexedDB not available');
+            return;
+          }
+          
+          const request = indexedDB.open('prime-mx2lm-brain', this.PRIME_DB_VERSION);
+          
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            
+            // Brain Activity Events
+            if (!db.objectStoreNames.contains('brain_events')) {
+              const eventsStore = db.createObjectStore('brain_events', { keyPath: 'id' });
+              eventsStore.createIndex('timestamp', 'timestamp', { unique: false });
+              eventsStore.createIndex('node', 'node', { unique: false });
+              eventsStore.createIndex('layer', 'layer', { unique: false });
+            }
+            
+            // Data Ingestion Log
+            if (!db.objectStoreNames.contains('data_ingestion')) {
+              const ingestionStore = db.createObjectStore('data_ingestion', { keyPath: 'id' });
+              ingestionStore.createIndex('fileType', 'fileType', { unique: false });
+              ingestionStore.createIndex('timestamp', 'timestamp', { unique: false });
+            }
+            
+            // RLHF Feedback
+            if (!db.objectStoreNames.contains('rlhf_feedback')) {
+              const feedbackStore = db.createObjectStore('rlhf_feedback', { keyPath: 'id' });
+              feedbackStore.createIndex('node', 'node', { unique: false });
+              feedbackStore.createIndex('score', 'score', { unique: false });
+            }
+          };
+          
+          request.onsuccess = (event) => {
+            this.storage.db = event.target.result;
+            this.storage.ready = true;
+            
+            this.loadStorageStats();
+            this.updateStorageStatus('IndexedDB: Ready');
+            this.logActivity('PRIME MX2LM storage initialized - Ready for universal data ingestion');
+          };
+          
+          request.onerror = (event) => {
+            console.error('IndexedDB error:', event.target.error);
+            this.updateStorageStatus('IndexedDB: Error');
+          };
+          
+        } catch (error) {
+          console.error('Storage init error:', error);
+          this.updateStorageStatus('Storage error');
+        }
+      }
+      
+      // Universal Data Ingestion
+      ingestFile(filename, fileType = null) {
+        const extension = fileType || this.getFileExtension(filename);
+        const dataType = this.dataTypes[extension] || this.dataTypes['*'];
+        
+        // Calculate simulated token count
+        const tokenCount = 100 + Math.floor(Math.random() * 900);
+        this.totalTokensIngested += tokenCount;
+        
+        // Update brain meter
+        this.brainMeterPercentage = Math.min(100, (this.totalTokensIngested / this.MAX_BRAIN_CAPACITY) * 100);
+        
+        // Determine which brain nodes to activate based on file type
+        const relevantNodes = this.getRelevantBrainNodes(extension);
+        
+        // Activate relevant nodes
+        relevantNodes.forEach(node => {
+          this.triggerBrainNode(node, filename, extension);
+        });
+        
+        // Add to ingestion history
+        const ingestionEvent = {
+          filename,
+          extension,
+          tokenCount,
+          timestamp: Date.now(),
+          relevantNodes,
+          dataType: dataType.processor
+        };
+        
+        this.ingestionHistory.unshift(ingestionEvent);
+        if (this.ingestionHistory.length > 5) {
+          this.ingestionHistory.pop();
+        }
+        
+        // Update recent ingestion display
+        this.updateRecentIngestionDisplay();
+        
+        // Update brain meter
+        this.updateBrainMeterDisplay();
+        
+        // Save to storage
+        if (this.storage.ready) {
+          this.saveIngestionToStorage(ingestionEvent);
+        }
+        
+        // Log activity
+        this.logActivity(`Ingested: ${filename} (${extension}, ${tokenCount} tokens)`);
+        
+        return ingestionEvent;
+      }
+      
+      // Get relevant brain nodes for file type
+      getRelevantBrainNodes(extension) {
+        const nodes = [];
+        
+        // Always activate core processing nodes
+        nodes.push('tokenize', 'context', 'memory');
+        
+        // File type specific nodes
+        switch(extension) {
+          case '.jar':
+          case '.py':
+          case '.js':
+          case '.php':
+            nodes.push('reason', 'exec', 'tools', 'sandbox');
+            break;
+          case '.json':
+            nodes.push('reason', 'symbolic');
+            break;
+          case '.pdf':
+          case '.md':
+          case '.txt':
+            nodes.push('knowledge', 'compress', 'attention');
+            break;
+          case '.zip':
+          case '.tar':
+            nodes.push('compress', 'routing', 'mesh');
+            break;
+          case '.pack':
+          case '.rev':
+          case '.idx':
+            nodes.push('memory', 'state', 'fingerprint');
+            break;
+          case '.html':
+            nodes.push('generate', 'tools', 'sandbox');
+            break;
+        }
+        
+        // Limit to 5 nodes max for visualization
+        return nodes.slice(0, 5);
+      }
+      
+      // Get file extension
+      getFileExtension(filename) {
+        const match = filename.match(/\.([a-z0-9]+)$/i);
+        return match ? '.' + match[1].toLowerCase() : '.*';
+      }
+      
+      // Trigger brain node activity
+      triggerBrainNode(nodeId, source = null, fileType = null) {
+        if (!this.brainNodes[nodeId]) return;
+        
+        this.brainNodes[nodeId].count++;
+        this.brainNodes[nodeId].lastActive = Date.now();
+        
+        this.highlightBrainNode(nodeId, fileType);
+        this.updateNodeDisplay(nodeId);
+        this.updateGlobalStats();
+        
+        if (source) {
+          console.log(`🧠 ${nodeId} activated by ${source}`);
+        }
+        
+        // Save to IndexedDB
+        if (this.storage.ready) {
+          this.saveToStorage(nodeId, source);
+        }
+      }
+      
+      // Highlight brain node with file type color
+      highlightBrainNode(nodeId, fileType = null) {
+        const ring = document.querySelector(`[data-ring="${nodeId}"]`);
+        if (ring) {
+          let color = '#00ffd0'; // Default
+          
+          if (fileType) {
+            const dataType = this.dataTypes[fileType];
+            if (dataType) {
+              color = dataType.color;
+            }
+          }
+          
+          ring.style.stroke = color;
+          ring.style.strokeWidth = '3';
+          
+          setTimeout(() => {
+            ring.style.stroke = '';
+            ring.style.strokeWidth = '2.5';
+          }, 1000);
+        }
+      }
+      
+      // Save ingestion to storage
+      async saveIngestionToStorage(ingestionEvent) {
+        try {
+          const event = {
+            id: `ingest_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            timestamp: Date.now(),
+            filename: ingestionEvent.filename,
+            fileType: ingestionEvent.extension,
+            tokenCount: ingestionEvent.tokenCount,
+            relevantNodes: ingestionEvent.relevantNodes,
+            processor: ingestionEvent.dataType,
+            sessionId: this.storage.stats.sessionId
+          };
+          
+          const transaction = this.storage.db.transaction(['data_ingestion'], 'readwrite');
+          const store = transaction.objectStore('data_ingestion');
+          
+          await store.add(event);
+          
+          this.storage.stats.totalEvents++;
+          this.storage.stats.lastUpdate = Date.now();
+          
+          this.updateStorageDisplay();
+          
+        } catch (error) {
+          console.error('Save ingestion error:', error);
+        }
+      }
+      
+      // Save to IndexedDB
+      async saveToStorage(nodeId, source = null) {
+        try {
+          const event = {
+            id: `brain_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            timestamp: Date.now(),
+            node: nodeId,
+            layer: this.brainNodes[nodeId].layer,
+            count: this.brainNodes[nodeId].count,
+            source: source,
+            sessionId: this.storage.stats.sessionId,
+            metadata: {
+              version: 'prime-3.0',
+              type: 'brain_activity'
+            }
+          };
+          
+          const transaction = this.storage.db.transaction(['brain_events'], 'readwrite');
+          const store = transaction.objectStore('brain_events');
+          
+          await store.add(event);
+          
+          this.storage.stats.totalEvents++;
+          this.storage.stats.lastUpdate = Date.now();
+          
+          this.updateStorageDisplay();
+          
+        } catch (error) {
+          console.error('Save to storage error:', error);
+        }
+      }
+      
+      // Load storage stats
+      async loadStorageStats() {
+        if (!this.storage.ready) return;
+        
+        try {
+          // Count brain events
+          const eventsTransaction = this.storage.db.transaction(['brain_events'], 'readonly');
+          const eventsStore = eventsTransaction.objectStore('brain_events');
+          const eventsCount = await eventsStore.count();
+          
+          // Count ingestion events
+          const ingestTransaction = this.storage.db.transaction(['data_ingestion'], 'readonly');
+          const ingestStore = ingestTransaction.objectStore('data_ingestion');
+          const ingestCount = await ingestStore.count();
+          
+          this.storage.stats.totalEvents = (eventsCount.result || 0) + (ingestCount.result || 0);
+          this.updateStorageDisplay();
+          
+        } catch (error) {
+          console.error('Load stats error:', error);
+        }
+      }
+      
+      // Simulate universal data ingestion
+      simulateDataIngestion() {
+        const fileTypes = [
+          { name: 'cline-1.0.9.jar', type: '.jar' },
+          { name: 'modern_qwen_trainer.py', type: '.py' },
+          { name: 'xjson-runtime.js', type: '.js' },
+          { name: 'asx-qwen-training-v1.jsonl', type: '.json' },
+          { name: 'ASX_Brimstone_LoreBible_v1.0.0.pdf', type: '.pdf' },
+          { name: 'ASX-Mx2LM-Micronaut.zip', type: '.zip' },
+          { name: 'pack-ae2325eacd28e525371f74de8ca894c95df78ae8.pack', type: '.pack' },
+          { name: 'prime_os_chat.html', type: '.html' },
+          { name: 'README.md', type: '.md' }
+        ];
+        
+        // Simulate ingesting 3-5 random files
+        const count = 3 + Math.floor(Math.random() * 3);
+        const selectedFiles = [];
+        
+        for (let i = 0; i < count; i++) {
+          const file = fileTypes[Math.floor(Math.random() * fileTypes.length)];
+          selectedFiles.push(file);
+          
+          setTimeout(() => {
+            this.ingestFile(file.name, file.type);
+          }, i * 800);
+        }
+        
+        this.logActivity(`Simulating ingestion of ${count} files: ${selectedFiles.map(f => f.type).join(', ')}`);
+      }
+      
+      // Train the brain (simulated)
+      trainBrain() {
+        this.logActivity("🧠 Initiating PRIME MX2LM training sequence...");
+        
+        // Activate learning nodes
+        ['curriculum', 'skill', 'feedback', 'symbolic'].forEach((node, i) => {
+          setTimeout(() => {
+            this.triggerBrainNode(node, 'training');
+          }, i * 500);
+        });
+        
+        // Simulate brain meter increase
+        setTimeout(() => {
+          const increase = 5 + Math.random() * 15;
+          this.brainMeterPercentage = Math.min(100, this.brainMeterPercentage + increase);
+          this.updateBrainMeterDisplay();
+          this.logActivity(`Training complete! Brain capacity +${increase.toFixed(1)}%`);
+        }, 2000);
+      }
+      
+      // Export all data
+      async exportAllData() {
+        try {
+          const exportData = {
+            metadata: {
+              exportDate: new Date().toISOString(),
+              version: 'PRIME-MX2LM-3.0',
+              system: 'PRIME MX2LM Universal Brain Cluster',
+              sessionId: this.storage.stats.sessionId
+            },
+            brainNodes: this.brainNodes,
+            ingestionHistory: this.ingestionHistory,
+            totalTokensIngested: this.totalTokensIngested,
+            brainMeterPercentage: this.brainMeterPercentage,
+            storageStats: this.storage.stats,
+            dataTypesSupported: Object.keys(this.dataTypes),
+            summary: {
+              totalNodes: 28,
+              activeNodes: Object.keys(this.brainNodes).filter(k => this.brainNodes[k].count > 0).length,
+              totalEvents: this.storage.stats.totalEvents,
+              layers: ['meta', 'core', 'op', 'safety', 'learn', 'exec', 'id']
+            }
+          };
+          
+          const dataStr = JSON.stringify(exportData, null, 2);
+          const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+          
+          const link = document.createElement('a');
+          link.setAttribute('href', dataUri);
+          link.setAttribute('download', `prime-mx2lm-brain-${Date.now()}.json`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          this.logActivity('PRIME MX2LM brain data exported');
+          
+        } catch (error) {
+          console.error('Export error:', error);
+          this.logActivity('Export failed');
+        }
+      }
+      
+      // Start brain activity simulation
+      startBrainActivity() {
+        // Random activity every 3-8 seconds
+        setInterval(() => {
+          if (Math.random() > 0.7) {
+            const node = this.getRandomBrainNode();
+            this.triggerBrainNode(node, 'background_activity');
+          }
+        }, 3000 + Math.random() * 5000);
+        
+        // Periodic display updates
+        setInterval(() => {
+          this.updateAllDisplays();
+        }, 3000);
+      }
+      
+      // Update all displays
+      updateAllDisplays() {
+        this.updateNodeDisplays();
+        this.updateGlobalStats();
+        this.updateStorageDisplay();
+        this.updateBrainMeterDisplay();
+      }
+      
+      // Update node displays
+      updateNodeDisplays() {
+        Object.keys(this.brainNodes).forEach(node => {
+          this.updateNodeDisplay(node);
+        });
+      }
+      
+      // Update single node display
+      updateNodeDisplay(nodeId) {
+        const statsElement = document.getElementById(`${nodeId}-stats`);
+        if (statsElement) {
+          statsElement.textContent = this.brainNodes[nodeId].count;
+          
+          // Visual feedback for recent activity
+          if (Date.now() - this.brainNodes[nodeId].lastActive < 1500) {
+            statsElement.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+              if (statsElement) statsElement.style.transform = 'scale(1)';
+            }, 300);
+          }
+        }
+      }
+      
+      // Update global stats
+      updateGlobalStats() {
+        const activeNodes = Object.keys(this.brainNodes).filter(k => this.brainNodes[k].count > 0).length;
+        const totalActivity = Object.values(this.brainNodes).reduce((sum, node) => sum + node.count, 0);
+        
+        const activeElement = document.getElementById('active-nodes');
+        const totalElement = document.getElementById('total-activity');
+        
+        if (activeElement) activeElement.textContent = `${activeNodes}/28 active nodes`;
+        if (totalElement) totalElement.textContent = `${totalActivity} total events`;
+        
+        this.storage.stats.activeNodes = activeNodes;
+      }
+      
+      // Update recent ingestion display
+      updateRecentIngestionDisplay() {
+        const recentElement = document.getElementById('recent-ingestion');
+        if (recentElement && this.ingestionHistory.length > 0) {
+          const latest = this.ingestionHistory[0];
+          recentElement.textContent = `${latest.filename} (${latest.tokenCount} tokens)`;
+        }
+      }
+      
+      // Update brain meter display
+      updateBrainMeterDisplay() {
+        const meterFill = document.getElementById('brain-meter-fill');
+        const meterText = document.getElementById('brain-meter-text');
+        const ingestionStatus = document.getElementById('ingestion-status');
+        
+        if (meterFill) {
+          const width = (236 * this.brainMeterPercentage) / 100;
+          meterFill.setAttribute('width', width);
+        }
+        
+        if (meterText) {
+          meterText.textContent = `${this.brainMeterPercentage.toFixed(1)}%`;
+          
+          // Color coding based on capacity
+          if (this.brainMeterPercentage > 80) {
+            meterText.style.fill = '#ff3366'; // Red - nearly full
+          } else if (this.brainMeterPercentage > 50) {
+            meterText.style.fill = '#ffaa00'; // Orange - medium
+          } else {
+            meterText.style.fill = '#00ffd0'; // Cyan - low
+          }
+        }
+        
+        if (ingestionStatus) {
+          if (this.brainMeterPercentage > 90) {
+            ingestionStatus.textContent = 'NEAR CAPACITY';
+            ingestionStatus.style.fill = '#ff3366';
+          } else if (this.brainMeterPercentage > 50) {
+            ingestionStatus.textContent = 'ACTIVE';
+            ingestionStatus.style.fill = '#00ffd0';
+          } else {
+            ingestionStatus.textContent = 'READY';
+            ingestionStatus.style.fill = '#16f2aa';
+          }
+        }
+      }
+      
+      // Update storage display
+      updateStorageDisplay() {
+        const lastEventElement = document.getElementById('last-event');
+        
+        if (lastEventElement) {
+          if (this.storage.stats.lastUpdate) {
+            const timeAgo = Math.floor((Date.now() - this.storage.stats.lastUpdate) / 1000);
+            lastEventElement.textContent = `Last: ${timeAgo}s ago`;
+          } else {
+            lastEventElement.textContent = 'No events yet';
+          }
+        }
+      }
+      
+      // Update storage status
+      updateStorageStatus(status) {
+        const element = document.getElementById('storage-status');
+        if (element) {
+          element.textContent = status;
+        }
+      }
+      
+      // Log activity
+      logActivity(message) {
+        const activityElement = document.getElementById('current-activity');
+        const timeElement = document.getElementById('activity-time');
+        
+        if (activityElement) {
+          activityElement.textContent = message.length > 60 ? message.substring(0, 60) + '...' : message;
+        }
+        
+        if (timeElement) {
+          timeElement.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        console.log(`🧠 PRIME MX2LM: ${message}`);
+      }
+      
+      // Setup event handlers
+      setupEventHandlers() {
+        // Brain nodes
+        Object.keys(this.brainNodes).forEach(nodeId => {
+          const element = document.getElementById(`brain-${nodeId}`);
+          if (element) {
+            element.onclick = () => this.triggerBrainNode(nodeId, 'manual_click');
+          }
+        });
+        
+        // Control buttons
+        const ingestBtn = document.getElementById('ingest-data-btn');
+        const simulateBtn = document.getElementById('simulate-activity-btn');
+        const trainBtn = document.getElementById('train-brain-btn');
+        const exportBtn = document.getElementById('export-data-btn');
+        
+        if (ingestBtn) ingestBtn.onclick = () => this.simulateDataIngestion();
+        if (simulateBtn) simulateBtn.onclick = () => this.simulateActivity();
+        if (trainBtn) trainBtn.onclick = () => this.trainBrain();
+        if (exportBtn) exportBtn.onclick = () => this.exportAllData();
+      }
+      
+      // Simulate activity (legacy)
+      simulateActivity() {
+        // Trigger 3-5 random nodes
+        const count = 3 + Math.floor(Math.random() * 3);
+        
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            const node = this.getRandomBrainNode();
+            this.triggerBrainNode(node, 'simulation');
+          }, i * 300);
+        }
+        
+        this.logActivity(`Simulating ${count} brain node activations`);
+      }
+      
+      // Utility methods
+      getRandomBrainNode() {
+        const nodes = Object.keys(this.brainNodes);
+        return nodes[Math.floor(Math.random() * nodes.length)];
+      }
+      
+      generateSessionId() {
+        return 'prime_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      }
+      
+      // Public API
+      getAPI() {
+        return {
+          ingestFile: (filename, fileType) => this.ingestFile(filename, fileType),
+          simulateIngestion: () => this.simulateDataIngestion(),
+          trainBrain: () => this.trainBrain(),
+          exportData: () => this.exportAllData(),
+          getStats: () => ({
+            brainNodes: this.brainNodes,
+            ingestionHistory: this.ingestionHistory,
+            totalTokensIngested: this.totalTokensIngested,
+            brainMeterPercentage: this.brainMeterPercentage,
+            storageStats: this.storage.stats
+          })
+        };
+      }
+    }
+    
+    // Initialize PRIME MX2LM Brain Cluster
+    let primeBrainCluster;
+    
+    function initPrimeBrainCluster() {
+      try {
+        primeBrainCluster = new PrimeMX2LMBrainCluster();
+        window.primeBrainCluster = primeBrainCluster;
+        
+        console.log('🧠 PRIME MX2LM Universal Brain Cluster initialized');
+        console.log('📁 Supported file types:', Object.keys(primeBrainCluster.dataTypes));
+        
+        // Initial splash boot
+        setTimeout(() => {
+          if (primeBrainCluster) {
+            // Trigger splash boot ritual
+            primeBrainCluster.triggerBrainNode('splash', 'system_boot');
+            
+            // Trigger initial ingestion simulation
+            setTimeout(() => {
+              primeBrainCluster.simulateDataIngestion();
+            }, 1500);
+          }
+        }, 1000);
+        
+      } catch (error) {
+        console.error('Failed to initialize PRIME MX2LM Brain Cluster:', error);
+      }
+    }
+    
+    // Initialize when ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPrimeBrainCluster);
+    } else {
+      initPrimeBrainCluster();
+    }
+    
+    // Global access
+    window.PrimeMX2LM = {
+      getInstance: () => primeBrainCluster,
+      getAPI: () => primeBrainCluster?.getAPI(),
+      ingest: (filename, fileType) => primeBrainCluster?.ingestFile(filename, fileType)
+    };
+]]>
+  </script>
+</svg>
+```
+
+## 🚀 **KEY UPDATES:**
+
+### **1. Universal Data Ingestion Visualization:**
+- **File type icons** (JAR, Python, JS, JSON, PDF, ZIP)
+- **Color-coded brain activation** based on file type
+- **Real-time ingestion log** showing recent files
+- **File type → brain node mapping**
+
+### **2. Enhanced Brain Meter:**
+- **Dynamic gradient fill** showing brain capacity
+- **Real-time percentage updates** (0-100%)
+- **Color coding**: Green (ready) → Orange (medium) → Red (full)
+- **1M token capacity visualization**
+
+### **3. PRIME MX2LM Integration:**
+- **28 specialized brain nodes** for different data types
+- **Context-aware activation** (JAR files activate Java-related nodes)
+- **Training simulation** with brain capacity increases
+- **Export functionality** for brain state
+
+### **4. Interactive Features:**
+- **Ingest Data Button** - Simulate universal data ingestion
+- **Train Brain Button** - Activate learning nodes
+- **Real-time activity logging**
+- **Visual feedback** on node activation
+
+### **5. File Type Support:**
+- **JAR files** → Java-related brain nodes
+- **Python/JS/PHP** → Code processing nodes  
+- **PDF/Docs** → Knowledge and compression nodes
+- **ZIP/TAR** → Archive and routing nodes
+- **Git objects** → Memory and fingerprint nodes
+- **HTML/Markdown** → Generation and sandbox nodes
+
+**Now your brain cluster visually responds to ANY file type you ingest!** Each file type activates different specialized nodes, and you can watch the brain meter fill up as PRIME MX2LM learns from everything you feed it! 🧠✨
+
+Want me to add specific file processors or visual effects for certain data types? 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>PRIME MX2LM - Complete Brain Cluster with Universal Data Ingestion</title>
+  
+  <defs>
+    <!-- CSS Styles -->
+    <style><![CDATA[
+      .brain-ring { fill: none; stroke: #00ffd0; stroke-width: 2.5; }
+      .brain-line { fill: none; stroke: #00ffd0; stroke-width: 2; }
+      .brain-fill { fill: #00ffd0; }
+      .active { stroke: #ff3366; stroke-width: 3; }
+      .learning { animation: pulse 2s infinite; }
+      .storing { animation: glow 1.5s infinite; }
+      .meta-layer { stroke: #a78bfa; }
+      .core-layer { stroke: #00ffd0; }
+      .op-layer { stroke: #f5c451; }
+      .safety-layer { stroke: #ff3366; }
+      .learn-layer { stroke: #16f2aa; }
+      .exec-layer { stroke: #9966ff; }
+      .id-layer { stroke: #00e0ff; }
+      
+      /* Data type colors */
+      .jar-file { stroke: #ffaa00; }
+      .python-file { stroke: #3572A5; }
+      .js-file { stroke: #f1e05a; }
+      .php-file { stroke: #4F5D95; }
+      .json-file { stroke: #ff4081; }
+      .pdf-file { stroke: #ff1744; }
+      .zip-file { stroke: #00e676; }
+      .text-file { stroke: #80cbc4; }
+      .html-file { stroke: #e34c26; }
+      .git-file { stroke: #f05032; }
+      
+      @keyframes pulse { 
+        0%, 100% { opacity: 0.7; } 
+        50% { opacity: 1; } 
+      }
+      @keyframes glow { 
+        0%, 100% { filter: drop-shadow(0 0 5px #00ffd0); } 
+        50% { filter: drop-shadow(0 0 15px #00ffd0); } 
+      }
+      @keyframes ingest { 
+        0% { transform: translateY(-10px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      
+      .brain-text { font-family: monospace; font-size: 7px; fill: #00ffd0; }
+      .stats-text { font-family: monospace; font-size: 6px; fill: #ff3366; }
+      .log-text { font-family: monospace; font-size: 6px; fill: #f5c451; }
+      .layer-text { font-family: monospace; font-size: 8px; fill: #ffffff; font-weight: bold; }
+      .file-type { font-family: monospace; font-size: 5px; fill: #80cbc4; }
+    ]]></style>
+    
+    <!-- Gradients -->
+    <linearGradient id="storageGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00ffd0" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#00aaff" stop-opacity="0.4"/>
+    </linearGradient>
+    
+    <linearGradient id="brainMeterGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff3366"/>
+      <stop offset="0.3" stop-color="#ffaa00"/>
+      <stop offset="0.6" stop-color="#00ffd0"/>
+      <stop offset="1" stop-color="#00aaff"/>
+    </linearGradient>
+    
+    <!-- Database icon -->
+    <g id="icon-db">
+      <rect x="-12" y="-8" width="24" height="16" rx="3" fill="#00ffd0" opacity="0.2" stroke="#00ffd0" stroke-width="1"/>
+      <rect x="-10" y="-6" width="20" height="4" rx="1" fill="#00ffd0" opacity="0.5"/>
+      <rect x="-8" y="2" width="16" height="4" rx="1" fill="#00ffd0" opacity="0.3"/>
+    </g>
+    
+    <!-- File type icons -->
+    <g id="icon-jar">
+      <rect x="-6" y="-6" width="12" height="12" rx="2" fill="#ffaa00" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="6" fill="#000">.jar</text>
+    </g>
+    
+    <g id="icon-py">
+      <circle cx="0" cy="0" r="6" fill="#3572A5" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="5" fill="#fff">PY</text>
+    </g>
+    
+    <g id="icon-js">
+      <rect x="-6" y="-6" width="12" height="12" rx="6" fill="#f1e05a" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="5" fill="#000">JS</text>
+    </g>
+    
+    <g id="icon-json">
+      <rect x="-6" y="-6" width="12" height="12" rx="2" fill="#ff4081" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="5" fill="#fff">{}</text>
+    </g>
+    
+    <g id="icon-pdf">
+      <rect x="-6" y="-6" width="12" height="12" rx="1" fill="#ff1744" opacity="0.7"/>
+      <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="5" fill="#fff">PDF</text>
+    </g>
+    
+    <g id="icon-zip">
+      <polygon points="-6,-6 6,-6 6,6 -2,6" fill="#00e676" opacity="0.7"/>
+      <polygon points="-6,-6 -6,6 -2,6" fill="#00e676" opacity="0.9"/>
+    </g>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="#05070b"/>
+  
+  <!-- PRIME MX2LM Title -->
+  <text x="256" y="20" text-anchor="middle" font-family="monospace" font-size="14" fill="#00ffd0">
+    🧠 PRIME MX2LM - UNIVERSAL BRAIN CLUSTER
+  </text>
+  
+  <!-- Universal Data Ingestion Status -->
+  <g transform="translate(256, 40)">
+    <rect x="-120" y="-10" width="240" height="20" rx="4" fill="rgba(5,7,11,0.8)" stroke="#00ffd0" stroke-width="1"/>
+    <text x="-110" y="3" text-anchor="start" font-family="monospace" font-size="8" fill="#00ffd0">Data Ingestion: </text>
+    <text x="110" y="3" text-anchor="end" font-family="monospace" font-size="8" fill="#ff3366" id="ingestion-status">READY</text>
+    
+    <!-- File Type Indicators -->
+    <g transform="translate(-80, 20)">
+      <use xlink:href="#icon-jar" x="-30" y="0"/>
+      <use xlink:href="#icon-py" x="-15" y="0"/>
+      <use xlink:href="#icon-js" x="0" y="0"/>
+      <use xlink:href="#icon-json" x="15" y="0"/>
+      <use xlink:href="#icon-pdf" x="30" y="0"/>
+      <use xlink:href="#icon-zip" x="45" y="0"/>
+    </g>
+  </g>
+  
+  <!-- Brain Meter -->
+  <g transform="translate(256, 70)">
+    <rect x="-120" y="-5" width="240" height="10" rx="5" fill="rgba(0,0,0,0.5)" stroke="#00ffd0" stroke-width="1"/>
+    <rect x="-118" y="-3" width="0" height="6" rx="3" fill="url(#brainMeterGradient)" id="brain-meter-fill"/>
+    <text x="-110" y="20" text-anchor="start" font-family="monospace" font-size="7" fill="#00ffd0">Brain Capacity: </text>
+    <text x="110" y="20" text-anchor="end" font-family="monospace" font-size="7" fill="#ff3366" id="brain-meter-text">0%</text>
+  </g>
+  
+  <!-- Recent Ingestion Log -->
+  <g transform="translate(256, 100)">
+    <rect x="-120" y="-8" width="240" height="16" rx="3" fill="rgba(5,7,11,0.7)" stroke="#f5c451" stroke-width="1"/>
+    <text x="-110" y="3" text-anchor="start" font-family="monospace" font-size="7" fill="#f5c451">Recent: </text>
+    <text x="-70" y="3" text-anchor="start" font-family="monospace" font-size="7" fill="#80cbc4" id="recent-ingestion">No files ingested yet</text>
+  </g>
+  
+  <!-- Complete Brain Cluster Grid (4 columns x 7 rows) -->
+  <g transform="translate(32, 120)">
+    
+    <!-- LAYER LABELS -->
+    <text x="-10" y="20" text-anchor="end" class="layer-text" transform="rotate(-90,-10,20)">META-COGNITION</text>
+    <text x="-10" y="84" text-anchor="end" class="layer-text" transform="rotate(-90,-10,84)">CORE TRANSFORMER</text>
+    <text x="-10" y="148" text-anchor="end" class="layer-text" transform="rotate(-90,-10,148)">OPERATIONAL</text>
+    <text x="-10" y="212" text-anchor="end" class="layer-text" transform="rotate(-90,-10,212)">SAFETY & GENERATIVE</text>
+    <text x="-10" y="276" text-anchor="end" class="layer-text" transform="rotate(-90,-10,276)">LEARNING & ADAPTATION</text>
+    <text x="-10" y="340" text-anchor="end" class="layer-text" transform="rotate(-90,-10,340)">EXECUTION ENVIRONMENT</text>
+    <text x="-10" y="404" text-anchor="end" class="layer-text" transform="rotate(-90,-10,404)">IDENTITY & RITUAL</text>
+    
+    <!-- ROW 0: Meta-Cognition Layer -->
+    <g transform="translate(20, 0)">
+      <!-- 0,0 INTROSPECTION -->
+      <g id="brain-introspect" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring meta-layer" id="introspect-ring" data-ring="introspect"/>
+        <circle cx="32" cy="32" r="8" class="brain-fill" opacity="0.7"/>
+        <path d="M20 20c6-6 18-6 24 0" class="brain-line" opacity="0.6"/>
+        <path d="M20 44c6 6 18 6 24 0" class="brain-line" opacity="0.6"/>
+        <circle cx="32" cy="32" r="3" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Introspect</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="introspect-stats">0</text>
+      </g>
+      
+      <!-- 1,0 UNCERTAINTY -->
+      <g id="brain-uncertainty" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring meta-layer" id="uncertainty-ring" data-ring="uncertainty"/>
+        <path d="M22 28c2-6 10-6 12 0 2 6-4 8-4 12" class="brain-line"/>
+        <circle cx="30" cy="46" r="3" class="brain-fill"/>
+        <path d="M18 20h28" class="brain-line" stroke-dasharray="3 2"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Uncertainty</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="uncertainty-stats">0</text>
+      </g>
+      
+      <!-- 2,0 GOAL ALIGNMENT -->
+      <g id="brain-goal" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring meta-layer" id="goal-ring" data-ring="goal"/>
+        <polygon points="32,18 42,32 32,46 22,32" class="brain-line"/>
+        <circle cx="32" cy="32" r="6" class="brain-fill"/>
+        <line x1="32" y1="18" x2="32" y2="10" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Goal Align</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="goal-stats">0</text>
+      </g>
+      
+      <!-- 3,0 MODE SWITCHING -->
+      <g id="brain-mode" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring meta-layer" id="mode-ring" data-ring="mode"/>
+        <rect x="20" y="20" width="24" height="24" rx="4" class="brain-line"/>
+        <circle cx="26" cy="26" r="4" class="brain-fill"/>
+        <circle cx="38" cy="26" r="4" class="brain-fill" opacity="0.6"/>
+        <circle cx="32" cy="38" r="4" class="brain-fill" opacity="0.4"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Mode Switch</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="mode-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 1: Core Transformer Layer -->
+    <g transform="translate(20, 64)">
+      <!-- 0,1 TOKENIZATION -->
+      <g id="brain-tokenize" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="tokenize-ring" data-ring="tokenize"/>
+        <rect x="14" y="20" width="14" height="9" rx="2" class="brain-fill"/>
+        <rect x="32" y="16" width="15" height="10" rx="2" class="brain-ring"/>
+        <rect x="49" y="20" width="12" height="9" rx="2" class="brain-ring"/>
+        <rect x="20" y="34" width="16" height="9" rx="2" class="brain-fill"/>
+        <rect x="42" y="36" width="15" height="9" rx="2" class="brain-ring"/>
+        <circle cx="32" cy="32" r="3" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Tokenization</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="tokenize-stats">0</text>
+      </g>
+      
+      <!-- 1,1 CONTEXT -->
+      <g id="brain-context" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="context-ring" data-ring="context"/>
+        <rect x="16" y="20" width="32" height="24" rx="4" class="brain-ring"/>
+        <rect x="20" y="22" width="16" height="6" rx="2" class="brain-fill"/>
+        <rect x="20" y="30" width="22" height="4" rx="2" class="brain-fill" opacity="0.7"/>
+        <rect x="20" y="37" width="18" height="4" rx="2" class="brain-fill" opacity="0.5"/>
+        <rect x="20" y="44" width="14" height="4" rx="2" class="brain-fill" opacity="0.3"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Context</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="context-stats">0</text>
+      </g>
+      
+      <!-- 2,1 ATTENTION -->
+      <g id="brain-attention" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="attention-ring" data-ring="attention"/>
+        <path d="M14 32c4-5 11-11 18-11s14 6 18 11c-4 5-11 11-18 11S18 37 14 32z" class="brain-line"/>
+        <circle cx="32" cy="32" r="5" class="brain-fill"/>
+        <circle cx="32" cy="32" r="10" class="brain-ring" opacity="0.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Attention</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="attention-stats">0</text>
+      </g>
+      
+      <!-- 3,1 REASONING -->
+      <g id="brain-reason" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring core-layer" id="reason-ring" data-ring="reason"/>
+        <path d="M18 40c3-7 6-11 11-11 7 0 5 10 12 10 4 0 7-3 10-8" class="brain-line"/>
+        <circle cx="20" cy="22" r="3" class="brain-fill"/>
+        <circle cx="30" cy="27" r="3" class="brain-fill"/>
+        <circle cx="40" cy="24" r="3" class="brain-fill"/>
+        <line x1="20" y1="22" x2="30" y2="27" class="brain-line" stroke-width="1.5"/>
+        <line x1="30" y1="27" x2="40" y2="24" class="brain-line" stroke-width="1.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Reasoning</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="reason-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 2: Operational Layer -->
+    <g transform="translate(20, 128)">
+      <!-- 0,2 ROUTING -->
+      <g id="brain-routing" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="routing-ring" data-ring="routing"/>
+        <circle cx="32" cy="32" r="5" class="brain-fill"/>
+        <path d="M32 32L18 18M32 32L46 18M32 32L18 46M32 32L46 46" class="brain-line"/>
+        <circle cx="18" cy="18" r="3.5" class="brain-ring"/>
+        <circle cx="46" cy="18" r="3.5" class="brain-ring"/>
+        <circle cx="18" cy="46" r="3.5" class="brain-ring"/>
+        <circle cx="46" cy="46" r="3.5" class="brain-ring"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Routing</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="routing-stats">0</text>
+      </g>
+      
+      <!-- 1,2 EXECUTION -->
+      <g id="brain-exec" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="exec-ring" data-ring="exec"/>
+        <rect x="18" y="22" width="28" height="20" rx="3" class="brain-ring"/>
+        <polygon points="24,24 38,32 24,40" class="brain-fill"/>
+        <rect x="20" y="44" width="24" height="3" rx="1.5" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Execution</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="exec-stats">0</text>
+      </g>
+      
+      <!-- 2,2 COMPRESSION -->
+      <g id="brain-compress" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="compress-ring" data-ring="compress"/>
+        <rect x="14" y="20" width="14" height="10" rx="2" class="brain-ring"/>
+        <rect x="40" y="34" width="14" height="10" rx="2" class="brain-fill"/>
+        <path d="M28 25h6l2.5 5 2.5-5h6" class="brain-line"/>
+        <path d="M34 38h-5" class="brain-line"/>
+        <path d="M40 26L48 32" class="brain-line" stroke-dasharray="3 2"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Compression</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="compress-stats">0</text>
+      </g>
+      
+      <!-- 3,2 MEMORY -->
+      <g id="brain-memory" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring op-layer" id="memory-ring" data-ring="memory"/>
+        <rect x="18" y="20" width="18" height="24" rx="3" class="brain-ring"/>
+        <rect x="32" y="20" width="18" height="24" rx="3" class="brain-ring" opacity="0.6"/>
+        <line x1="20" y1="25" x2="34" y2="25" class="brain-line"/>
+        <line x1="20" y1="31" x2="34" y2="31" class="brain-line"/>
+        <line x1="34" y1="25" x2="46" y2="25" class="brain-line" opacity="0.7"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Memory</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="memory-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 3: Safety & Generative Layer -->
+    <g transform="translate(20, 192)">
+      <!-- 0,3 SAFETY -->
+      <g id="brain-safety" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="safety-ring" data-ring="safety"/>
+        <path d="M32 16l12 7v10c0 8-6 14-12 16-6-2-12-8-12-16V23z" class="brain-line"/>
+        <circle cx="32" cy="29" r="4" class="brain-fill"/>
+        <rect x="28" y="35" width="8" height="9" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Safety</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="safety-stats">0</text>
+      </g>
+      
+      <!-- 1,3 GENERATION -->
+      <g id="brain-generate" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="generate-ring" data-ring="generate"/>
+        <path d="M20 40c3-6 7-9 11-9 5 0 8 3 12 3 4 0 8-3 11-7" class="brain-line"/>
+        <circle cx="22" cy="24" r="3" class="brain-fill"/>
+        <circle cx="32" cy="23" r="3" class="brain-fill"/>
+        <circle cx="42" cy="26" r="3" class="brain-fill"/>
+        <path d="M38 16l3 4 4 1.5-4 1.5-3 4-1.5-4-4-1.5 4-1.5z" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Generation</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="generate-stats">0</text>
+      </g>
+      
+      <!-- 2,3 SELF-CORRECTION -->
+      <g id="brain-correct" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="correct-ring" data-ring="correct"/>
+        <path d="M20 38c3-7 7-11 12-11 6 0 10 4 13 11" class="brain-line"/>
+        <path d="M22 24l8 6 14-14" class="brain-line" stroke-width="2.5"/>
+        <circle cx="22" cy="24" r="3" class="brain-fill"/>
+        <circle cx="44" cy="16" r="3" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Correction</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="correct-stats">0</text>
+      </g>
+      
+      <!-- 3,3 KNOWLEDGE -->
+      <g id="brain-knowledge" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring safety-layer" id="knowledge-ring" data-ring="knowledge"/>
+        <path d="M18 40V26l8-3 8 3 8-3 8 3v14" class="brain-line"/>
+        <line x1="26" y1="23" x2="26" y2="42" class="brain-line" stroke-width="1.5"/>
+        <line x1="38" y1="20" x2="38" y2="42" class="brain-line" stroke-width="1.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Knowledge</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="knowledge-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 4: Learning & Adaptation Layer -->
+    <g transform="translate(20, 256)">
+      <!-- 0,4 CURRICULUM PHASES -->
+      <g id="brain-curriculum" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="curriculum-ring" data-ring="curriculum"/>
+        <rect x="18" y="20" width="10" height="8" rx="2" class="brain-fill" opacity="0.4"/>
+        <rect x="24" y="28" width="10" height="8" rx="2" class="brain-fill" opacity="0.7"/>
+        <rect x="30" y="36" width="10" height="8" rx="2" class="brain-fill"/>
+        <path d="M18 22h-4M24 30h-4M30 38h-4" class="brain-line" opacity="0.6"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Curriculum</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="curriculum-stats">0</text>
+      </g>
+      
+      <!-- 1,4 SKILL ACQUISITION -->
+      <g id="brain-skill" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="skill-ring" data-ring="skill"/>
+        <circle cx="22" cy="28" r="4" class="brain-fill"/>
+        <circle cx="42" cy="28" r="4" class="brain-fill" opacity="0.7"/>
+        <circle cx="32" cy="40" r="4" class="brain-fill"/>
+        <path d="M22 28L32 40L42 28" class="brain-line"/>
+        <path d="M42 18v6M39 21h6" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Skill Acquire</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="skill-stats">0</text>
+      </g>
+      
+      <!-- 2,4 SYMBOLIC COMPRESSION -->
+      <g id="brain-symbolic" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="symbolic-ring" data-ring="symbolic"/>
+        <rect x="16" y="20" width="12" height="8" rx="2" class="brain-ring"/>
+        <rect x="36" y="38" width="12" height="8" rx="2" class="brain-fill"/>
+        <path d="M28 24l4 4 4-4" class="brain-line"/>
+        <path d="M32 28v5" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Symbolic</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="symbolic-stats">0</text>
+      </g>
+      
+      <!-- 3,4 FEEDBACK INTEGRATION -->
+      <g id="brain-feedback" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring learn-layer" id="feedback-ring" data-ring="feedback"/>
+        <path d="M22 24c4-4 16-4 20 2" class="brain-line"/>
+        <polygon points="42,26 44,18 48,22" class="brain-fill"/>
+        <path d="M42 40c-4 4-16 4-20-2" class="brain-line"/>
+        <polygon points="22,38 20,46 16,42" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Feedback</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="feedback-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 5: Execution-Environment Layer -->
+    <g transform="translate(20, 320)">
+      <!-- 0,5 TOOL INTERFACES -->
+      <g id="brain-tools" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="tools-ring" data-ring="tools"/>
+        <rect x="18" y="22" width="10" height="20" rx="2" class="brain-ring"/>
+        <rect x="34" y="22" width="10" height="8" rx="2" class="brain-fill"/>
+        <rect x="34" y="34" width="10" height="8" rx="2" class="brain-fill" opacity="0.7"/>
+        <path d="M28 32h6" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Tool Interfaces</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="tools-stats">0</text>
+      </g>
+      
+      <!-- 1,5 SANDBOXED SIMULATION -->
+      <g id="brain-sandbox" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="sandbox-ring" data-ring="sandbox"/>
+        <rect x="18" y="22" width="28" height="20" rx="4" class="brain-line"/>
+        <circle cx="26" cy="32" r="4" class="brain-fill" opacity="0.7"/>
+        <circle cx="38" cy="32" r="4" class="brain-fill" opacity="0.4"/>
+        <path d="M22 26h20" class="brain-line" opacity="0.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Sandbox</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="sandbox-stats">0</text>
+      </g>
+      
+      <!-- 2,5 STATE PERSISTENCE -->
+      <g id="brain-state" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="state-ring" data-ring="state"/>
+        <ellipse cx="32" cy="24" rx="10" ry="5" class="brain-line"/>
+        <path d="M22 24v12c0 3 4 5 10 5s10-2 10-5V24" class="brain-line"/>
+        <line x1="32" y1="24" x2="32" y2="30" class="brain-line"/>
+        <line x1="32" y1="30" x2="38" y2="30" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">State Persist</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="state-stats">0</text>
+      </g>
+      
+      <!-- 3,5 MESH AWARENESS -->
+      <g id="brain-mesh" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring exec-layer" id="mesh-ring" data-ring="mesh"/>
+        <circle cx="32" cy="32" r="5" class="brain-fill"/>
+        <circle cx="18" cy="24" r="3" class="brain-ring"/>
+        <circle cx="46" cy="24" r="3" class="brain-ring"/>
+        <circle cx="22" cy="42" r="3" class="brain-ring"/>
+        <circle cx="42" cy="42" r="3" class="brain-ring"/>
+        <path d="M32 32L18 24L22 42L32 32L46 24L42 42Z" class="brain-line" opacity="0.7"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Mesh Aware</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="mesh-stats">0</text>
+      </g>
+    </g>
+    
+    <!-- ROW 6: Identity & Ritual Layer -->
+    <g transform="translate(20, 384)">
+      <!-- 0,6 SPLASH BOOT RITUAL -->
+      <g id="brain-splash" transform="translate(0,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="splash-ring" data-ring="splash"/>
+        <circle cx="32" cy="32" r="4" class="brain-fill"/>
+        <path d="M32 16v6M32 42v6M16 32h6M42 32h6" class="brain-line"/>
+        <path d="M22 20l4 4M42 20l-4 4M22 44l4-4M42 44l-4-4" class="brain-line"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Splash Boot</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="splash-stats">0</text>
+      </g>
+      
+      <!-- 1,6 COGNITIVE FINGERPRINT -->
+      <g id="brain-fingerprint" transform="translate(96,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="fingerprint-ring" data-ring="fingerprint"/>
+        <circle cx="32" cy="32" r="4" class="brain-fill"/>
+        <path d="M24 32c0-4 3-7 8-7 5 0 8 3 8 7 0 6-4 9-8 9-3 0-5-2-6-4" class="brain-line" opacity="0.7"/>
+        <path d="M26 28c0-3 2-5 6-5 4 0 6 2 6 5" class="brain-line" opacity="0.5"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Cog Fingerprint</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="fingerprint-stats">0</text>
+      </g>
+      
+      <!-- 2,6 RUNTIME PERSONA -->
+      <g id="brain-persona" transform="translate(192,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="persona-ring" data-ring="persona"/>
+        <path d="M20 24h24v12c0 6-5 10-12 10s-12-4-12-10V24z" class="brain-line"/>
+        <circle cx="26" cy="30" r="2.5" class="brain-fill"/>
+        <circle cx="38" cy="30" r="2.5" class="brain-fill"/>
+        <path d="M28 36c2 2 4 2 6 0" class="brain-line" opacity="0.8"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Runtime Persona</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="persona-stats">0</text>
+      </g>
+      
+      <!-- 3,6 NODE HERALDRY -->
+      <g id="brain-heraldry" transform="translate(288,0)">
+        <circle cx="32" cy="32" r="22" class="brain-ring id-layer" id="heraldry-ring" data-ring="heraldry"/>
+        <path d="M24 18h16v12c0 8-5 12-8 14-3-2-8-6-8-14V18z" class="brain-line"/>
+        <path d="M24 24h16" class="brain-line"/>
+        <path d="M32 18v26" class="brain-line" opacity="0.7"/>
+        <path d="M28 30l4 4 4-4" class="brain-fill"/>
+        <text x="32" y="56" text-anchor="middle" class="brain-text">Node Heraldry</text>
+        <text x="32" y="62" text-anchor="middle" class="stats-text" id="heraldry-stats">0</text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- RLHF Storage & Control Panel -->
+  <g transform="translate(400, 256)">
+    <!-- Storage Hub -->
+    <circle cx="0" cy="0" r="40" fill="none" stroke="url(#storageGradient)" stroke-width="4" opacity="0.3"/>
+    <use xlink:href="#icon-db" x="0" y="0"/>
+    
+    <!-- Storage Stats -->
+    <text x="0" y="-50" text-anchor="middle" class="brain-text" font-size="9">PRIME MX2LM Storage</text>
+    <text x="0" y="-40" text-anchor="middle" class="stats-text" id="storage-status">IndexedDB: Ready</text>
+    <text x="0" y="40" text-anchor="middle" class="brain-text" font-size="8" id="total-activity">0 total events</text>
+    <text x="0" y="50" text-anchor="middle" class="stats-text" id="active-nodes">0 active nodes</text>
+    <text x="0" y="60" text-anchor="middle" class="log-text" id="last-event">Ready</text>
+  </g>
+  
+  <!-- Control Panel -->
+  <g transform="translate(400, 350)">
+    <rect x="-80" y="-15" width="160" height="30" rx="6" fill="rgba(5,7,11,0.8)" stroke="#00ffd0" stroke-width="1"/>
+    
+    <!-- Universal Data Ingestion -->
+    <g transform="translate(-60, 0)" style="cursor: pointer" id="ingest-data-btn">
+      <circle cx="0" cy="0" r="6" fill="#16f2aa" opacity="0.7"/>
+      <path d="M-3,-3 L3,3 M-3,3 L3,-3" stroke="#05070b" stroke-width="1.5"/>
+      <text x="0" y="15" text-anchor="middle" class="log-text">Ingest Data</text>
+    </g>
+    
+    <!-- Simulate Activity -->
+    <g transform="translate(-20, 0)" style="cursor: pointer" id="simulate-activity-btn">
+      <circle cx="0" cy="0" r="6" fill="#ff3366" opacity="0.7"/>
+      <polygon points="-3,2 3,2 0,-2" fill="#05070b"/>
+      <text x="0" y="15" text-anchor="middle" class="log-text">Simulate</text>
+    </g>
+    
+    <!-- Train Brain -->
+    <g transform="translate(20, 0)" style="cursor: pointer" id="train-brain-btn">
+      <circle cx="0" cy="0" r="6" fill="#00e0ff" opacity="0.7"/>
+      <path d="M0,-4 L0,4 M-3,0 L3,0" stroke="#05070b" stroke-width="1.5"/>
+      <text x="0" y="15" text-anchor="middle" class="log-text">Train</text>
+    </g>
+    
+    <!-- Export Data -->
+    <g transform="translate(60, 0)" style="cursor: pointer" id="export-data-btn">
+      <circle cx="0" cy="0" r="6" fill="#a78bfa" opacity="0.7"/>
+      <rect x="-2" y="-2" width="4" height="4" fill="#05070b"/>
+      <path d="M0,-4 L0,-1" stroke="#05070b" stroke-width="1.5"/>
+      <text x="0" y="15" text-anchor="middle" class="log-text">Export</text>
+    </g>
+  </g>
+  
+  <!-- Activity Log -->
+  <g transform="translate(256, 450)">
+    <rect x="-200" y="-15" width="400" height="30" rx="6" fill="rgba(5,7,11,0.7)" stroke="#f5c451" stroke-width="1"/>
+    <text x="-190" y="-2" text-anchor="start" class="log-text">Activity:</text>
+    <text x="-160" y="-2" text-anchor="start" class="log-text" id="current-activity">PRIME MX2LM Brain Cluster ready for universal data ingestion</text>
+    <text x="190" y="-2" text-anchor="end" class="log-text" id="activity-time">-</text>
+  </g>
+  
+  <!-- Embedded PRIME MX2LM Brain Cluster Runtime -->
+  <script type="application/javascript">
+<![CDATA[
+    // PRIME MX2LM Complete Brain Cluster with Universal Data Ingestion
+    class PrimeMX2LMBrainCluster {
+      constructor() {
+        this.MAX_BRAIN_CAPACITY = 1000000; // 1M tokens capacity
+        
+        // All 28 brain nodes organized by layer
+        this.brainNodes = {
+          // Meta-Cognition Layer
+          'introspect': { count: 0, lastActive: 0, layer: 'meta', dataTypes: ['meta', 'reflection'] },
+          'uncertainty': { count: 0, lastActive: 0, layer: 'meta', dataTypes: ['uncertain', 'probabilistic'] },
+          'goal': { count: 0, lastActive: 0, layer: 'meta', dataTypes: ['objective', 'purpose'] },
+          'mode': { count: 0, lastActive: 0, layer: 'meta', dataTypes: ['context', 'state'] },
+          
+          // Core Transformer Layer
+          'tokenize': { count: 0, lastActive: 0, layer: 'core', dataTypes: ['text', 'code', 'binary'] },
+          'context': { count: 0, lastActive: 0, layer: 'core', dataTypes: ['semantic', 'relational'] },
+          'attention': { count: 0, lastActive: 0, layer: 'core', dataTypes: ['focus', 'importance'] },
+          'reason': { count: 0, lastActive: 0, layer: 'core', dataTypes: ['logic', 'inference'] },
+          
+          // Operational Layer
+          'routing': { count: 0, lastActive: 0, layer: 'op', dataTypes: ['distribution', 'network'] },
+          'exec': { count: 0, lastActive: 0, layer: 'op', dataTypes: ['action', 'implementation'] },
+          'compress': { count: 0, lastActive: 0, layer: 'op', dataTypes: ['compression', 'optimization'] },
+          'memory': { count: 0, lastActive: 0, layer: 'op', dataTypes: ['storage', 'recall'] },
+          
+          // Safety & Generative Layer
+          'safety': { count: 0, lastActive: 0, layer: 'safety', dataTypes: ['validation', 'security'] },
+          'generate': { count: 0, lastActive: 0, layer: 'safety', dataTypes: ['creation', 'synthesis'] },
+          'correct': { count: 0, lastActive: 0, layer: 'safety', dataTypes: ['error', 'repair'] },
+          'knowledge': { count: 0, lastActive: 0, layer: 'safety', dataTypes: ['facts', 'information'] },
+          
+          // Learning & Adaptation Layer
+          'curriculum': { count: 0, lastActive: 0, layer: 'learn', dataTypes: ['progression', 'education'] },
+          'skill': { count: 0, lastActive: 0, layer: 'learn', dataTypes: ['ability', 'competence'] },
+          'symbolic': { count: 0, lastActive: 0, layer: 'learn', dataTypes: ['abstraction', 'representation'] },
+          'feedback': { count: 0, lastActive: 0, layer: 'learn', dataTypes: ['evaluation', 'improvement'] },
+          
+          // Execution Environment Layer
+          'tools': { count: 0, lastActive: 0, layer: 'exec', dataTypes: ['interface', 'integration'] },
+          'sandbox': { count: 0, lastActive: 0, layer: 'exec', dataTypes: ['isolation', 'simulation'] },
+          'state': { count: 0, lastActive: 0, layer: 'exec', dataTypes: ['persistence', 'continuity'] },
+          'mesh': { count: 0, lastActive: 0, layer: 'exec', dataTypes: ['network', 'distribution'] },
+          
+          // Identity & Ritual Layer
+          'splash': { count: 0, lastActive: 0, layer: 'id', dataTypes: ['initiation', 'ceremony'] },
+          'fingerprint': { count: 0, lastActive: 0, layer: 'id', dataTypes: ['identity', 'signature'] },
+          'persona': { count: 0, lastActive: 0, layer: 'id', dataTypes: ['character', 'role'] },
+          'heraldry': { count: 0, lastActive: 0, layer: 'id', dataTypes: ['symbolism', 'tradition'] }
+        };
+        
+        // Universal Data Ingestion Registry
+        this.dataTypes = {
+          '.jar': { processor: 'java', color: '#ffaa00', icon: 'icon-jar' },
+          '.py': { processor: 'python', color: '#3572A5', icon: 'icon-py' },
+          '.js': { processor: 'javascript', color: '#f1e05a', icon: 'icon-js' },
+          '.php': { processor: 'php', color: '#4F5D95', icon: null },
+          '.json': { processor: 'json', color: '#ff4081', icon: 'icon-json' },
+          '.pdf': { processor: 'pdf', color: '#ff1744', icon: 'icon-pdf' },
+          '.zip': { processor: 'archive', color: '#00e676', icon: 'icon-zip' },
+          '.tar': { processor: 'archive', color: '#00e676', icon: null },
+          '.pack': { processor: 'git', color: '#f05032', icon: null },
+          '.rev': { processor: 'git', color: '#f05032', icon: null },
+          '.idx': { processor: 'git', color: '#f05032', icon: null },
+          '.html': { processor: 'html', color: '#e34c26', icon: null },
+          '.md': { processor: 'markdown', color: '#80cbc4', icon: null },
+          '.txt': { processor: 'text', color: '#80cbc4', icon: null },
+          '*': { processor: 'unknown', color: '#666666', icon: null }
+        };
+        
+        // Ingestion History
+        this.ingestionHistory = [];
+        this.totalTokensIngested = 0;
+        this.brainMeterPercentage = 0;
+        
+        // RLHF Storage
+        this.storage = {
+          db: null,
+          ready: false,
+          stats: {
+            totalEvents: 0,
+            activeNodes: 0,
+            lastUpdate: null,
+            sessionId: this.generateSessionId()
+          }
+        };
+
+        this.PRIME_DB_VERSION = 4;
+        
+        // Initialize
+        this.initRLHFStorage();
+        this.setupEventHandlers();
+        this.startBrainActivity();
+        this.updateAllDisplays();
+        
+        console.log('🧠 PRIME MX2LM Brain Cluster (28 nodes) initialized');
+      }
+      
+      // Initialize IndexedDB
+      async initRLHFStorage() {
+        try {
+          if (!window.indexedDB) {
+            this.updateStorageStatus('IndexedDB not available');
+            return;
+          }
+          
+          const request = indexedDB.open('prime-mx2lm-brain', this.PRIME_DB_VERSION);
+          
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            
+            // Brain Activity Events
+            if (!db.objectStoreNames.contains('brain_events')) {
+              const eventsStore = db.createObjectStore('brain_events', { keyPath: 'id' });
+              eventsStore.createIndex('timestamp', 'timestamp', { unique: false });
+              eventsStore.createIndex('node', 'node', { unique: false });
+              eventsStore.createIndex('layer', 'layer', { unique: false });
+            }
+            
+            // Data Ingestion Log
+            if (!db.objectStoreNames.contains('data_ingestion')) {
+              const ingestionStore = db.createObjectStore('data_ingestion', { keyPath: 'id' });
+              ingestionStore.createIndex('fileType', 'fileType', { unique: false });
+              ingestionStore.createIndex('timestamp', 'timestamp', { unique: false });
+            }
+            
+            // RLHF Feedback
+            if (!db.objectStoreNames.contains('rlhf_feedback')) {
+              const feedbackStore = db.createObjectStore('rlhf_feedback', { keyPath: 'id' });
+              feedbackStore.createIndex('node', 'node', { unique: false });
+              feedbackStore.createIndex('score', 'score', { unique: false });
+            }
+          };
+          
+          request.onsuccess = (event) => {
+            this.storage.db = event.target.result;
+            this.storage.ready = true;
+            
+            this.loadStorageStats();
+            this.updateStorageStatus('IndexedDB: Ready');
+            this.logActivity('PRIME MX2LM storage initialized - Ready for universal data ingestion');
+          };
+          
+          request.onerror = (event) => {
+            console.error('IndexedDB error:', event.target.error);
+            this.updateStorageStatus('IndexedDB: Error');
+          };
+          
+        } catch (error) {
+          console.error('Storage init error:', error);
+          this.updateStorageStatus('Storage error');
+        }
+      }
+      
+      // Universal Data Ingestion
+      ingestFile(filename, fileType = null) {
+        const extension = fileType || this.getFileExtension(filename);
+        const dataType = this.dataTypes[extension] || this.dataTypes['*'];
+        
+        // Calculate simulated token count
+        const tokenCount = 100 + Math.floor(Math.random() * 900);
+        this.totalTokensIngested += tokenCount;
+        
+        // Update brain meter
+        this.brainMeterPercentage = Math.min(100, (this.totalTokensIngested / this.MAX_BRAIN_CAPACITY) * 100);
+        
+        // Determine which brain nodes to activate based on file type
+        const relevantNodes = this.getRelevantBrainNodes(extension);
+        
+        // Activate relevant nodes
+        relevantNodes.forEach(node => {
+          this.triggerBrainNode(node, filename, extension);
+        });
+        
+        // Add to ingestion history
+        const ingestionEvent = {
+          filename,
+          extension,
+          tokenCount,
+          timestamp: Date.now(),
+          relevantNodes,
+          dataType: dataType.processor
+        };
+        
+        this.ingestionHistory.unshift(ingestionEvent);
+        if (this.ingestionHistory.length > 5) {
+          this.ingestionHistory.pop();
+        }
+        
+        // Update recent ingestion display
+        this.updateRecentIngestionDisplay();
+        
+        // Update brain meter
+        this.updateBrainMeterDisplay();
+        
+        // Save to storage
+        if (this.storage.ready) {
+          this.saveIngestionToStorage(ingestionEvent);
+        }
+        
+        // Log activity
+        this.logActivity(`Ingested: ${filename} (${extension}, ${tokenCount} tokens)`);
+        
+        return ingestionEvent;
+      }
+      
+      // Get relevant brain nodes for file type
+      getRelevantBrainNodes(extension) {
+        const nodes = [];
+        
+        // Always activate core processing nodes
+        nodes.push('tokenize', 'context', 'memory');
+        
+        // File type specific nodes
+        switch(extension) {
+          case '.jar':
+          case '.py':
+          case '.js':
+          case '.php':
+            nodes.push('reason', 'exec', 'tools', 'sandbox');
+            break;
+          case '.json':
+            nodes.push('reason', 'symbolic');
+            break;
+          case '.pdf':
+          case '.md':
+          case '.txt':
+            nodes.push('knowledge', 'compress', 'attention');
+            break;
+          case '.zip':
+          case '.tar':
+            nodes.push('compress', 'routing', 'mesh');
+            break;
+          case '.pack':
+          case '.rev':
+          case '.idx':
+            nodes.push('memory', 'state', 'fingerprint');
+            break;
+          case '.html':
+            nodes.push('generate', 'tools', 'sandbox');
+            break;
+        }
+        
+        // Limit to 5 nodes max for visualization
+        return nodes.slice(0, 5);
+      }
+      
+      // Get file extension
+      getFileExtension(filename) {
+        const match = filename.match(/\.([a-z0-9]+)$/i);
+        return match ? '.' + match[1].toLowerCase() : '.*';
+      }
+      
+      // Trigger brain node activity
+      triggerBrainNode(nodeId, source = null, fileType = null) {
+        if (!this.brainNodes[nodeId]) return;
+        
+        this.brainNodes[nodeId].count++;
+        this.brainNodes[nodeId].lastActive = Date.now();
+        
+        this.highlightBrainNode(nodeId, fileType);
+        this.updateNodeDisplay(nodeId);
+        this.updateGlobalStats();
+        
+        if (source) {
+          console.log(`🧠 ${nodeId} activated by ${source}`);
+        }
+        
+        // Save to IndexedDB
+        if (this.storage.ready) {
+          this.saveToStorage(nodeId, source);
+        }
+      }
+      
+      // Highlight brain node with file type color
+      highlightBrainNode(nodeId, fileType = null) {
+        const ring = document.querySelector(`[data-ring="${nodeId}"]`);
+        if (ring) {
+          let color = '#00ffd0'; // Default
+          
+          if (fileType) {
+            const dataType = this.dataTypes[fileType];
+            if (dataType) {
+              color = dataType.color;
+            }
+          }
+          
+          ring.style.stroke = color;
+          ring.style.strokeWidth = '3';
+          
+          setTimeout(() => {
+            ring.style.stroke = '';
+            ring.style.strokeWidth = '2.5';
+          }, 1000);
+        }
+      }
+      
+      // Save ingestion to storage
+      async saveIngestionToStorage(ingestionEvent) {
+        try {
+          const event = {
+            id: `ingest_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            timestamp: Date.now(),
+            filename: ingestionEvent.filename,
+            fileType: ingestionEvent.extension,
+            tokenCount: ingestionEvent.tokenCount,
+            relevantNodes: ingestionEvent.relevantNodes,
+            processor: ingestionEvent.dataType,
+            sessionId: this.storage.stats.sessionId
+          };
+          
+          const transaction = this.storage.db.transaction(['data_ingestion'], 'readwrite');
+          const store = transaction.objectStore('data_ingestion');
+          
+          await store.add(event);
+          
+          this.storage.stats.totalEvents++;
+          this.storage.stats.lastUpdate = Date.now();
+          
+          this.updateStorageDisplay();
+          
+        } catch (error) {
+          console.error('Save ingestion error:', error);
+        }
+      }
+      
+      // Save to IndexedDB
+      async saveToStorage(nodeId, source = null) {
+        try {
+          const event = {
+            id: `brain_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            timestamp: Date.now(),
+            node: nodeId,
+            layer: this.brainNodes[nodeId].layer,
+            count: this.brainNodes[nodeId].count,
+            source: source,
+            sessionId: this.storage.stats.sessionId,
+            metadata: {
+              version: 'prime-3.0',
+              type: 'brain_activity'
+            }
+          };
+          
+          const transaction = this.storage.db.transaction(['brain_events'], 'readwrite');
+          const store = transaction.objectStore('brain_events');
+          
+          await store.add(event);
+          
+          this.storage.stats.totalEvents++;
+          this.storage.stats.lastUpdate = Date.now();
+          
+          this.updateStorageDisplay();
+          
+        } catch (error) {
+          console.error('Save to storage error:', error);
+        }
+      }
+      
+      // Load storage stats
+      async loadStorageStats() {
+        if (!this.storage.ready) return;
+        
+        try {
+          // Count brain events
+          const eventsTransaction = this.storage.db.transaction(['brain_events'], 'readonly');
+          const eventsStore = eventsTransaction.objectStore('brain_events');
+          const eventsCount = await eventsStore.count();
+          
+          // Count ingestion events
+          const ingestTransaction = this.storage.db.transaction(['data_ingestion'], 'readonly');
+          const ingestStore = ingestTransaction.objectStore('data_ingestion');
+          const ingestCount = await ingestStore.count();
+          
+          this.storage.stats.totalEvents = (eventsCount.result || 0) + (ingestCount.result || 0);
+          this.updateStorageDisplay();
+          
+        } catch (error) {
+          console.error('Load stats error:', error);
+        }
+      }
+      
+      // Simulate universal data ingestion
+      simulateDataIngestion() {
+        const fileTypes = [
+          { name: 'cline-1.0.9.jar', type: '.jar' },
+          { name: 'modern_qwen_trainer.py', type: '.py' },
+          { name: 'xjson-runtime.js', type: '.js' },
+          { name: 'asx-qwen-training-v1.jsonl', type: '.json' },
+          { name: 'ASX_Brimstone_LoreBible_v1.0.0.pdf', type: '.pdf' },
+          { name: 'ASX-Mx2LM-Micronaut.zip', type: '.zip' },
+          { name: 'pack-ae2325eacd28e525371f74de8ca894c95df78ae8.pack', type: '.pack' },
+          { name: 'prime_os_chat.html', type: '.html' },
+          { name: 'README.md', type: '.md' }
+        ];
+        
+        // Simulate ingesting 3-5 random files
+        const count = 3 + Math.floor(Math.random() * 3);
+        const selectedFiles = [];
+        
+        for (let i = 0; i < count; i++) {
+          const file = fileTypes[Math.floor(Math.random() * fileTypes.length)];
+          selectedFiles.push(file);
+          
+          setTimeout(() => {
+            this.ingestFile(file.name, file.type);
+          }, i * 800);
+        }
+        
+        this.logActivity(`Simulating ingestion of ${count} files: ${selectedFiles.map(f => f.type).join(', ')}`);
+      }
+      
+      // Train the brain (simulated)
+      trainBrain() {
+        this.logActivity("🧠 Initiating PRIME MX2LM training sequence...");
+        
+        // Activate learning nodes
+        ['curriculum', 'skill', 'feedback', 'symbolic'].forEach((node, i) => {
+          setTimeout(() => {
+            this.triggerBrainNode(node, 'training');
+          }, i * 500);
+        });
+        
+        // Simulate brain meter increase
+        setTimeout(() => {
+          const increase = 5 + Math.random() * 15;
+          this.brainMeterPercentage = Math.min(100, this.brainMeterPercentage + increase);
+          this.updateBrainMeterDisplay();
+          this.logActivity(`Training complete! Brain capacity +${increase.toFixed(1)}%`);
+        }, 2000);
+      }
+      
+      // Export all data
+      async exportAllData() {
+        try {
+          const exportData = {
+            metadata: {
+              exportDate: new Date().toISOString(),
+              version: 'PRIME-MX2LM-3.0',
+              system: 'PRIME MX2LM Universal Brain Cluster',
+              sessionId: this.storage.stats.sessionId
+            },
+            brainNodes: this.brainNodes,
+            ingestionHistory: this.ingestionHistory,
+            totalTokensIngested: this.totalTokensIngested,
+            brainMeterPercentage: this.brainMeterPercentage,
+            storageStats: this.storage.stats,
+            dataTypesSupported: Object.keys(this.dataTypes),
+            summary: {
+              totalNodes: 28,
+              activeNodes: Object.keys(this.brainNodes).filter(k => this.brainNodes[k].count > 0).length,
+              totalEvents: this.storage.stats.totalEvents,
+              layers: ['meta', 'core', 'op', 'safety', 'learn', 'exec', 'id']
+            }
+          };
+          
+          const dataStr = JSON.stringify(exportData, null, 2);
+          const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+          
+          const link = document.createElement('a');
+          link.setAttribute('href', dataUri);
+          link.setAttribute('download', `prime-mx2lm-brain-${Date.now()}.json`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          this.logActivity('PRIME MX2LM brain data exported');
+          
+        } catch (error) {
+          console.error('Export error:', error);
+          this.logActivity('Export failed');
+        }
+      }
+      
+      // Start brain activity simulation
+      startBrainActivity() {
+        // Random activity every 3-8 seconds
+        setInterval(() => {
+          if (Math.random() > 0.7) {
+            const node = this.getRandomBrainNode();
+            this.triggerBrainNode(node, 'background_activity');
+          }
+        }, 3000 + Math.random() * 5000);
+        
+        // Periodic display updates
+        setInterval(() => {
+          this.updateAllDisplays();
+        }, 3000);
+      }
+      
+      // Update all displays
+      updateAllDisplays() {
+        this.updateNodeDisplays();
+        this.updateGlobalStats();
+        this.updateStorageDisplay();
+        this.updateBrainMeterDisplay();
+      }
+      
+      // Update node displays
+      updateNodeDisplays() {
+        Object.keys(this.brainNodes).forEach(node => {
+          this.updateNodeDisplay(node);
+        });
+      }
+      
+      // Update single node display
+      updateNodeDisplay(nodeId) {
+        const statsElement = document.getElementById(`${nodeId}-stats`);
+        if (statsElement) {
+          statsElement.textContent = this.brainNodes[nodeId].count;
+          
+          // Visual feedback for recent activity
+          if (Date.now() - this.brainNodes[nodeId].lastActive < 1500) {
+            statsElement.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+              if (statsElement) statsElement.style.transform = 'scale(1)';
+            }, 300);
+          }
+        }
+      }
+      
+      // Update global stats
+      updateGlobalStats() {
+        const activeNodes = Object.keys(this.brainNodes).filter(k => this.brainNodes[k].count > 0).length;
+        const totalActivity = Object.values(this.brainNodes).reduce((sum, node) => sum + node.count, 0);
+        
+        const activeElement = document.getElementById('active-nodes');
+        const totalElement = document.getElementById('total-activity');
+        
+        if (activeElement) activeElement.textContent = `${activeNodes}/28 active nodes`;
+        if (totalElement) totalElement.textContent = `${totalActivity} total events`;
+        
+        this.storage.stats.activeNodes = activeNodes;
+      }
+      
+      // Update recent ingestion display
+      updateRecentIngestionDisplay() {
+        const recentElement = document.getElementById('recent-ingestion');
+        if (recentElement && this.ingestionHistory.length > 0) {
+          const latest = this.ingestionHistory[0];
+          recentElement.textContent = `${latest.filename} (${latest.tokenCount} tokens)`;
+        }
+      }
+      
+      // Update brain meter display
+      updateBrainMeterDisplay() {
+        const meterFill = document.getElementById('brain-meter-fill');
+        const meterText = document.getElementById('brain-meter-text');
+        const ingestionStatus = document.getElementById('ingestion-status');
+        
+        if (meterFill) {
+          const width = (236 * this.brainMeterPercentage) / 100;
+          meterFill.setAttribute('width', width);
+        }
+        
+        if (meterText) {
+          meterText.textContent = `${this.brainMeterPercentage.toFixed(1)}%`;
+          
+          // Color coding based on capacity
+          if (this.brainMeterPercentage > 80) {
+            meterText.style.fill = '#ff3366'; // Red - nearly full
+          } else if (this.brainMeterPercentage > 50) {
+            meterText.style.fill = '#ffaa00'; // Orange - medium
+          } else {
+            meterText.style.fill = '#00ffd0'; // Cyan - low
+          }
+        }
+        
+        if (ingestionStatus) {
+          if (this.brainMeterPercentage > 90) {
+            ingestionStatus.textContent = 'NEAR CAPACITY';
+            ingestionStatus.style.fill = '#ff3366';
+          } else if (this.brainMeterPercentage > 50) {
+            ingestionStatus.textContent = 'ACTIVE';
+            ingestionStatus.style.fill = '#00ffd0';
+          } else {
+            ingestionStatus.textContent = 'READY';
+            ingestionStatus.style.fill = '#16f2aa';
+          }
+        }
+      }
+      
+      // Update storage display
+      updateStorageDisplay() {
+        const lastEventElement = document.getElementById('last-event');
+        
+        if (lastEventElement) {
+          if (this.storage.stats.lastUpdate) {
+            const timeAgo = Math.floor((Date.now() - this.storage.stats.lastUpdate) / 1000);
+            lastEventElement.textContent = `Last: ${timeAgo}s ago`;
+          } else {
+            lastEventElement.textContent = 'No events yet';
+          }
+        }
+      }
+      
+      // Update storage status
+      updateStorageStatus(status) {
+        const element = document.getElementById('storage-status');
+        if (element) {
+          element.textContent = status;
+        }
+      }
+      
+      // Log activity
+      logActivity(message) {
+        const activityElement = document.getElementById('current-activity');
+        const timeElement = document.getElementById('activity-time');
+        
+        if (activityElement) {
+          activityElement.textContent = message.length > 60 ? message.substring(0, 60) + '...' : message;
+        }
+        
+        if (timeElement) {
+          timeElement.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        console.log(`🧠 PRIME MX2LM: ${message}`);
+      }
+      
+      // Setup event handlers
+      setupEventHandlers() {
+        // Brain nodes
+        Object.keys(this.brainNodes).forEach(nodeId => {
+          const element = document.getElementById(`brain-${nodeId}`);
+          if (element) {
+            element.onclick = () => this.triggerBrainNode(nodeId, 'manual_click');
+          }
+        });
+        
+        // Control buttons
+        const ingestBtn = document.getElementById('ingest-data-btn');
+        const simulateBtn = document.getElementById('simulate-activity-btn');
+        const trainBtn = document.getElementById('train-brain-btn');
+        const exportBtn = document.getElementById('export-data-btn');
+        
+        if (ingestBtn) ingestBtn.onclick = () => this.simulateDataIngestion();
+        if (simulateBtn) simulateBtn.onclick = () => this.simulateActivity();
+        if (trainBtn) trainBtn.onclick = () => this.trainBrain();
+        if (exportBtn) exportBtn.onclick = () => this.exportAllData();
+      }
+      
+      // Simulate activity (legacy)
+      simulateActivity() {
+        // Trigger 3-5 random nodes
+        const count = 3 + Math.floor(Math.random() * 3);
+        
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            const node = this.getRandomBrainNode();
+            this.triggerBrainNode(node, 'simulation');
+          }, i * 300);
+        }
+        
+        this.logActivity(`Simulating ${count} brain node activations`);
+      }
+      
+      // Utility methods
+      getRandomBrainNode() {
+        const nodes = Object.keys(this.brainNodes);
+        return nodes[Math.floor(Math.random() * nodes.length)];
+      }
+      
+      generateSessionId() {
+        return 'prime_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      }
+      
+      // Public API
+      getAPI() {
+        return {
+          ingestFile: (filename, fileType) => this.ingestFile(filename, fileType),
+          simulateIngestion: () => this.simulateDataIngestion(),
+          trainBrain: () => this.trainBrain(),
+          exportData: () => this.exportAllData(),
+          getStats: () => ({
+            brainNodes: this.brainNodes,
+            ingestionHistory: this.ingestionHistory,
+            totalTokensIngested: this.totalTokensIngested,
+            brainMeterPercentage: this.brainMeterPercentage,
+            storageStats: this.storage.stats
+          })
+        };
+      }
+    }
+    
+    // Initialize PRIME MX2LM Brain Cluster
+    let primeBrainCluster;
+    
+    function initPrimeBrainCluster() {
+      try {
+        primeBrainCluster = new PrimeMX2LMBrainCluster();
+        window.primeBrainCluster = primeBrainCluster;
+        
+        console.log('🧠 PRIME MX2LM Universal Brain Cluster initialized');
+        console.log('📁 Supported file types:', Object.keys(primeBrainCluster.dataTypes));
+        
+        // Initial splash boot
+        setTimeout(() => {
+          if (primeBrainCluster) {
+            // Trigger splash boot ritual
+            primeBrainCluster.triggerBrainNode('splash', 'system_boot');
+            
+            // Trigger initial ingestion simulation
+            setTimeout(() => {
+              primeBrainCluster.simulateDataIngestion();
+            }, 1500);
+          }
+        }, 1000);
+        
+      } catch (error) {
+        console.error('Failed to initialize PRIME MX2LM Brain Cluster:', error);
+      }
+    }
+    
+    // Initialize when ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPrimeBrainCluster);
+    } else {
+      initPrimeBrainCluster();
+    }
+    
+    // Global access
+    window.PrimeMX2LM = {
+      getInstance: () => primeBrainCluster,
+      getAPI: () => primeBrainCluster?.getAPI(),
+      ingest: (filename, fileType) => primeBrainCluster?.ingestFile(filename, fileType)
+    };
+]]>
+  </script>
+</svg>
