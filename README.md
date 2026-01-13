@@ -8,7 +8,7 @@ This directory contains an almost **complete Qwen2 1.5B model** with all necessa
 
 | File | Size | Description |
 |------|------|-------------|
-| `model.safetensors` | 1.9 GB | Main model weights (float32) |   <----DOWNLOAD THIS FILE HERE: https://mx2lm.app/model.safetensors
+| <a href="https://mx2lm.app/model.safetensors>`model.safetensors`</a> | CLICK TO DOWNLOAD 1.9 GB | Main model weights (float32) | 
 | `tokenizer.json` | 11.4 MB | Tokenizer configuration |
 | `config.json` | 1.3 KB | Model architecture config |
 | `tokenizer_config.json` | 4.9 KB | Tokenizer settings |
@@ -275,3 +275,4 @@ const answer = await pipeline('text-generation', 'qwen', {
 
 
 **Enjoy using your local Qwen2 model! 🎉**
+
