@@ -92,18 +92,6 @@
       margin: 8px 0 4px;
       align-items: center;
     }
-    .ctrl-row--stack {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .ctrl-row--stack .ctrl-row {
-      margin: 4px 0 0;
-    }
-    .panel-divider {
-      height: 1px;
-      background: rgba(148,163,184,0.25);
-      margin: 12px 0;
-    }
     .log {
       margin-top: 8px;
       background: #020617;
@@ -114,6 +102,29 @@
       max-height: 150px;
       overflow: auto;
       border: 1px solid rgba(15,23,42,0.9);
+    }
+    .section-divider {
+      margin: 16px 0 8px;
+      border-top: 1px solid rgba(148,163,184,0.3);
+      padding-top: 12px;
+    }
+    .section-title {
+      font-size: 0.8rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .engine-log {
+      background: rgba(2,6,23,0.85);
+      border-radius: 10px;
+      padding: 8px;
+      font-size: 0.7rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      max-height: 120px;
+      overflow: auto;
+      border: 1px solid rgba(22,242,170,0.2);
+      color: #d9f8ff;
     }
     #brainContainer {
       width: 100%;
@@ -187,18 +198,26 @@
         <button id="btnRenderBrain">Render Brain</button>
       </div>
 
-      <div class="panel-divider"></div>
-
-      <div class="ctrl-row ctrl-row--stack">
-        <div class="status-line">SVG-QLoRA Geometry Engine</div>
-        <div class="ctrl-row">
-          <button id="btnGenerateSVG">Generate SVG Brain</button>
-          <button id="btnCompressSVG">Compress SCXQ2</button>
-        </div>
-        <div class="status-line" id="svgStatus">Geometry: idle</div>
-      </div>
-
       <div class="log" id="log"></div>
+
+      <div class="section-divider">
+        <div class="section-title">SVG-QLoRA Geometry Engine</div>
+        <div class="ctrl-row">
+          <button id="btnGenerateGeometry">Generate SVG Brain</button>
+          <button id="btnCompressGeometry">Compress SCXQ2</button>
+        </div>
+        <div class="ctrl-row">
+          <label for="geometrySelect" style="font-size:0.75rem;color:var(--muted);">
+            Demo Brain:
+          </label>
+          <select id="geometrySelect">
+            <option value="baseball_chip">Baseball Analytics</option>
+            <option value="finance_chip">Quantitative Finance</option>
+            <option value="creative_chip">Creative Writing</option>
+          </select>
+        </div>
+        <div class="engine-log" id="engineLog"></div>
+      </div>
     </section>
 
     <!-- RIGHT: SVG NEURAL GEOMETRY VIEWPORT -->
@@ -213,291 +232,6 @@
 
   <script>
     // ------------------------------------------------------
-    // SVG WEIGHT GEOMETRY ENGINE
-    // ------------------------------------------------------
-    class SVGWeightGeometry {
-      constructor() {
-        this.activationFilters = new Map();
-      }
-
-      weightsToSVG(weights, layerName, config = {}) {
-        const {
-          precision = 3,
-          scale = 120
-        } = config;
-
-        const svgData = {
-          type: 'weight_layer',
-          layer: layerName,
-          dimensions: weights.shape,
-          paths: []
-        };
-
-        if (weights.rank === 2) {
-          const [rows] = weights.shape;
-
-          for (let i = 0; i < rows; i += 1) {
-            const pathData = this.matrixRowToPath(weights.data[i], {
-              rowIndex: i,
-              totalRows: rows,
-              scale,
-              precision
-            });
-
-            svgData.paths.push({
-              type: 'weight_row',
-              index: i,
-              d: pathData,
-              stroke: this.weightToColor(weights.data[i][0] || 0),
-              width: this.weightToStroke(weights.data[i])
-            });
-          }
-        }
-
-        return svgData;
-      }
-
-      matrixRowToPath(rowWeights, config) {
-        const { rowIndex, totalRows, scale, precision } = config;
-        const yBase = (rowIndex / Math.max(1, totalRows)) * scale;
-
-        let pathData = `M 0,${yBase.toFixed(precision)}`;
-
-        rowWeights.forEach((weight, colIndex) => {
-          const x = (colIndex / Math.max(1, rowWeights.length - 1)) * scale;
-          const y = yBase + (weight * scale * 0.3);
-
-          if (colIndex > 0) {
-            const prevX = ((colIndex - 1) / Math.max(1, rowWeights.length - 1)) * scale;
-            const prevY = yBase + (rowWeights[colIndex - 1] * scale * 0.3);
-
-            const cp1x = prevX + (x - prevX) * 0.3;
-            const cp1y = prevY;
-            const cp2x = prevX + (x - prevX) * 0.7;
-            const cp2y = y;
-
-            pathData += ` C ${cp1x.toFixed(precision)},${cp1y.toFixed(precision)} ${cp2x.toFixed(precision)},${cp2y.toFixed(precision)} ${x.toFixed(precision)},${y.toFixed(precision)}`;
-          } else {
-            pathData += ` L ${x.toFixed(precision)},${y.toFixed(precision)}`;
-          }
-        });
-
-        return pathData;
-      }
-
-      activationToFilter(activationType) {
-        const filterId = `activation_${activationType}_${Date.now()}`;
-
-        switch (activationType) {
-          case 'relu':
-            return {
-              id: filterId,
-              svg: `
-                <filter id="${filterId}" x="-0.1" y="-0.1" width="1.2" height="1.2">
-                  <feComponentTransfer>
-                    <feFuncR type="linear" slope="1" intercept="0"/>
-                    <feFuncG type="linear" slope="1" intercept="0"/>
-                    <feFuncB type="linear" slope="1" intercept="0"/>
-                    <feFuncA type="linear" slope="1" intercept="0"/>
-                  </feComponentTransfer>
-                </filter>
-              `
-            };
-          case 'sigmoid':
-            return {
-              id: filterId,
-              svg: `
-                <filter id="${filterId}">
-                  <feComponentTransfer>
-                    <feFuncR type="table" tableValues="0 0 0.5 1 1 1"/>
-                    <feFuncG type="table" tableValues="0 0 0.5 1 1 1"/>
-                    <feFuncB type="table" tableValues="0 0 0.5 1 1 1"/>
-                  </feComponentTransfer>
-                </filter>
-              `
-            };
-          case 'tanh':
-            return {
-              id: filterId,
-              svg: `
-                <filter id="${filterId}">
-                  <feComponentTransfer>
-                    <feFuncR type="table" tableValues="-1 -0.5 0 0.5 1"/>
-                    <feFuncG type="table" tableValues="-1 -0.5 0 0.5 1"/>
-                    <feFuncB type="table" tableValues="-1 -0.5 0 0.5 1"/>
-                  </feComponentTransfer>
-                </filter>
-              `
-            };
-          default:
-            return {
-              id: filterId,
-              svg: `
-                <filter id="${filterId}">
-                  <feComponentTransfer>
-                    <feFuncR type="linear" slope="1" intercept="0"/>
-                    <feFuncG type="linear" slope="1" intercept="0"/>
-                    <feFuncB type="linear" slope="1" intercept="0"/>
-                  </feComponentTransfer>
-                </filter>
-              `
-            };
-        }
-      }
-
-      weightToColor(weight) {
-        if (weight < 0) {
-          const intensity = Math.min(1, Math.abs(weight) * 2);
-          return `rgb(0, 0, ${Math.floor(255 * intensity)})`;
-        }
-        const intensity = Math.min(1, weight * 2);
-        return `rgb(${Math.floor(255 * intensity)}, 0, 0)`;
-      }
-
-      weightToStroke(rowWeights) {
-        const norm = rowWeights.reduce((acc, val) => acc + Math.abs(val), 0) / Math.max(1, rowWeights.length);
-        return Math.max(0.5, Math.min(3, norm * 4));
-      }
-
-      networkToSVG(modelWeights, architecture) {
-        const svgLayers = [];
-        const defs = [];
-
-        architecture.layers.forEach(layer => {
-          const filter = this.activationToFilter(layer.activation);
-          defs.push(filter.svg);
-          this.activationFilters.set(layer.name, filter.id);
-        });
-
-        architecture.layers.forEach(layer => {
-          const layerWeights = modelWeights[layer.name];
-          if (layerWeights) {
-            const layerSVG = this.weightsToSVG(layerWeights, layer.name);
-            layerSVG.filter = this.activationFilters.get(layer.name);
-            svgLayers.push(layerSVG);
-          }
-        });
-
-        return {
-          defs: defs.join('\n'),
-          layers: svgLayers,
-          metadata: {
-            type: 'neural_network_svg',
-            architecture: architecture.name,
-            totalParams: Object.values(modelWeights).reduce((acc, w) => acc + w.data.length, 0),
-            generated: new Date().toISOString()
-          }
-        };
-      }
-    }
-
-    // ------------------------------------------------------
-    // SVG-QLORA COMPRESSION ENGINE
-    // ------------------------------------------------------
-    class SVGQLoRACompressor {
-      constructor() {
-        this.geometryEngine = new SVGWeightGeometry();
-        this.compressionRegistry = new Map();
-      }
-
-      async compressQLoRAToSVG(qloraWeights, modelName, config = {}) {
-        const {
-          quantization = 8,
-          compression = 'scxq2'
-        } = config;
-
-        const svgBrain = this.geometryEngine.networkToSVG(qloraWeights, {
-          name: modelName,
-          layers: Object.keys(qloraWeights).map(key => ({
-            name: key,
-            activation: 'linear'
-          }))
-        });
-
-        if (quantization < 32) {
-          svgBrain.layers = this.quantizeSVGPaths(svgBrain.layers, quantization);
-        }
-
-        if (compression === 'scxq2') {
-          return this.compressSVGWithSCXQ2(svgBrain, modelName);
-        }
-
-        return {
-          brainId: `${modelName}_svg`,
-          svg: svgBrain
-        };
-      }
-
-      quantizeSVGPaths(layers, bits) {
-        return layers.map(layer => ({
-          ...layer,
-          paths: layer.paths.map(path => ({
-            ...path,
-            d: this.quantizePathData(path.d, bits)
-          }))
-        }));
-      }
-
-      quantizePathData(pathData, bits) {
-        const numbers = (pathData.match(/[-+]?\\d*\\.?\\d+/g) || []).map(Number);
-        if (!numbers.length) return pathData;
-        const maxVal = Math.pow(2, bits) - 1;
-        let index = 0;
-        return pathData.replace(/[-+]?\\d*\\.?\\d+/g, match => {
-          const num = numbers[index];
-          const normalized = Math.max(0, Math.min(1, (num + 1) / 2));
-          const quantized = Math.round(normalized * maxVal);
-          const dequantized = (quantized / maxVal) * 2 - 1;
-          index += 1;
-          return dequantized.toFixed(3);
-        });
-      }
-
-      compressSVGWithSCXQ2(svgBrain, modelName) {
-        const compressed = {
-          type: 'svg_qlora_brain',
-          model: modelName,
-          version: '1.0',
-          compressed: true,
-          data: {}
-        };
-
-        svgBrain.layers.forEach(layer => {
-          compressed.data[layer.layer] = {
-            paths: layer.paths.map(path => ({
-              d: this.scxq2CompressPath(path.d),
-              metadata: {
-                stroke: path.stroke,
-                width: path.width
-              }
-            })),
-            filter: layer.filter
-          };
-        });
-
-        const brainId = `brain_${modelName}_${Date.now()}`;
-        this.compressionRegistry.set(brainId, compressed);
-
-        return {
-          brainId,
-          originalSize: JSON.stringify(svgBrain).length,
-          compressedSize: JSON.stringify(compressed).length,
-          compressionRatio: JSON.stringify(svgBrain).length / Math.max(1, JSON.stringify(compressed).length)
-        };
-      }
-
-      scxq2CompressPath(pathData) {
-        return pathData
-          .replace(/M /g, '⟁M⟁')
-          .replace(/L /g, '⟁L⟁')
-          .replace(/C /g, '⟁C⟁')
-          .replace(/Z/g, '⟁Z⟁')
-          .replace(/,/g, '⟁')
-          .replace(/\\s+/g, '⟁');
-      }
-    }
-
-    // ------------------------------------------------------
     // SVG BRAIN RENDERER (FRONT-END VISUAL CORTEX)
     // ------------------------------------------------------
     class SVGBrainRenderer {
@@ -511,14 +245,23 @@
         }
       }
 
+      setOverlays(titleText) {
+        const title = document.getElementById('brainTitle');
+        const overlay = document.getElementById('brainOverlay');
+        if (title) {
+          title.textContent = titleText;
+          this.container.appendChild(title);
+        }
+        if (overlay) {
+          this.container.appendChild(overlay);
+        }
+      }
+
       render(brain) {
         this.clear();
 
-        const title = document.getElementById('brainTitle');
-        const overlay = document.getElementById('brainOverlay');
-        title.textContent = `${brain.model} — ${brain.id}`;
-        this.container.appendChild(title);
-        this.container.appendChild(overlay);
+        // Re-add overlays
+        this.setOverlays(`${brain.model} — ${brain.id}`);
 
         const ns = 'http://www.w3.org/2000/svg';
         const svg = document.createElementNS(ns, 'svg');
@@ -531,6 +274,7 @@
           g.setAttribute('class', 'neural-layer');
           g.setAttribute('transform', `translate(10,${15 + idx * 35})`);
 
+          // label
           const label = document.createElementNS(ns, 'text');
           label.setAttribute('x', 0);
           label.setAttribute('y', -4);
@@ -569,47 +313,394 @@
     }
 
     const brainRenderer = new SVGBrainRenderer('brainContainer');
-    const geometryEngine = new SVGWeightGeometry();
-    const svgCompressor = new SVGQLoRACompressor();
+
+    // ------------------------------------------------------
+    // SVG-QLoRA GEOMETRY ENGINE
+    // ------------------------------------------------------
+    class SVGWeightGeometry {
+      constructor() {
+        this.weightPaths = new Map();
+        this.layerGroups = new Map();
+        this.activationFilters = new Map();
+      }
+
+      weightsToSVG(weights, layerName, config = {}) {
+        const {
+          precision = 3,
+          scale = 100
+        } = config;
+
+        const svgData = {
+          type: 'weight_layer',
+          layer: layerName,
+          dimensions: weights.shape,
+          paths: []
+        };
+
+        if (weights.rank === 2) {
+          const [rows, cols] = weights.shape;
+          for (let i = 0; i < rows; i += 1) {
+            const pathData = this.matrixRowToPath(weights.data[i], {
+              rowIndex: i,
+              totalRows: rows,
+              scale,
+              precision
+            });
+            svgData.paths.push({
+              type: 'weight_row',
+              index: i,
+              d: pathData,
+              stroke: this.weightToColor(weights.data[i][0]),
+              'stroke-width': this.weightToStroke(weights.norm())
+            });
+          }
+        }
+      }
+
+        return svgData;
+      }
+
+      matrixRowToPath(rowWeights, config) {
+        const { rowIndex, totalRows, scale, precision } = config;
+        const yBase = (rowIndex / totalRows) * scale;
+        let pathData = `M 0,${yBase.toFixed(precision)}`;
+
+        rowWeights.forEach((weight, colIndex) => {
+          const x = (colIndex / rowWeights.length) * scale;
+          const y = yBase + (weight * scale * 0.3);
+
+          if (colIndex > 0) {
+            const prevX = ((colIndex - 1) / rowWeights.length) * scale;
+            const prevY = yBase + (rowWeights[colIndex - 1] * scale * 0.3);
+
+            const cp1x = prevX + (x - prevX) * 0.3;
+            const cp1y = prevY;
+            const cp2x = prevX + (x - prevX) * 0.7;
+            const cp2y = y;
+
+            pathData += ` C ${cp1x.toFixed(precision)},${cp1y.toFixed(precision)} ${cp2x.toFixed(precision)},${cp2y.toFixed(precision)} ${x.toFixed(precision)},${y.toFixed(precision)}`;
+          } else {
+            pathData += ` L ${x.toFixed(precision)},${y.toFixed(precision)}`;
+          }
+        });
+
+        return pathData;
+      }
+
+      activationToFilter(activationType) {
+        const filterId = `activation_${activationType}_${Date.now()}`;
+
+        switch (activationType) {
+          case 'relu':
+            return {
+              id: filterId,
+              svg: `
+            <filter id="${filterId}" x="-0.1" y="-0.1" width="1.2" height="1.2">
+              <feComponentTransfer>
+                <feFuncR type="linear" slope="1" intercept="0"/>
+                <feFuncG type="linear" slope="1" intercept="0"/>
+                <feFuncB type="linear" slope="1" intercept="0"/>
+                <feFuncA type="linear" slope="1" intercept="0">
+                  <animate attributeName="intercept" values="0;0;1;1" dur="0.001s" fill="freeze"/>
+                </feFuncA>
+              </feComponentTransfer>
+            </filter>
+          `
+            };
+          case 'sigmoid':
+            return {
+              id: filterId,
+              svg: `
+            <filter id="${filterId}">
+              <feComponentTransfer>
+                <feFuncR type="table" tableValues="0 0 0.5 1 1 1"/>
+                <feFuncG type="table" tableValues="0 0 0.5 1 1 1"/>
+                <feFuncB type="table" tableValues="0 0 0.5 1 1 1"/>
+              </feComponentTransfer>
+            </filter>
+          `
+            };
+          case 'tanh':
+            return {
+              id: filterId,
+              svg: `
+            <filter id="${filterId}">
+              <feComponentTransfer>
+                <feFuncR type="table" tableValues="-1 -0.5 0 0.5 1"/>
+                <feFuncG type="table" tableValues="-1 -0.5 0 0.5 1"/>
+                <feFuncB type="table" tableValues="-1 -0.5 0 0.5 1"/>
+              </feComponentTransfer>
+            </filter>
+          `
+            };
+          default:
+            return null;
+        }
+      }
+
+      weightToColor(weight) {
+        if (weight < 0) {
+          const intensity = Math.min(1, Math.abs(weight) * 2);
+          return `rgb(0, 0, ${Math.floor(255 * intensity)})`;
+        }
+        const intensity = Math.min(1, weight * 2);
+        return `rgb(${Math.floor(255 * intensity)}, 0, 0)`;
+      }
+
+      weightToStroke(norm) {
+        return Math.max(0.5, Math.min(3, norm * 2));
+      }
+
+      networkToSVG(modelWeights, architecture) {
+        const svgLayers = [];
+        const defs = [];
+
+        architecture.layers.forEach(layer => {
+          const filter = this.activationToFilter(layer.activation);
+          if (filter) {
+            defs.push(filter.svg);
+            this.activationFilters.set(layer.name, filter.id);
+          }
+        });
+
+        architecture.layers.forEach(layer => {
+          const layerWeights = modelWeights[layer.name];
+          if (layerWeights) {
+            const layerSVG = this.weightsToSVG(layerWeights, layer.name);
+            layerSVG.filter = this.activationFilters.get(layer.name);
+            svgLayers.push(layerSVG);
+          }
+        });
+
+        return {
+          defs: defs.join('\n'),
+          layers: svgLayers,
+          metadata: {
+            type: 'neural_network_svg',
+            architecture: architecture.name,
+            totalParams: this.countParameters(modelWeights),
+            generated: new Date().toISOString()
+          }
+        };
+      }
+
+      countParameters(modelWeights) {
+        return Object.values(modelWeights).reduce((total, weights) => {
+          const [rows, cols] = weights.shape;
+          return total + (rows * cols);
+        }, 0);
+      }
+
+      renderSVGBrain(networkSVG, containerId, titleText) {
+        const container = document.getElementById(containerId);
+        if (!container) return null;
+
+        brainRenderer.clear();
+        brainRenderer.setOverlays(titleText);
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '100%');
+        svg.setAttribute('height', '100%');
+        svg.setAttribute('viewBox', '0 0 800 600');
+        svg.style.background = '#0a0a1a';
+
+        const defsElement = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        defsElement.innerHTML = networkSVG.defs;
+        svg.appendChild(defsElement);
+
+        networkSVG.layers.forEach((layer, index) => {
+          const layerGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          layerGroup.setAttribute('class', `neural-layer layer-${index}`);
+          layerGroup.setAttribute('transform', `translate(${index * 120 + 50}, 80)`);
+
+          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          label.setAttribute('x', 0);
+          label.setAttribute('y', -12);
+          label.setAttribute('fill', '#16f2aa');
+          label.setAttribute('font-size', '10');
+          label.setAttribute('font-family', 'monospace');
+          label.textContent = layer.layer;
+          layerGroup.appendChild(label);
+
+          layer.paths.forEach(pathData => {
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', pathData.d);
+            path.setAttribute('stroke', pathData.stroke);
+            path.setAttribute('stroke-width', pathData['stroke-width']);
+            path.setAttribute('fill', 'none');
+
+            if (layer.filter) {
+              path.setAttribute('filter', `url(#${layer.filter})`);
+            }
+
+            path.style.opacity = '0.7';
+            path.addEventListener('mouseenter', () => {
+              path.style.strokeWidth = '4';
+              path.style.opacity = '1';
+            });
+            path.addEventListener('mouseleave', () => {
+              path.style.strokeWidth = pathData['stroke-width'];
+              path.style.opacity = '0.7';
+            });
+
+            layerGroup.appendChild(path);
+          });
+
+          svg.appendChild(layerGroup);
+        });
+
+        container.appendChild(svg);
+        return svg;
+      }
+    }
+
+    class SVGQLoRACompressor {
+      constructor() {
+        this.geometryEngine = new SVGWeightGeometry();
+        this.compressionRegistry = new Map();
+      }
+
+      async compressQLoRAToSVG(qloraWeights, modelName, config = {}) {
+        const {
+          quantization = 8,
+          compression = 'scxq2'
+        } = config;
+
+        const svgBrain = this.geometryEngine.networkToSVG(qloraWeights, {
+          name: modelName,
+          layers: Object.keys(qloraWeights).map(key => ({
+            name: key,
+            activation: 'linear'
+          }))
+        });
+
+        if (quantization < 32) {
+          svgBrain.layers = this.quantizeSVGPaths(svgBrain.layers, quantization);
+        }
+
+        if (compression === 'scxq2') {
+          return this.compressSVGWithSCXQ2(svgBrain, modelName);
+        }
+
+        return svgBrain;
+      }
+
+      quantizeSVGPaths(layers, bits) {
+        return layers.map(layer => ({
+          ...layer,
+          paths: layer.paths.map(path => ({
+            ...path,
+            d: this.quantizePathData(path.d, bits)
+          }))
+        }));
+      }
+
+      quantizePathData(pathData, bits) {
+        const numbers = (pathData.match(/[-+]?\\d*\\.?\\d+/g) || []).map(Number);
+        const maxVal = Math.pow(2, bits) - 1;
+
+        let quantizedPath = pathData;
+        numbers.forEach((original, index) => {
+          const normalized = (original + 1) / 2;
+          const quantized = Math.round(normalized * maxVal);
+          const dequantized = (quantized / maxVal) * 2 - 1;
+          quantizedPath = quantizedPath.replace(original.toString(), dequantized.toFixed(3));
+        });
+
+        return quantizedPath;
+      }
+
+      async compressSVGWithSCXQ2(svgBrain, modelName) {
+        const compressed = {
+          type: 'svg_qlora_brain',
+          model: modelName,
+          version: '1.0',
+          compressed: true,
+          data: {}
+        };
+
+        svgBrain.layers.forEach(layer => {
+          compressed.data[layer.layer] = {
+            paths: layer.paths.map(path => ({
+              d: this.scxq2CompressPath(path.d),
+              metadata: {
+                stroke: path.stroke,
+                width: path['stroke-width']
+              }
+            })),
+            filter: layer.filter
+          };
+        });
+
+        const brainId = `brain_${modelName}_${Date.now()}`;
+        this.compressionRegistry.set(brainId, compressed);
+
+        return {
+          brainId,
+          originalSize: JSON.stringify(svgBrain).length,
+          compressedSize: JSON.stringify(compressed).length,
+          compressionRatio: JSON.stringify(svgBrain).length / JSON.stringify(compressed).length
+        };
+      }
+
+      scxq2CompressPath(pathData) {
+        return pathData
+          .replace(/M /g, '⟁M⟁')
+          .replace(/L /g, '⟁L⟁')
+          .replace(/C /g, '⟁C⟁')
+          .replace(/Z/g, '⟁Z⟁')
+          .replace(/,/g, '⟁')
+          .replace(/\\s+/g, '⟁');
+      }
+
+      scxq2DecompressPath(compressedPath) {
+        return compressedPath
+          .replace(/⟁M⟁/g, 'M ')
+          .replace(/⟁L⟁/g, 'L ')
+          .replace(/⟁C⟁/g, 'C ')
+          .replace(/⟁Z⟁/g, 'Z')
+          .replace(/⟁/g, ' ');
+      }
+
+      async loadCompressedBrain(brainId, containerId) {
+        const compressed = this.compressionRegistry.get(brainId);
+        if (!compressed) throw new Error(`Brain ${brainId} not found`);
+
+        const svgBrain = {
+          defs: '',
+          layers: Object.entries(compressed.data).map(([layerName, layerData]) => ({
+            layer: layerName,
+            paths: layerData.paths.map(path => ({
+              d: this.scxq2DecompressPath(path.d),
+              stroke: path.metadata.stroke,
+              'stroke-width': path.metadata.width
+            })),
+            filter: layerData.filter
+          }))
+        };
+
+        return this.geometryEngine.renderSVGBrain(svgBrain, containerId, `SCXQ2 ${compressed.model}`);
+      }
+    }
 
     // ------------------------------------------------------
     // SW UTILS
     // ------------------------------------------------------
     const logEl = document.getElementById('log');
+    const engineLogEl = document.getElementById('engineLog');
     const statusLine = document.getElementById('statusLine');
     const brainCountEl = document.getElementById('brainCount');
     const procCountEl = document.getElementById('procCount');
     const brainSelect = document.getElementById('brainSelect');
-    const svgStatus = document.getElementById('svgStatus');
+    const geometrySelect = document.getElementById('geometrySelect');
 
-    const demoWeights = {
-      lora_A: {
-        rank: 2,
-        shape: [24, 48],
-        data: Array.from({ length: 24 }, (_, i) => (
-          Array.from({ length: 48 }, (_, j) => (
-            Math.sin(i * 0.25) * Math.cos(j * 0.15) * 0.6
-          ))
-        ))
-      },
-      lora_B: {
-        rank: 2,
-        shape: [16, 36],
-        data: Array.from({ length: 16 }, (_, i) => (
-          Array.from({ length: 36 }, (_, j) => (
-            Math.cos(i * 0.3) * Math.sin(j * 0.2) * 0.4
-          ))
-        ))
-      }
-    };
+    const svgGeometryEngine = new SVGWeightGeometry();
+    const svgCompressor = new SVGQLoRACompressor();
 
-    const demoArchitecture = {
-      name: 'ULTRA-QLoRA',
-      layers: [
-        { name: 'lora_A', activation: 'relu' },
-        { name: 'lora_B', activation: 'tanh' }
-      ]
-    };
+    function logEngine(msg) {
+      const time = new Date().toISOString().split('T')[1].replace('Z','');
+      engineLogEl.textContent = `[${time}] ${msg}\n` + engineLogEl.textContent;
+    }
 
     function log(msg) {
       const time = new Date().toISOString().split('T')[1].replace('Z','');
@@ -710,37 +801,52 @@
       log(`Rendered brain: ${json.brain.model} (${json.brain.id})`);
     }
 
-    function renderGeneratedBrain(networkSVG) {
-      const brain = {
-        id: 'generated_svg',
-        model: networkSVG.metadata.architecture,
-        layers: networkSVG.layers.map(layer => ({
-          name: layer.layer,
-          paths: layer.paths.map(path => ({
-            d: path.d,
-            stroke: path.stroke,
-            width: path.width
-          }))
-        }))
+    function createDemoWeights(seed) {
+      const rows = 24;
+      const cols = 48;
+      const makeMatrix = (factor) => Array.from({ length: rows }, (_, i) =>
+        Array.from({ length: cols }, (_, j) =>
+          Math.sin((i + factor) * 0.1) * Math.cos((j + seed) * 0.07) * 0.5
+        )
+      );
+
+      return {
+        lora_A: {
+          shape: [rows, cols],
+          rank: 2,
+          data: makeMatrix(1),
+          norm() { return 0.8; }
+        },
+        lora_B: {
+          shape: [rows, cols],
+          rank: 2,
+          data: makeMatrix(2),
+          norm() { return 0.6; }
+        }
       };
-      brainRenderer.render(brain);
     }
 
     async function generateSVGBrain() {
-      const networkSVG = geometryEngine.networkToSVG(demoWeights, demoArchitecture);
-      svgStatus.textContent = 'Geometry: generated';
-      log('Generated SVG geometry from demo weights');
-      renderGeneratedBrain(networkSVG);
+      const demoKey = geometrySelect.value;
+      const weights = createDemoWeights(demoKey.length);
+      const svgBrain = svgGeometryEngine.networkToSVG(weights, {
+        name: demoKey,
+        layers: [
+          { name: 'lora_A', activation: 'relu' },
+          { name: 'lora_B', activation: 'tanh' }
+        ]
+      });
+
+      svgGeometryEngine.renderSVGBrain(svgBrain, 'brainContainer', `SVG QLoRA — ${demoKey}`);
+      logEngine(`Generated SVG brain for ${demoKey} (${svgBrain.metadata.totalParams} params)`);
     }
 
     async function compressSVGBrain() {
-      const result = await svgCompressor.compressQLoRAToSVG(
-        demoWeights,
-        demoArchitecture.name,
-        { quantization: 8, compression: 'scxq2' }
-      );
-      svgStatus.textContent = `Geometry: compressed (${result.compressionRatio.toFixed(2)}x)`;
-      log(`Compressed SVG brain to SCXQ2 (${result.compressionRatio.toFixed(2)}x)`);
+      const demoKey = geometrySelect.value;
+      const weights = createDemoWeights(demoKey.length);
+      const result = await svgCompressor.compressQLoRAToSVG(weights, demoKey, { compression: 'scxq2', quantization: 8 });
+      logEngine(`Compressed ${demoKey}: ${result.compressionRatio.toFixed(2)}x (${result.brainId})`);
+      await svgCompressor.loadCompressedBrain(result.brainId, 'brainContainer');
     }
 
     // ------------------------------------------------------
@@ -749,8 +855,8 @@
     document.getElementById('btnRefresh').addEventListener('click', refreshStatus);
     document.getElementById('btnListBrains').addEventListener('click', fetchBrainsList);
     document.getElementById('btnRenderBrain').addEventListener('click', renderSelectedBrain);
-    document.getElementById('btnGenerateSVG').addEventListener('click', generateSVGBrain);
-    document.getElementById('btnCompressSVG').addEventListener('click', compressSVGBrain);
+    document.getElementById('btnGenerateGeometry').addEventListener('click', generateSVGBrain);
+    document.getElementById('btnCompressGeometry').addEventListener('click', compressSVGBrain);
 
     // ------------------------------------------------------
     // BOOT
