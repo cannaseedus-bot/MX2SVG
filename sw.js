@@ -1,470 +1,430 @@
-/* ============================================================
-   MX2SVG — SW.KERNEL (K### SECTIONS)
-   - manifest.json hosts kuhol_server routes/contracts/policies
-   - sw.js is numbered + fault-addressable
-   - Qwen = primary brain, lam.o = addon
-   - SCXQ2 stream capture = kernel service for ALL routes + channels
-   ============================================================ */
+// ULTRA NEURAL GEOMETRY STACK — ΩOS TRINITY SERVICE WORKER
+// K'uhul + KLH + XJSON + SCXQ2 + SVG Brain Store (no DOM here)
 
-'use strict';
+// ----------------------------------------------------------
+// CORE CONSTANTS
+// ----------------------------------------------------------
+const KUHUL_OS = 'kuhul-ultra-neuro-v1';
+const KERNEL_CACHE = `${KUHUL_OS}-kernel`;
+const STATIC_CACHE = `${KUHUL_OS}-static`;
 
-/* =========================
-   K000 — GLOBALS
-   ========================= */
+const CORE_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/sw.js'
+];
 
-const K = Object.create(null);
-const STATE = {
-  server: null,
-  policy: null,
-  streams: Object.create(null),   // stream_id -> SCXQ2Stream
-  session: {
-    id: 'sess_' + String(Date.now()),
-    tick: 0
+// ----------------------------------------------------------
+// LIGHTWEIGHT KERNEL (K) — PROCESS TABLE
+// ----------------------------------------------------------
+const K = {
+  p: new Map(),   // processes
+  w: new Map(),   // weights / brains / registry
+
+  async run(id, code, ctx = {}) {
+    const proc = { id, code, ctx, st: 'run', ts: Date.now() };
+    this.p.set(id, proc);
+    // In this SW edition we don't execute glyphs fully;
+    // we just register process + return context.
+    return { id, res: 'ok', ctx };
   },
-  models: {
-    qwen: { status: 'unknown' },
-    lamo: { status: 'unknown' }
+
+  status() {
+    return {
+      processes: this.p.size,
+      registry: this.w.size,
+      ts: Date.now()
+    };
   }
 };
 
-/* =========================
-   K001 — BOOT
-   ========================= */
-K.K001 = async () => true;
-
-/* =========================
-   K010 — MANIFEST LOAD
-   ========================= */
-K.K010 = async () => {
-  if (STATE.server) return STATE.server;
-  const r = await fetch('./manifest.json', { cache: 'no-cache' });
-  const m = await r.json();
-  if (!m.kuhul_server) throw fault('K010', 'E_NO_KUHUL_SERVER');
-  STATE.server = m.kuhul_server;
-  STATE.policy = m.kuhul_server.policies || {};
-  return STATE.server;
-};
-
-/* =========================
-   K011 — CONTRACT GET
-   ========================= */
-K.K011 = async (contractId) => {
-  const server = await K.K010();
-  const c = server.contracts && server.contracts[contractId];
-  if (!c) throw fault('K011', 'E_NO_CONTRACT:' + contractId);
-  return c;
-};
-
-/* =========================
-   K012 — CONTRACT CHECK (MINIMAL)
-   - deterministic, shallow, no JSON schema engine
-   ========================= */
-K.K012 = async (contractId, body, dir /* 'input'|'output' */) => {
-  const c = await K.K011(contractId);
-  const shape = c && c[dir];
-  if (!shape) return true;
-  // minimal: required fields are those not ending with '?'
-  for (const k of Object.keys(shape)) {
-    const t = shape[k];
-    if (typeof t === 'string' && t.endsWith('?')) continue;
-    if (Array.isArray(t)) continue; // enum list
-    if (!(k in body)) throw fault('K012', `E_CONTRACT_${dir.toUpperCase()}_MISSING:${k}`);
-  }
-  return true;
-};
-
-/* =========================
-   K020 — QWEN HEALTH
-   ========================= */
-K.K020 = async () => {
-  // Qwen is "primary brain"; actual adapter is project-specific.
-  // Keep deterministic stub + stream capture.
-  SCXQ2.capture('route.qwen.health', { ok: true });
-  STATE.models.qwen.status = 'live';
-  return json({ ok: true, provider: 'qwen', status: STATE.models.qwen.status });
-};
-
-/* =========================
-   K021 — QWEN INFER
-   - contract: xjson://contract/qwen.infer/v1
-   ========================= */
-K.K021 = async (req) => {
-  const body = await req.json();
-  await K.K012('xjson://contract/qwen.infer/v1', body, 'input');
-
-  const stream = SCXQ2.beginSession({
-    kind: 'infer',
-    provider: 'qwen',
-    session_id: STATE.session.id,
-    route: '/api/qwen/infer'
-  });
-
-  SCXQ2.capture('infer.start', { provider: 'qwen', body });
-
-  // TODO: wire to real Qwen runtime (Transformers.js / WebGPU / local)
-  const out = {
-    text: '[QWEN OUTPUT — adapter not wired]',
-    tokens_used: 0
-  };
-
-  SCXQ2.capture('infer.end', { provider: 'qwen', out });
-  const frame = SCXQ2.endSession(stream, { ok: true });
-
-  await K.K012('xjson://contract/qwen.infer/v1', out, 'output');
-  return json({ ...out, scxq2: { stream_id: stream.id, end_hash: frame.end_hash } });
-};
-
-/* =========================
-   K030 — LAM.O HEALTH
-   ========================= */
-K.K030 = async () => {
-  SCXQ2.capture('route.lamo.health', { target: 'http://localhost:61683' });
-  try {
-    const r = await fetch('http://localhost:61683/api/tags', { method: 'GET' });
-    const j = await r.json();
-    STATE.models.lamo.status = r.ok ? 'live' : 'down';
-    return json({ ok: r.ok, provider: 'ollama', status: STATE.models.lamo.status, tags: j }, r.ok ? 200 : 503);
-  } catch (e) {
-    STATE.models.lamo.status = 'down';
-    return json({ ok: false, provider: 'ollama', status: 'down', fault: 'CONNECT_FAIL' }, 503);
+// ----------------------------------------------------------
+// SCXQ2 PATH CODEC (ULTRA-LITE)
+// ----------------------------------------------------------
+const SCXQ2 = {
+  encodePath(pathData) {
+    return pathData
+      .replace(/M /g, '⟁M⟁')
+      .replace(/L /g, '⟁L⟁')
+      .replace(/C /g, '⟁C⟁')
+      .replace(/Z/g, '⟁Z⟁')
+      .replace(/,/g, '⟁')
+      .replace(/\s+/g, '⟁');
+  },
+  decodePath(comp) {
+    return comp
+      .replace(/⟁M⟁/g, 'M ')
+      .replace(/⟁L⟁/g, 'L ')
+      .replace(/⟁C⟁/g, 'C ')
+      .replace(/⟁Z⟁/g, 'Z')
+      .replace(/⟁/g, ' ');
   }
 };
 
-/* =========================
-   K031 — LAM.O INFER
-   - contract: xjson://contract/lam.o.infer/v1
-   ========================= */
-K.K031 = async (req) => {
-  const body = await req.json();
-  await K.K012('xjson://contract/lam.o.infer/v1', body, 'input');
+// ----------------------------------------------------------
+// BRAIN STORE — SCXQ2 PACKED SVG GEOMETRY
+// ----------------------------------------------------------
+const BrainStore = {
+  brains: new Map(),   // brainId -> { meta, layers }
 
-  const stream = SCXQ2.beginSession({
-    kind: 'infer',
-    provider: 'ollama',
-    session_id: STATE.session.id,
-    route: '/api/lam.o/infer'
-  });
+  initDemoBrains() {
+    if (this.brains.size) return;
 
-  SCXQ2.capture('infer.start', { provider: 'ollama', body });
+    // DEMO BRAIN #1 — "mx2lm_core" geometry (synthetic)
+    const b1 = {
+      id: 'mx2lm_core_svg',
+      model: 'MX2LM-CORE-GEOMETRY',
+      type: 'svg_qlora_scxq2',
+      created: Date.now(),
+      layers: [
+        {
+          name: 'lora_A',
+          filter: null,
+          paths: [
+            {
+              d: SCXQ2.encodePath(
+                'M 0,10 C 20,5 40,15 60,10 C 80,5 100,15 120,10'
+              ),
+              stroke: 'rgb(255,0,80)',
+              width: 1.5
+            },
+            {
+              d: SCXQ2.encodePath(
+                'M 0,20 C 20,25 40,15 60,20 C 80,25 100,15 120,20'
+              ),
+              stroke: 'rgb(80,160,255)',
+              width: 1.2
+            }
+          ]
+        },
+        {
+          name: 'lora_B',
+          filter: null,
+          paths: [
+            {
+              d: SCXQ2.encodePath(
+                'M 0,40 C 30,60 60,20 90,40 C 120,60 150,20 180,40'
+              ),
+              stroke: 'rgb(255,160,0)',
+              width: 1.8
+            }
+          ]
+        }
+      ]
+    };
 
-  let out;
-  try {
-    const r = await fetch('http://localhost:61683/api/generate', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body)
+    // DEMO BRAIN #2 — "arena_brain" geometry (synthetic)
+    const b2 = {
+      id: 'arena_brain_svg',
+      model: 'ARENA-BATTLE-BRAIN',
+      type: 'svg_qlora_scxq2',
+      created: Date.now(),
+      layers: [
+        {
+          name: 'risk_map',
+          filter: null,
+          paths: [
+            {
+              d: SCXQ2.encodePath(
+                'M 10,80 L 40,60 L 70,90 L 100,70 L 130,100'
+              ),
+              stroke: 'rgb(22,242,170)',
+              width: 2.0
+            }
+          ]
+        }
+      ]
+    };
+
+    this.brains.set(b1.id, b1);
+    this.brains.set(b2.id, b2);
+
+    // Also mirror into kernel registry
+    K.w.set(b1.id, b1);
+    K.w.set(b2.id, b2);
+  },
+
+  list() {
+    return Array.from(this.brains.values()).map(b => ({
+      id: b.id,
+      model: b.model,
+      type: b.type,
+      created: b.created
+    }));
+  },
+
+  get(id) {
+    const b = this.brains.get(id);
+    if (!b) return null;
+
+    // decode paths on the way out
+    return {
+      id: b.id,
+      model: b.model,
+      type: b.type,
+      created: b.created,
+      layers: b.layers.map(layer => ({
+        name: layer.name,
+        filter: layer.filter,
+        paths: layer.paths.map(p => ({
+          d: SCXQ2.decodePath(p.d),
+          stroke: p.stroke,
+          width: p.width
+        }))
+      }))
+    };
+  },
+
+  // hook for future: pack raw weights from /usr into SCXQ2 geometry
+  async packFromWeights(id, weightsMeta = {}) {
+    // placeholder pipeline: in real mode this would map QLoRA -> SVG -> SCXQ2
+    const synthetic = {
+      id,
+      model: weightsMeta.model || 'CUSTOM-GEOMETRY',
+      type: 'svg_qlora_scxq2',
+      created: Date.now(),
+      layers: [
+        {
+          name: 'custom_layer',
+          filter: null,
+          paths: [
+            {
+              d: SCXQ2.encodePath('M 0,0 C 30,30 60,-10 90,10'),
+              stroke: 'rgb(180,80,255)',
+              width: 1.4
+            }
+          ]
+        }
+      ]
+    };
+    this.brains.set(id, synthetic);
+    K.w.set(id, synthetic);
+    return synthetic;
+  }
+};
+
+// ----------------------------------------------------------
+// ΩOS MANIFEST (KERNEL VIEW)
+// ----------------------------------------------------------
+const ΩMANIFEST_KERNEL = {
+  Ωv: '2.1',
+  n: 'ASX-PRIME-TRINITY-OS',
+  d: 'Browser OS + Neural Geometry Kernel',
+  brain_protocol: {
+    format: 'svg_qlora_scxq2',
+    slots: 16,
+    engine: 'kuhul_geometry',
+    registry: 'sw_brain_store'
+  }
+};
+
+// ----------------------------------------------------------
+// ΩOS API ROUTER
+// ----------------------------------------------------------
+async function respondΩOS(requestUrl, request) {
+  const path = requestUrl.pathname.replace(/^\/api\/ΩOS\//, '');
+  const parts = path.split('/').filter(Boolean);
+
+  // /api/ΩOS/status
+  if (parts[0] === 'status') {
+    return new Response(JSON.stringify({
+      kernel: 'ΩOS-ULTRA',
+      version: ΩMANIFEST_KERNEL.Ωv,
+      k: K.status(),
+      brain_slots: ΩMANIFEST_KERNEL.brain_protocol.slots
+    }), {
+      headers: { 'Content-Type': 'application/json' }
     });
-    out = await r.json();
-    SCXQ2.capture('infer.end', { provider: 'ollama', out, ok: r.ok });
-  } catch (e) {
-    out = { response: '', fault: 'CONNECT_FAIL' };
-    SCXQ2.capture('infer.end', { provider: 'ollama', out, ok: false });
   }
 
-  const frame = SCXQ2.endSession(stream, { ok: !out.fault });
-
-  // contract output is minimal ("response"); allow passthrough but ensure presence
-  if (!('response' in out)) out.response = (out && (out.response || out.output || out.message || '')) + '';
-  await K.K012('xjson://contract/lam.o.infer/v1', out, 'output');
-
-  return json({ ...out, scxq2: { stream_id: stream.id, end_hash: frame.end_hash } }, out.fault ? 503 : 200);
-};
-
-/* =========================
-   K032 — LAM.O DESCRIBE (OPTIONAL)
-   - uses /api/show in Ollama if available, else tags
-   ========================= */
-K.K032 = async (req) => {
-  const body = await req.json().catch(() => ({}));
-  const model = String(body.model || '');
-  SCXQ2.capture('route.lamo.describe', { model });
-
-  try {
-    // common endpoint for details in some ollama builds
-    const r = await fetch('http://localhost:61683/api/show', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ name: model })
-    });
-    const j = await r.json();
-    return json({ ok: r.ok, model, describe: j }, r.ok ? 200 : 500);
-  } catch (e) {
-    return json({ ok: false, model, fault: 'CONNECT_FAIL' }, 503);
-  }
-};
-
-/* =========================
-   K040 — SESSION EXPORT
-   ========================= */
-K.K040 = async () => {
-  const bundle = {
-    '@type': 'mx2svg.session.export.v1',
-    session_id: STATE.session.id,
-    tick: STATE.session.tick,
-    streams: SCXQ2.exportAll()
-  };
-  SCXQ2.capture('session.export', { session_id: STATE.session.id, streams: Object.keys(STATE.streams).length });
-  return json(bundle);
-};
-
-/* =========================
-   K041 — SESSION CLEAR
-   ========================= */
-K.K041 = async () => {
-  SCXQ2.capture('session.clear', { session_id: STATE.session.id });
-  SCXQ2.resetAll();
-  STATE.session.id = 'sess_' + String(Date.now());
-  STATE.session.tick = 0;
-  return json({ ok: true, session_id: STATE.session.id });
-};
-
-/* =========================
-   K070 — POSTMESSAGE CHANNEL (INSTRUCTION_CHANNELS)
-   - sw_kernel expects: LOAD_MODEL, TOKENIZE, LAMO_ROUTE
-   ========================= */
-K.K070 = async (msg, src) => {
-  const { type, payload } = msg || {};
-  if (!type) return;
-
-  // capture all channel traffic
-  SCXQ2.capture('channel.sw_kernel', { type, payload });
-
-  if (type === 'LOAD_MODEL') {
-    // placeholder: wire to actual runtime loader
-    return reply(src, { status: 'ok', model: payload && payload.model || 'qwen' });
-  }
-
-  if (type === 'TOKENIZE') {
-    // deterministic stub: return empty token arrays
-    const tokenization = { svg_tokens: [], json_tokens: [] };
-    return reply(src, { status: 'ok', tokenization });
-  }
-
-  if (type === 'LAMO_ROUTE') {
-    // allow UI to request a lam.o REST path via message
-    const path = String(payload && payload.path || '/api/lam.o/health');
-    const body = payload && payload.body ? payload.body : {};
-    const r = await fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
-    const j = await r.json().catch(() => ({}));
-    return reply(src, { status: r.ok ? 'ok' : 'fail', lamo_response: j });
-  }
-
-  return reply(src, { status: 'fail', fault: 'E_UNKNOWN_INSTRUCTION' });
-};
-
-/* =========================
-   K100 — ROUTER (MANIFEST ROUTES)
-   ========================= */
-K.K100 = async (req) => {
-  const server = await K.K010();
-  const url = new URL(req.url);
-  const route = server.routes[url.pathname];
-  if (!route) return json({ ok: false, fault: 'K100:E_NO_ROUTE', path: url.pathname }, 404);
-
-  if (String(req.method).toUpperCase() !== String(route.method).toUpperCase()) {
-    return json({ ok: false, fault: 'K100:E_BAD_METHOD', want: route.method, got: req.method }, 405);
-  }
-
-  const handler = K[route.handler];
-  if (!handler) return json({ ok: false, fault: 'K100:E_NO_HANDLER', handler: route.handler }, 500);
-
-  // universal capture
-  SCXQ2.capture('route.call', { path: url.pathname, handler: route.handler, cap: route.cap || null });
-
-  // contract check (input) if declared
-  if (route.contract) {
-    const body = await req.clone().json().catch(() => null);
-    if (body) await K.K012(route.contract, body, 'input');
-  }
-
-  const res = await handler(req);
-
-  // capture response status only (no body read here; handler captures specifics)
-  SCXQ2.capture('route.ret', { path: url.pathname, status: res.status });
-
-  return res;
-};
-
-/* =========================
-   K900 — FETCH HOOK
-   ========================= */
-self.addEventListener('fetch', (e) => {
-  const p = new URL(e.request.url).pathname;
-  if (p.startsWith('/api/')) e.respondWith(K.K100(e.request));
-});
-
-/* =========================
-   K910 — MESSAGE HOOK
-   ========================= */
-self.addEventListener('message', (e) => {
-  // accept messages from any controlled client in-scope
-  e.waitUntil(K.K070(e.data, e.source));
-});
-
-/* ============================================================
-   SCXQ2 — STREAM CAPTURE SERVICE (KERNEL-WIDE)
-   - no crypto, deterministic hashing, replay-safe
-   - stream frames used by ALL routes + channels
-   ============================================================ */
-
-const SCXQ2 = (() => {
-  // Frame kinds (canonical-ish)
-  const KIND = Object.freeze({
-    HDR: 1, TICK: 2, MASK: 3, EVT: 4, END: 7
-  });
-
-  function fnv1a_u32(str) {
-    const s = String(str);
-    let h = 0x811c9dc5;
-    for (let i = 0; i < s.length; i++) {
-      h ^= s.charCodeAt(i);
-      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  // /api/ΩOS/brains/*
+  if (parts[0] === 'brains') {
+    // /api/ΩOS/brains/list
+    if (parts[1] === 'list') {
+      const list = BrainStore.list();
+      return new Response(JSON.stringify({ brains: list }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-    return h >>> 0;
-  }
 
-  function hashHex(obj) {
-    const h = fnv1a_u32(stableStringify(obj));
-    return 'h:' + h.toString(16).padStart(8, '0');
-  }
-
-  function stableStringify(value) {
-    const seen = new Set();
-    const walk = (v) => {
-      if (v === null) return 'null';
-      const t = typeof v;
-      if (t === 'number') return Number.isFinite(v) ? String(v) : '0';
-      if (t === 'boolean') return v ? 'true' : 'false';
-      if (t === 'string') return JSON.stringify(v);
-      if (Array.isArray(v)) return '[' + v.map(walk).join(',') + ']';
-      if (t === 'object') {
-        if (seen.has(v)) return '"[circular]"';
-        seen.add(v);
-        const keys = Object.keys(v).sort();
-        const body = keys.map(k => JSON.stringify(k) + ':' + walk(v[k])).join(',');
-        seen.delete(v);
-        return '{' + body + '}';
+    // /api/ΩOS/brains/get/:id
+    if (parts[1] === 'get' && parts[2]) {
+      const id = decodeURIComponent(parts[2]);
+      const brain = BrainStore.get(id);
+      if (!brain) {
+        return new Response(JSON.stringify({ error: 'brain_not_found', id }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        });
       }
-      return '""';
-    };
-    return walk(value);
-  }
+      return new Response(JSON.stringify({ brain }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
-  function newStream(meta) {
-    const id = 'st_' + String(Date.now()) + '_' + String((Math.random() * 1e9) | 0); // NOTE: can be replaced if you require strict "no randomness"
-    // If you want absolutely zero randomness: replace suffix with STATE.session.tick and a counter.
-    const frames = [];
-    const hdr = {
-      k: KIND.HDR,
-      t: Date.now(),
-      meta: meta || {},
-      v: 1
-    };
-    frames.push(hdr);
-    return { id, frames, open: true, end_hash: 'h:00000000' };
-  }
-
-  // deterministic id fallback (no randomness) – used if you flip STRICT_ID
-  const STRICT_ID = true;
-  let _ctr = 0;
-
-  function beginSession(meta) {
-    const sid = STRICT_ID
-      ? ('st_' + STATE.session.id + '_' + String(STATE.session.tick) + '_' + String((_ctr++) >>> 0))
-      : undefined;
-
-    const s = newStream(meta);
-    if (sid) s.id = sid;
-
-    STATE.streams[s.id] = s;
-    capture('stream.begin', { stream_id: s.id, meta });
-    return s;
-  }
-
-  function endSession(stream, metaEnd) {
-    if (!stream || !STATE.streams[stream.id]) return { end_hash: 'h:00000000' };
-    const s = STATE.streams[stream.id];
-    if (!s.open) return s;
-
-    const end = {
-      k: KIND.END,
-      t: Date.now(),
-      meta: metaEnd || {}
-    };
-    s.frames.push(end);
-    s.end_hash = hashHex(s.frames);
-    s.open = false;
-
-    capture('stream.end', { stream_id: s.id, end_hash: s.end_hash });
-    return { end_hash: s.end_hash };
-  }
-
-  function capture(kind, payload) {
-    const evt = {
-      k: KIND.EVT,
-      t: Date.now(),
-      kind: String(kind),
-      payload: payload === undefined ? null : payload
-    };
-
-    // append to all open streams (session-level capture)
-    for (const id of Object.keys(STATE.streams)) {
-      const s = STATE.streams[id];
-      if (s && s.open) s.frames.push(evt);
+    // /api/ΩOS/brains/pack (future: pack from weights/xjson)
+    if (parts[1] === 'pack' && request.method === 'POST') {
+      const body = await request.json().catch(() => ({}));
+      const id = body.id || `brain_${Date.now()}`;
+      const meta = body.meta || {};
+      const brain = await BrainStore.packFromWeights(id, meta);
+      return new Response(JSON.stringify({ brain }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
   }
 
-  function exportAll() {
-    const out = {};
-    for (const id of Object.keys(STATE.streams)) {
-      const s = STATE.streams[id];
-      out[id] = {
-        id,
-        open: !!s.open,
-        end_hash: s.end_hash,
-        frames: s.frames.slice()
-      };
+  // /api/ΩOS/process/list
+  if (parts[0] === 'process' && parts[1] === 'list') {
+    const processes = Array.from(K.p.values()).map(p => ({
+      id: p.id,
+      st: p.st,
+      ts: p.ts
+    }));
+    return new Response(JSON.stringify({ processes }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  return new Response(JSON.stringify({ error: 'ΩOS_endpoint_not_found', path }), {
+    status: 404,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+// ----------------------------------------------------------
+// SW LIFECYCLE
+// ----------------------------------------------------------
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    BrainStore.initDemoBrains();
+    const cache = await caches.open(KERNEL_CACHE);
+    await cache.addAll(CORE_ASSETS);
+    self.skipWaiting();
+  })());
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys
+        .filter(k => !k.startsWith(KUHUL_OS))
+        .map(k => caches.delete(k))
+    );
+    await self.clients.claim();
+
+    const clients = await self.clients.matchAll();
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'ΩOS:kernel_ready',
+        kernel: ΩMANIFEST_KERNEL,
+        brains: BrainStore.list()
+      });
+    });
+  })());
+});
+
+// ----------------------------------------------------------
+// FETCH — ROUTE ΩOS + CACHE
+// ----------------------------------------------------------
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // ΩOS API
+  if (url.pathname.startsWith('/api/ΩOS/')) {
+    event.respondWith(respondΩOS(url, event.request));
+    return;
+  }
+
+  // Serve manifest from cache/network
+  if (url.pathname === '/manifest.json') {
+    event.respondWith((async () => {
+      const cache = await caches.open(KERNEL_CACHE);
+      const cached = await cache.match('/manifest.json');
+      if (cached) return cached;
+      try {
+        const net = await fetch(event.request);
+        cache.put('/manifest.json', net.clone());
+        return net;
+      } catch {
+        return new Response(JSON.stringify(ΩMANIFEST_KERNEL), {
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+    })());
+    return;
+  }
+
+  // NAVIGATION → app shell
+  if (event.request.mode === 'navigate') {
+    event.respondWith((async () => {
+      const cache = await caches.open(KERNEL_CACHE);
+      const cached = await cache.match('/index.html');
+      if (cached) return cached;
+      try {
+        const net = await fetch('/index.html');
+        cache.put('/index.html', net.clone());
+        return net;
+      } catch {
+        return new Response(
+          `<html><body style="background:#020617;color:#e8fff6;font-family:system-ui">
+             <h1>ΩOS OFFLINE</h1>
+             <p>Neural geometry kernel unavailable.</p>
+           </body></html>`,
+          { headers: { 'Content-Type': 'text/html' } }
+        );
+      }
+    })());
+    return;
+  }
+
+  // Static with cache-first
+  event.respondWith((async () => {
+    const cache = await caches.open(STATIC_CACHE);
+    const cached = await cache.match(event.request);
+    if (cached) return cached;
+    try {
+      const net = await fetch(event.request);
+      cache.put(event.request, net.clone());
+      return net;
+    } catch {
+      return new Response('ΩOS: fetch failed', { status: 503 });
     }
-    return out;
+  })());
+});
+
+// ----------------------------------------------------------
+// MESSAGE CHANNEL — KERNEL / BRAIN CONTROL
+// ----------------------------------------------------------
+self.addEventListener('message', event => {
+  const { type, payload } = event.data || {};
+  const port = event.ports && event.ports[0];
+
+  if (type === 'ΩOS:status') {
+    port && port.postMessage({
+      ok: true,
+      kernel: ΩMANIFEST_KERNEL,
+      k: K.status(),
+      brains: BrainStore.list()
+    });
   }
 
-  function resetAll() {
-    for (const k of Object.keys(STATE.streams)) delete STATE.streams[k];
-    _ctr = 0;
+  if (type === 'ΩOS:brains:list') {
+    port && port.postMessage({
+      ok: true,
+      brains: BrainStore.list()
+    });
   }
 
-  return Object.freeze({
-    beginSession,
-    endSession,
-    capture,
-    exportAll,
-    resetAll,
-    _hashHex: hashHex,
-    _stableStringify: stableStringify
-  });
-})();
+  if (type === 'ΩOS:brains:get' && payload?.id) {
+    const brain = BrainStore.get(payload.id);
+    port && port.postMessage({
+      ok: !!brain,
+      brain
+    });
+  }
+});
 
-/* ============================================================
-   HELPERS
-   ============================================================ */
-
-function json(obj, status = 200) {
-  return new Response(JSON.stringify(obj), {
-    status,
-    headers: { 'content-type': 'application/json' }
-  });
-}
-
-function fault(section, code) {
-  const e = new Error(section + ':' + code);
-  e.section = section;
-  e.code = code;
-  return e;
-}
-
-async function reply(source, msg) {
-  try {
-    if (!source || !source.postMessage) return;
-    source.postMessage(msg);
-  } catch (_) {}
-}
+console.log('ΩOS ULTRA NEURAL GEOMETRY KERNEL — SERVICE WORKER ONLINE');
