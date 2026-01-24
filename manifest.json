@@ -1,411 +1,149 @@
 {
-  "name": "MX2SVG Experimental Tokenization Inference",
-  "short_name": "MX2SVG Lab",
-  "description": "Experimental PWA wrapper for SVG/JSON tokenization and model orchestration with optional lam.o runner support.",
-  "version": "1.0.0",
+  "name": "ASX PRIME — ULTRA Neural Geometry Stack",
+  "short_name": "ULTRA-NEURAL",
+  "version": "2.1.0",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "start_url": "./",
-  "scope": "./",
-  "theme_color": "#0f172a",
-  "background_color": "#0f172a",
-  "orientation": "any",
-  "lang": "en-US",
-  "categories": [
-    "productivity",
-    "developer",
-    "utilities"
-  ],
+  "background_color": "#020617",
+  "theme_color": "#16f2aa",
+  "description": "K'uhul + KLH + XJSON + SCXQ2 + SVG Neural Geometry Engine",
   "icons": [
     {
-      "src": "icons/icon-72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "icons/icon-384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ],
-  "screenshots": [
-    {
-      "src": "icons/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
-    },
-    {
-      "src": "icons/screenshot-narrow.png",
-      "sizes": "720x1280",
-      "type": "image/png",
-      "form_factor": "narrow"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "New Chat",
-      "short_name": "Chat",
-      "description": "Start a new model inference session",
-      "url": "/?action=new-chat",
-      "icons": [
-        {
-          "src": "icons/icon-96.png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
-      "name": "Model Status",
-      "short_name": "Status",
-      "description": "Check lam.o model runner status",
-      "url": "/?action=status",
-      "icons": [
-        {
-          "src": "icons/icon-96.png",
-          "sizes": "96x96"
-        }
-      ]
-    }
-  ],
-  "tokenization": {
-    "svg_tokens": [],
-    "json_tokens": [],
-    "vocabulary": {
-      "source": "tokenizer.json",
-      "notes": "Populate with tokenizer outputs at runtime."
-    },
-    "constraints": {
-      "no_simulated_data": true,
-      "model_weights": "model.safetensors"
-    }
-  },
-  "orchestration": {
-    "service_worker": "sw.js",
-    "ui": "index.html",
-    "transformers_runtime": "service worker"
-  },
-  "server_manifest": {
-    "@type": "mx2svg.server.manifest.v1",
-    "notes": "Static local REST API layout and SW instruction channels for extended capabilities.",
-    "routes": {
-      "health": {
-        "method": "POST",
-        "path": "/api/lam.o/health"
-      },
-      "describe": {
-        "method": "POST",
-        "path": "/api/lam.o/describe"
-      },
-      "infer": {
-        "method": "POST",
-        "path": "/api/lam.o/infer",
-        "contract": "xjson://contract/lam.o.infer/v1"
-      },
-      "session_export": {
-        "method": "POST",
-        "path": "/api/lam.o/session/export"
-      },
-      "session_clear": {
-        "method": "POST",
-        "path": "/api/lam.o/session/clear"
-      }
-    },
-    "instruction_channels": {
-      "sw_kernel": {
-        "transport": "postMessage",
-        "expects": [
-          "LOAD_MODEL",
-          "TOKENIZE",
-          "LAMO_ROUTE"
-        ],
-        "returns": [
-          "status",
-          "tokenization",
-          "lamo_response"
+  "x_asx": {
+    "Ωv": "2.1",
+    "n": "ASX-PRIME-TRINITY-OS",
+    "d": "Complete Browser OS with Kernel Processes + SVG Neural Geometry",
+    "⟁kproc": {
+      "⟁fs": {
+        "⟁t": "vfs",
+        "⟁d": "xj_vfs",
+        "⟁m": [
+          {"⟁p": "/sys", "⟁t": "ro", "⟁s": "scx_sys"},
+          {"⟁p": "/usr", "⟁t": "rw", "⟁s": "store"},
+          {"⟁p": "/tmp", "⟁t": "vol", "⟁s": "mem"}
         ]
       },
-      "server_tasks": {
-        "transport": "rest",
-        "paths": [
-          "/api/lam.o/*"
-        ],
-        "policy": "same_origin_only"
+      "⟁pm": {
+        "⟁t": "kuhl_sched",
+        "⟁max": 256,
+        "⟁mem": "16m",
+        "⟁iso": "glyph"
+      },
+      "⟁net": {
+        "⟁t": "vnet",
+        "⟁proto": ["http", "ws", "hive"],
+        "⟁route": "klh"
+      },
+      "⟁sec": {
+        "⟁t": "trust_stamp",
+        "⟁sand": "glyph_env"
+      },
+      "⟁comp": {
+        "⟁t": "scx_zip",
+        "⟁alg": ["sym", "huff", "dict"]
       }
     },
-    "capabilities": {
-      "file_management": {
-        "mode": "cli_bridge",
-        "commands": [
-          "ls",
-          "cat",
-          "stat",
-          "mkdir",
-          "rm"
-        ],
-        "sandbox": "service_worker_controlled",
-        "notes": "Declarative intent only; execution depends on SW kernel policy."
+    "swarm_protocol": {
+      "mode": "holographic",
+      "shard_size": "micro-atomic",
+      "indexing": "scxq2-hash-map",
+      "mount_points": {
+        "global_memory": "magnet:?xt=urn:btih:HIVE_MEMORY_HASH",
+        "agent_hive": "magnet:?xt=urn:btih:AGENT_SWARM_HASH"
       },
-      "ast_language": {
-        "mode": "ast_pipeline",
-        "engines": [
-          "json_ast",
-          "svg_ast"
-        ],
-        "transforms": [
-          "parse",
-          "lint",
-          "rewrite",
-          "emit"
-        ]
-      },
-      "data_orchestration": {
-        "links": true,
-        "routes": true,
-        "contracts": true
-      }
-    }
-  },
-  "kuhul_server": {
-    "v": "1.0.0",
-    "kind": "static_server_contract",
-    "authority": "manifest.json",
-    "routes": {
-      "/api/qwen/health": {
-        "method": "POST",
-        "handler": "K020",
-        "cap": "model.qwen.health"
-      },
-      "/api/qwen/infer": {
-        "method": "POST",
-        "handler": "K021",
-        "cap": "model.qwen.infer",
-        "contract": "xjson://contract/qwen.infer/v1"
-      },
-      "/api/lam.o/health": {
-        "method": "POST",
-        "handler": "K030",
-        "cap": "model.ollama.health"
-      },
-      "/api/lam.o/infer": {
-        "method": "POST",
-        "handler": "K031",
-        "cap": "model.ollama.infer",
-        "contract": "xjson://contract/lam.o.infer/v1"
-      },
-      "/api/fs/list": {
-        "method": "POST",
-        "handler": "K110",
-        "cap": "fs.list",
-        "contract": "xjson://contract/fs.list/v1"
-      },
-      "/api/fs/read": {
-        "method": "POST",
-        "handler": "K111",
-        "cap": "fs.read",
-        "contract": "xjson://contract/fs.read/v1"
-      },
-      "/api/fs/write": {
-        "method": "POST",
-        "handler": "K112",
-        "cap": "fs.write",
-        "contract": "xjson://contract/fs.write/v1"
-      },
-      "/api/cli/run": {
-        "method": "POST",
-        "handler": "K130",
-        "cap": "cli.run",
-        "contract": "xjson://contract/cli.run/v1"
-      },
-      "/api/ast/parse": {
-        "method": "POST",
-        "handler": "K210",
-        "cap": "ast.parse",
-        "contract": "xjson://contract/ast.parse/v1"
-      }
+      "caching": "flash-ram-lru",
+      "behavior": "fetch-on-demand"
     },
-    "caps": {
-      "model.qwen.infer": {
-        "kind": "local_model",
-        "primary": true,
-        "provider": "qwen"
-      },
-      "model.ollama.infer": {
-        "kind": "addon_model",
-        "provider": "ollama"
-      },
-      "fs.list": {
-        "kind": "vfs",
-        "scope": "app"
-      },
-      "fs.read": {
-        "kind": "vfs",
-        "scope": "app"
-      },
-      "fs.write": {
-        "kind": "vfs",
-        "scope": "app",
-        "requires": [
-          "proof.pin"
-        ]
-      },
-      "cli.run": {
-        "kind": "tool",
-        "policy": "allowlist"
-      },
-      "ast.parse": {
-        "kind": "language",
-        "engine": "kuhul-ast"
-      }
-    },
-    "contracts": {
-      "xjson://contract/qwen.infer/v1": {
-        "$schema": "xjson://schema/core/v1",
-        "@type": "model.infer",
-        "provider": "qwen",
-        "input": {
-          "prompt": "string",
-          "mode": [
-            "chat",
-            "reasoning",
-            "analysis"
-          ],
-          "max_tokens": "int?"
-        },
-        "output": {
-          "text": "string",
-          "tokens_used": "int"
-        }
-      },
-      "xjson://contract/lam.o.infer/v1": {
-        "$schema": "xjson://schema/core/v1",
-        "@type": "model.infer",
-        "provider": "ollama",
-        "input": {
-          "model": "string",
-          "prompt": "string",
-          "stream": "bool?"
-        },
-        "output": {
-          "response": "string"
-        }
-      }
-    },
-    "policies": {
-      "proof.pin": {
-        "type": "pin",
-        "hash": "h:00000000"
-      },
-      "cli.allow": [
-        "kql",
-        "scxq2",
-        "git.status"
-      ]
-    }
-  },
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "kuhul": {
-    "lam": {
-      "o": {
-        "n": "Ollama Model Server",
-        "t": "model_runner",
-        "e": "http://localhost:61683/api/infer",
-        "p": 61683,
-        "ca": [
-          "multiple_models",
-          "local_inference",
-          "model_management"
-        ],
-        "st": "live"
-      }
-    },
-    "pack": {
-      "id": "pack_lam_o",
-      "name": "Ollama Model Runner Pack",
-      "role": "model_runner_backend",
-      "fold": "AI",
-      "functions": [
-        "lam.o.describe",
-        "lam.o.infer",
-        "lam.o.health"
+    "brain_protocol": {
+      "format": "svg_qlora_scxq2",
+      "slots": 16,
+      "geometry": "svg_path",
+      "compression": "scxq2",
+      "engine": "kuhul_geometry",
+      "mounts": [
+        { "id": "mx2lm_core", "mode": "read-write" },
+        { "id": "qwen_adapter", "mode": "read-only" },
+        { "id": "arena_brain", "mode": "read-write" }
       ]
     },
-    "runner_caps": {
-      "lam.o": {
-        "models": [
-          "deepseek-r1",
-          "llama3",
-          "qwen2.5",
-          "janus"
-        ],
-        "modes": [
-          "chat",
-          "reasoning",
-          "analysis",
-          "image_gen"
-        ],
-        "max_tokens": 8192,
-        "streaming": true
+    "⟁scx_tools": {
+      "⟁code_zip": {
+        "⟁in": ["khl", "js", "xj"],
+        "⟁out": "scx",
+        "⟁ratio": "87%"
+      },
+      "⟁asset_zip": {
+        "⟁in": ["svg", "img", "font"],
+        "⟁out": "scx_sym"
+      },
+      "⟁data_zip": {
+        "⟁in": ["xj_ast", "api", "state"],
+        "⟁out": "scx_struct"
+      },
+      "⟁rt_zip": {
+        "⟁mode": "stream",
+        "⟁latency": "<1ms"
       }
     },
-    "scx_version": "SCXQ2-v1",
-    "protocol": "ollama_http_v1"
-  },
-  "xjson_manifest": {
-    "merge_strategy": "always_merge_never_replace",
-    "intent": "tokenizer_server_orchestrator",
-    "scope": "manifest.json",
-    "notes": [
-      "Do not frame this manifest as a PWA app or OS.",
-      "Treat this as a tokenizer server and orchestration manifest that aggregates XJSON/KUHUL runtime specs."
-    ],
-    "sources": [
-      {
-        "path": "MX2SVG.json",
-        "role": "primary_orchestrator_spec"
+    "⟁sys_svc": {
+      "⟁db": {
+        "⟁t": "xj_db",
+        "⟁eng": {
+          "⟁kv": "scx_kv",
+          "⟁doc": "xj_doc",
+          "⟁graph": "glyph_rel"
+        }
       },
-      {
-        "path": "MX2SVG_PWA_ENHANCED.json",
-        "role": "legacy_pwa_overlay_reference"
+      "⟁auth": {
+        "⟁t": "trust_auth",
+        "⟁prov": ["local", "hive", "asx"]
+      },
+      "⟁cache": {
+        "⟁t": "multi_cache",
+        "⟁layers": [
+          {"⟁n": "mem", "⟁s": "64m", "⟁strat": "lru"},
+          {"⟁n": "flash", "⟁s": "256m", "⟁strat": "pri"},
+          {"⟁n": "persist", "⟁s": "1g", "⟁strat": "lfu"}
+        ]
+      },
+      "⟁sched": {
+        "⟁t": "glyph_sched",
+        "⟁tasks": ["bg_sync", "cache_clean", "comp_jobs"]
+      },
+      "⟁log": {
+        "⟁t": "struct_log",
+        "⟁out": "xj_logs",
+        "⟁comp": "scx_stream"
       }
+    },
+    "⟁boot": [
+      "manifest.load",
+      "scx_dict.load",
+      "svg_rt.init",
+      "kuhl.init",
+      "kproc.mount",
+      "sys_svc.start",
+      "scx_tools.init",
+      "micronaut.mount",
+      "swarm.mount",
+      "brain_store.mount",
+      "klh.init",
+      "fs.mount",
+      "sec.activate",
+      "index.render",
+      "user.start",
+      "ready"
     ]
   }
 }
