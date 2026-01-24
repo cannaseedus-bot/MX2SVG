@@ -1,0 +1,129 @@
+{
+  "$schema": "xjson://schema/core/v1",
+  "@id": "xjson://contract/ggltensors.pack/v1",
+  "@type": "ggltensors.pack",
+  "@v": "1.0.0",
+  "@status": "FROZEN",
+  "@plane": 2,
+  "@laws": {
+    "sealed_compute": true,
+    "pure_io": true,
+    "no_side_effects": true,
+    "determinism": true,
+    "randomness": "forbidden_unless_seeded"
+  },
+  "input": {
+    "model": {
+      "model_id": "string",
+      "model_hash": "string?",
+      "abi": {
+        "abi_id": "string",
+        "abi_hash": "string"
+      }
+    },
+    "weights": {
+      "weights_id": "string",
+      "weights_hash": "string",
+      "format": ["safetensors", "ggltensors", "other"],
+      "quant": ["none", "int8", "int4", "fp16", "bf16", "other"],
+      "shards": [
+        {
+          "shard_id": "string",
+          "shard_hash": "string",
+          "bytes": "int?"
+        }
+      ]
+    },
+    "tensors": {
+      "tensor_format": ["ggltensors.v1"],
+      "tensor_hash": "string",
+      "tensor_ref": {
+        "uri": "string",
+        "bytes": "int?",
+        "mime": "string?"
+      }
+    },
+    "glyphs": {
+      "ggl_codex": "string?",
+      "glyph_hash": "string",
+      "glyph_ref": {
+        "uri": "string",
+        "bytes": "int?",
+        "mime": "string?"
+      }
+    },
+    "runtime": {
+      "device": ["cpu", "gpu", "wasm", "webgpu", "other"],
+      "precision": ["fp32", "fp16", "bf16", "int8", "int4", "other"],
+      "max_tokens": "int?",
+      "batch": "int?",
+      "streaming": "bool?",
+      "seed": "int?"
+    },
+    "policies": {
+      "sealed": true,
+      "no_network": true,
+      "no_fs": true,
+      "no_eval": true
+    }
+  },
+  "output": {
+    "pack": {
+      "pack_id": "string",
+      "pack_hash": "string",
+      "model_id": "string",
+      "tensor_hash": "string",
+      "glyph_hash": "string",
+      "abi_hash": "string",
+      "seed": "int?",
+      "created_at_ms": "int?"
+    },
+    "proof": {
+      "@type": "ggltensors.pack.proof",
+      "proof_hash": "string",
+      "payload": {
+        "@type": "ggltensors.pack.proof.payload",
+        "@v": "1.0.0",
+        "model_id": "string",
+        "model_hash": "string?",
+        "weights_hash": "string",
+        "tensor_hash": "string",
+        "glyph_hash": "string",
+        "abi_id": "string",
+        "abi_hash": "string",
+        "runtime_device": "string",
+        "runtime_precision": "string",
+        "seed": "int?",
+        "policy_sealed": "bool",
+        "policy_no_network": "bool",
+        "policy_no_fs": "bool",
+        "policy_no_eval": "bool"
+      }
+    }
+  },
+  "@hash_contract": {
+    "hash_alg": "fnv1a32_hex",
+    "hash_prefix": "h:",
+    "canonicalization": "stable_json_sort_keys",
+    "proof_hash_payload_only": true,
+    "pack_hash_equals_proof_hash": true,
+    "payload_fields_locked": [
+      "@type",
+      "@v",
+      "model_id",
+      "model_hash",
+      "weights_hash",
+      "tensor_hash",
+      "glyph_hash",
+      "abi_id",
+      "abi_hash",
+      "runtime_device",
+      "runtime_precision",
+      "seed",
+      "policy_sealed",
+      "policy_no_network",
+      "policy_no_fs",
+      "policy_no_eval"
+    ]
+  }
+}
