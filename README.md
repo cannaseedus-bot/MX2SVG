@@ -1,6 +1,6 @@
 # MX2SVG
 
-MX2SVG is a configuration-driven system for generating SVG workflows and related assets. This repository includes the core configuration, tokenizer assets, and an enhanced PWA-capable configuration with supporting documentation.
+MX2SVG is a configuration-driven system for generating SVG workflows and related assets. This repository includes the core configuration, tokenizer assets, and an enhanced PWA-capable configuration with supporting documentation, plus formal SVG-3D tensor and K'UHUL COSMOS specifications.
 
 ## Why the name MX2SVG
 
@@ -24,9 +24,14 @@ All files live in the repository root (there are no subdirectories). The list be
 | `transformers_py_to_ggl_v1.py` | Python adapter for sealed Plane-2 GGL inference with pack hashing and SCXQ2 frame stubs. |
 | `ggl_sealed_compute_v1.js` | Contract, hashing, and kernel hook scaffolding for sealed GGL inference plus minimal verifier. |
 | `ggl_sealed_locks_v1.js` | Locked contracts, lane layout, barrier policy, and adapter ABI rules for Plane-2 sealed compute. |
-| `manifest.json` | Experimental PWA manifest that stores SVG/JSON tokenization payloads. |
-| `index.html` | Experimental PWA UI with chat form and service worker messaging. |
-| `sw.js` | Service worker orchestration for tokenization and model loading. |
+| `manifest.json` | Experimental PWA manifest for the ΩOS/SVG-3D runtime metadata. |
+| `index.html` | Dark two-panel session/chat UI that connects to the ΩOS service worker. |
+| `sw.js` | ΩOS service worker kernel with brain registry and API routing. |
+| `MX2SVG.xml` | MX2SVG model specification (CLI pipeline, inference engines, WebGPU templates). |
+| `SVG3D_TENSOR_CORE.xml` | SVG-3D tensor core specification (manifolds, primitives, legality). |
+| `ASX_R_ENGINE.xml` | ASX-R geometric reasoning engine specification. |
+| `PI_GEOMETRIC_TENSOR_EQUIVALENCE.md` | Mapping between ML tensor concepts and π-geometric constructs. |
+| `KUHUL_COSMOS_IDB_HYPERVISOR.cosmos` | COSMOS spec for the IndexedDB hypervisor integration. |
 | `tokenizer.json` | Tokenizer definition (normalization, BPE setup, and added tokens) for MX2SVG-related workflows. |
 | `tokenizer.py` | Script that loads the Qwen2 base model/tokenizer, adds custom tokens, and saves updated artifacts. |
 | `abi.json` | ABI metadata describing the base model, token counts, and compatibility rules. |
