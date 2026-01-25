@@ -7,17 +7,18 @@
   <link rel="manifest" href="manifest.json">
   <style>
     :root {
-      --bg: #020617;
-      --panel: #050b18;
-      --accent: #16f2aa;
-      --accent-soft: rgba(22,242,170,0.2);
-      --muted: #7f8ea3;
+      --bg: #0f1117;
+      --panel: #151821;
+      --accent: #19c37d;
+      --accent-soft: rgba(25,195,125,0.2);
+      --muted: #8b93a7;
       --danger: #ff6b6b;
+      --border: rgba(148,163,184,0.2);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: radial-gradient(circle at top, #020617 0, #000 55%);
-      color: #e8f5ff;
+      background: #0b0d12;
+      color: #e6edf3;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       min-height: 100vh;
       padding: 16px;
@@ -30,11 +31,11 @@
       gap: 16px;
     }
     .panel {
-      background: linear-gradient(145deg, #050b18, #050815);
+      background: var(--panel);
       border-radius: 16px;
-      border: 1px solid rgba(148,163,184,0.35);
+      border: 1px solid var(--border);
       padding: 16px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      box-shadow: 0 24px 40px rgba(0,0,0,0.3);
     }
     .panel h2 {
       font-size: 1rem;
@@ -55,8 +56,8 @@
       letter-spacing: .12em;
       padding: 4px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.4);
-      background: rgba(15,23,42,0.9);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.6);
     }
     .badge--accent {
       border-color: var(--accent);
@@ -69,10 +70,10 @@
       margin: 4px 0;
     }
     select, button {
-      background: #020617;
+      background: #0b0f17;
       color: #e5f3ff;
       border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.5);
+      border: 1px solid var(--border);
       padding: 6px 10px;
       font-size: 0.8rem;
       outline: none;
@@ -80,10 +81,10 @@
     button {
       cursor: pointer;
       border-color: var(--accent);
-      background: radial-gradient(circle at top left, rgba(22,242,170,0.18), #020617);
+      background: rgba(25,195,125,0.12);
     }
     button:hover {
-      box-shadow: 0 0 18px rgba(22,242,170,0.4);
+      box-shadow: 0 0 18px rgba(25,195,125,0.35);
     }
     .ctrl-row {
       display: flex;
@@ -92,328 +93,140 @@
       margin: 8px 0 4px;
       align-items: center;
     }
-    .log {
-      margin-top: 8px;
-      background: #020617;
-      border-radius: 10px;
-      padding: 8px;
-      font-size: 0.7rem;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      max-height: 150px;
-      overflow: auto;
-      border: 1px solid rgba(15,23,42,0.9);
-    }
-    #brainContainer {
-      width: 100%;
-      height: 480px;
-      border-radius: 16px;
-      border: 1px solid rgba(148,163,184,0.4);
-      background:
-        radial-gradient(circle at top, rgba(22,242,170,0.06), transparent 55%),
-        radial-gradient(circle at bottom, rgba(56,189,248,0.06), transparent 55%),
-        #020617;
-      position: relative;
-      overflow: hidden;
-    }
-    .brain-title {
-      position: absolute;
-      top: 10px;
-      left: 14px;
+    .session-meta {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
       font-size: 0.8rem;
       color: var(--muted);
-      background: rgba(0,0,0,0.65);
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.5);
-      pointer-events: none;
     }
-    .brain-overlay {
-      position: absolute;
-      bottom: 10px;
-      right: 14px;
-      font-size: 0.7rem;
-      color: var(--accent);
-      background: rgba(3,7,18,0.9);
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(22,242,170,0.4);
-      pointer-events: none;
+    .session-meta span {
+      color: #e6edf3;
+      font-weight: 600;
+    }
+    .chat-history {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 520px;
+      overflow: auto;
+      padding-right: 8px;
+    }
+    .chat-message {
+      background: #0f141e;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .chat-message--user {
+      border-color: rgba(25,195,125,0.4);
+      background: rgba(25,195,125,0.08);
+    }
+    .chat-message__role {
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .chat-form {
+      display: grid;
+      gap: 12px;
+      height: 100%;
+    }
+    .chat-form textarea {
+      width: 100%;
+      min-height: 220px;
+      background: #0b0f17;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      color: #e6edf3;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+    .chat-form__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .chat-form__footer button {
+      padding: 8px 16px;
+      font-size: 0.85rem;
     }
     @media (max-width: 900px) {
       .grid { grid-template-columns: minmax(0,1fr); }
-      #brainContainer { height: 360px; }
     }
   </style>
 </head>
 <body>
   <div class="grid">
-    <!-- LEFT: KERNEL + BRAIN CONTROL -->
+    <!-- LEFT: SESSION / CHAT HISTORY -->
     <section class="panel">
-      <h2>ΩOS TRINITY KERNEL</h2>
+      <h2>SESSION CONTEXT</h2>
       <div class="badge-row">
         <span class="badge badge--accent">K'UHUL</span>
         <span class="badge">KLH</span>
         <span class="badge">XJSON</span>
         <span class="badge">SCXQ2</span>
-        <span class="badge">SVG&nbsp;NEURO</span>
+        <span class="badge">SVG-3D</span>
       </div>
 
-      <div class="status-line" id="statusLine">Kernel: probing…</div>
-      <div class="status-line" id="brainCount">Brains: —</div>
-      <div class="status-line" id="procCount">Processes: —</div>
-
-      <div class="ctrl-row">
-        <button id="btnRefresh">Refresh Kernel</button>
-        <button id="btnListBrains">List Brains</button>
+      <div class="session-meta">
+        <div>Session ID: <span id="sessionId">—</span></div>
+        <div>Kernel: <span id="statusLine">probing…</span></div>
+        <div>Brains: <span id="brainCount">—</span></div>
+        <div>Processes: <span id="procCount">—</span></div>
       </div>
 
-      <div class="ctrl-row">
-        <label for="brainSelect" style="font-size:0.75rem;color:var(--muted);">
-          Active Brain:
-        </label>
-        <select id="brainSelect"></select>
-        <button id="btnRenderBrain">Render Brain</button>
-      </div>
-
-      <div class="ctrl-row" style="margin-top:12px;">
-        <span style="font-size:0.75rem;color:var(--muted);letter-spacing:.08em;">
-          SVG-QLoRA Geometry Lab
-        </span>
-      </div>
-      <div class="ctrl-row">
-        <button id="btnGenerateDemo">Generate Demo SVG Brain</button>
-        <button id="btnCompressDemo">Compress Demo Brain</button>
-      </div>
-
-      <div class="log" id="log"></div>
+      <div class="chat-history" id="chatHistory"></div>
     </section>
 
-    <!-- RIGHT: SVG NEURAL GEOMETRY VIEWPORT -->
+    <!-- RIGHT: CHAT INPUT -->
     <section class="panel">
-      <h2>NEURAL GEOMETRY VIEWPORT</h2>
-      <div id="brainContainer">
-        <div class="brain-title" id="brainTitle">No brain loaded</div>
-        <div class="brain-overlay" id="brainOverlay">ULTRA NEURAL GEOMETRY STACK</div>
-      </div>
+      <h2>CHAT CONSOLE</h2>
+      <form class="chat-form" id="chatForm">
+        <textarea id="chatInput" placeholder="Send a message to the SVG-3D tensor inference runtime..."></textarea>
+        <div class="chat-form__footer">
+          <span>Responses are recorded to the session log.</span>
+          <button type="submit">Send Message</button>
+        </div>
+      </form>
     </section>
   </div>
 
   <script>
-    // ------------------------------------------------------
-    // SVG BRAIN RENDERER (FRONT-END VISUAL CORTEX)
-    // ------------------------------------------------------
-    class SVGBrainRenderer {
-      constructor(containerId) {
-        this.container = document.getElementById(containerId);
-      }
-
-      clear() {
-        while (this.container.firstChild) {
-          this.container.removeChild(this.container.firstChild);
-        }
-      }
-
-      render(brain) {
-        this.clear();
-
-        // Re-add overlays
-        const title = document.getElementById('brainTitle');
-        const overlay = document.getElementById('brainOverlay');
-        title.textContent = `${brain.model} — ${brain.id}`;
-        this.container.appendChild(title);
-        this.container.appendChild(overlay);
-
-        const ns = 'http://www.w3.org/2000/svg';
-        const svg = document.createElementNS(ns, 'svg');
-        svg.setAttribute('width', '100%');
-        svg.setAttribute('height', '100%');
-        svg.setAttribute('viewBox', '0 0 240 140');
-
-        brain.layers.forEach((layer, idx) => {
-          const g = document.createElementNS(ns, 'g');
-          g.setAttribute('class', 'neural-layer');
-          g.setAttribute('transform', `translate(10,${15 + idx * 35})`);
-
-          // label
-          const label = document.createElementNS(ns, 'text');
-          label.setAttribute('x', 0);
-          label.setAttribute('y', -4);
-          label.setAttribute('fill', '#9ca3af');
-          label.setAttribute('font-size', '6');
-          label.setAttribute('font-family', 'monospace');
-          label.textContent = layer.name;
-          g.appendChild(label);
-
-          layer.paths.forEach(p => {
-            const path = document.createElementNS(ns, 'path');
-            path.setAttribute('d', p.d);
-            path.setAttribute('stroke', p.stroke);
-            path.setAttribute('stroke-width', p.width || 1.2);
-            path.setAttribute('fill', 'none');
-            path.style.opacity = 0.75;
-            path.classList.add('weight-path');
-
-            path.addEventListener('mouseenter', () => {
-              path.style.strokeWidth = (p.width || 1.2) * 1.8;
-              path.style.opacity = 1;
-            });
-            path.addEventListener('mouseleave', () => {
-              path.style.strokeWidth = p.width || 1.2;
-              path.style.opacity = 0.75;
-            });
-
-            g.appendChild(path);
-          });
-
-          svg.appendChild(g);
-        });
-
-        this.container.appendChild(svg);
-      }
-    }
-
-    const brainRenderer = new SVGBrainRenderer('brainContainer');
-    const demoState = {
-      brain: null,
-      compressed: null
-    };
-
-    class SVGWeightGeometry {
-      constructor() {
-        this.activationFilters = new Map();
-      }
-
-      weightsToBrain(weights, layerName, config = {}) {
-        const {
-          precision = 2,
-          scale = 120,
-          curveTension = 0.5
-        } = config;
-
-        const rows = weights.length;
-        const cols = weights[0]?.length || 0;
-        const layers = [];
-
-        for (let i = 0; i < rows; i++) {
-          const pathData = this.matrixRowToPath(weights[i], {
-            rowIndex: i,
-            totalRows: rows,
-            scale,
-            precision,
-            curveTension
-          });
-
-          layers.push({
-            name: `${layerName}_row_${i + 1}`,
-            filter: null,
-            paths: [
-              {
-                d: pathData,
-                stroke: this.weightToColor(weights[i][0] || 0),
-                width: this.weightToStroke(weights[i])
-              }
-            ]
-          });
-        }
-      }
-
-        return {
-          id: `${layerName}_${Date.now()}`,
-          model: 'SVG-QLoRA-DEMO',
-          type: 'svg_qlora_scxq2',
-          created: Date.now(),
-          layers
-        };
-      }
-
-      matrixRowToPath(rowWeights, config) {
-        const { rowIndex, totalRows, scale, precision, curveTension } = config;
-        const yBase = (rowIndex / Math.max(1, totalRows)) * scale;
-
-        let pathData = `M 0,${yBase.toFixed(precision)}`;
-        rowWeights.forEach((weight, colIndex) => {
-          const x = (colIndex / Math.max(1, rowWeights.length)) * scale;
-          const y = yBase + (weight * scale * 0.3);
-
-          if (colIndex > 0) {
-            const prevX = ((colIndex - 1) / Math.max(1, rowWeights.length)) * scale;
-            const prevY = yBase + (rowWeights[colIndex - 1] * scale * 0.3);
-            const cp1x = prevX + (x - prevX) * curveTension;
-            const cp1y = prevY;
-            const cp2x = prevX + (x - prevX) * (1 - curveTension);
-            const cp2y = y;
-            pathData += ` C ${cp1x.toFixed(precision)},${cp1y.toFixed(precision)} ${cp2x.toFixed(precision)},${cp2y.toFixed(precision)} ${x.toFixed(precision)},${y.toFixed(precision)}`;
-          } else {
-            pathData += ` L ${x.toFixed(precision)},${y.toFixed(precision)}`;
-          }
-        });
-
-        return pathData;
-      }
-
-      weightToColor(weight) {
-        if (weight < 0) {
-          const intensity = Math.min(1, Math.abs(weight) * 2);
-          return `rgb(80,160,255)`;
-        }
-        const intensity = Math.min(1, weight * 2);
-        return `rgb(${Math.floor(220 * intensity + 35)}, 80, 160)`;
-      }
-
-      weightToStroke(rowWeights) {
-        const norm = rowWeights.reduce((sum, val) => sum + Math.abs(val), 0) / Math.max(1, rowWeights.length);
-        return Math.max(0.8, Math.min(2.8, norm * 3));
-      }
-    }
-
-    class SVGQLoRACompressor {
-      constructor() {
-        this.geometryEngine = new SVGWeightGeometry();
-      }
-
-      compressBrain(brain) {
-        const compressed = {
-          id: `${brain.id}_scxq2`,
-          model: brain.model,
-          type: 'svg_qlora_scxq2',
-          created: Date.now(),
-          layers: brain.layers.map(layer => ({
-            name: layer.name,
-            filter: layer.filter,
-            paths: layer.paths.map(path => ({
-              d: this.scxq2CompressPath(path.d),
-              stroke: path.stroke,
-              width: path.width
-            }))
-          }))
-        };
-
-        return compressed;
-      }
-
-      scxq2CompressPath(pathData) {
-        return pathData
-          .replace(/M /g, '⟁M⟁')
-          .replace(/L /g, '⟁L⟁')
-          .replace(/C /g, '⟁C⟁')
-          .replace(/Z/g, '⟁Z⟁')
-          .replace(/,/g, '⟁')
-          .replace(/\s+/g, '⟁');
-      }
-    }
-
-    // ------------------------------------------------------
-    // SW UTILS
-    // ------------------------------------------------------
-    const logEl = document.getElementById('log');
+    const chatHistory = document.getElementById('chatHistory');
     const statusLine = document.getElementById('statusLine');
     const brainCountEl = document.getElementById('brainCount');
     const procCountEl = document.getElementById('procCount');
-    const brainSelect = document.getElementById('brainSelect');
+    const sessionIdEl = document.getElementById('sessionId');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const sessionId = `sess_${Math.random().toString(36).slice(2, 10)}`;
+    const messages = [];
 
-    function log(msg) {
-      const time = new Date().toISOString().split('T')[1].replace('Z','');
-      logEl.textContent = `[${time}] ${msg}\n` + logEl.textContent;
+    sessionIdEl.textContent = sessionId;
+
+    function appendMessage(role, content) {
+      const container = document.createElement('div');
+      container.className = `chat-message chat-message--${role}`;
+
+      const roleLine = document.createElement('div');
+      roleLine.className = 'chat-message__role';
+      roleLine.textContent = role === 'user' ? 'user' : 'system';
+
+      const body = document.createElement('div');
+      body.textContent = content;
+
+      container.appendChild(roleLine);
+      container.appendChild(body);
+      chatHistory.appendChild(container);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
     async function registerSW() {
@@ -423,7 +236,7 @@
       }
       const reg = await navigator.serviceWorker.register('/sw.js');
       statusLine.textContent = 'Kernel: registering…';
-      log('Service worker registration requested');
+      appendMessage('system', 'Service worker registration requested.');
 
       navigator.serviceWorker.addEventListener('message', ev => {
         if (ev.data?.type === 'ΩOS:kernel_ready') {
@@ -431,13 +244,13 @@
           brainCountEl.textContent = `Brains: ${ev.data.brains.length}`;
           procCountEl.textContent = `Processes: 0`;
           populateBrains(ev.data.brains);
-          log('Kernel broadcast: ready');
+          appendMessage('system', 'Kernel broadcast: ready.');
         }
       });
 
       await navigator.serviceWorker.ready;
       statusLine.textContent = 'Kernel: ready (await)';
-      log('Service worker ready');
+      appendMessage('system', 'Service worker ready.');
 
       await refreshStatus();
     }
@@ -461,96 +274,28 @@
       brainCountEl.textContent = `Brains: ${res.brains.length}`;
       procCountEl.textContent = `Processes: ${res.k.processes}`;
       populateBrains(res.brains);
-      log('Status refreshed from ΩOS');
-    }
-
-    function populateBrains(brains) {
-      brainSelect.innerHTML = '';
-      brains.forEach(b => {
-        const opt = document.createElement('option');
-        opt.value = b.id;
-        opt.textContent = `${b.model} (${b.id})`;
-        brainSelect.appendChild(opt);
-      });
-      if (!brains.length) {
-        const opt = document.createElement('option');
-        opt.textContent = 'No brains in registry';
-        opt.disabled = true;
-        opt.selected = true;
-        brainSelect.appendChild(opt);
-      }
+      appendMessage('system', 'Status refreshed from ΩOS.');
     }
 
     async function fetchBrainsList() {
       const res = await fetch('/api/ΩOS/brains/list').catch(() => null);
       if (!res || !res.ok) {
-        log('Brains list fetch failed');
+        appendMessage('system', 'Brains list fetch failed.');
         return;
       }
       const json = await res.json();
-      populateBrains(json.brains || []);
-      brainCountEl.textContent = `Brains: ${json.brains.length}`;
-      log(`Brain list updated (${json.brains.length})`);
+      brainCountEl.textContent = `${json.brains.length}`;
+      appendMessage('system', `Brain registry updated (${json.brains.length}).`);
     }
 
-    async function renderSelectedBrain() {
-      const id = brainSelect.value;
-      if (!id) return;
-      const res = await fetch(`/api/ΩOS/brains/get/${encodeURIComponent(id)}`).catch(() => null);
-      if (!res || !res.ok) {
-        log(`Failed to fetch brain ${id}`);
-        return;
-      }
-      const json = await res.json();
-      if (!json.brain) {
-        log(`No brain payload for ${id}`);
-        return;
-      }
-      brainRenderer.render(json.brain);
-      log(`Rendered brain: ${json.brain.model} (${json.brain.id})`);
-    }
-
-    function generateDemoWeights(rows = 6, cols = 10) {
-      return Array.from({ length: rows }, (_, i) =>
-        Array.from({ length: cols }, (_, j) =>
-          Math.sin(i * 0.6) * Math.cos(j * 0.4) * 0.8
-        )
-      );
-    }
-
-    function renderDemoBrain() {
-      const geometryEngine = new SVGWeightGeometry();
-      const weights = generateDemoWeights();
-      const brain = geometryEngine.weightsToBrain(weights, 'demo_layer', {
-        precision: 2,
-        scale: 200,
-        curveTension: 0.35
-      });
-
-      demoState.brain = brain;
-      demoState.compressed = null;
-      brainRenderer.render(brain);
-      log(`Generated SVG brain geometry (${brain.layers.length} layers)`);
-    }
-
-    function compressDemoBrain() {
-      if (!demoState.brain) {
-        log('No demo brain to compress');
-        return;
-      }
-      const compressor = new SVGQLoRACompressor();
-      demoState.compressed = compressor.compressBrain(demoState.brain);
-      log(`Compressed demo brain to SCXQ2 (${demoState.compressed.layers.length} layers)`);
-    }
-
-    // ------------------------------------------------------
-    // WIRE UI
-    // ------------------------------------------------------
-    document.getElementById('btnRefresh').addEventListener('click', refreshStatus);
-    document.getElementById('btnListBrains').addEventListener('click', fetchBrainsList);
-    document.getElementById('btnRenderBrain').addEventListener('click', renderSelectedBrain);
-    document.getElementById('btnGenerateDemo').addEventListener('click', renderDemoBrain);
-    document.getElementById('btnCompressDemo').addEventListener('click', compressDemoBrain);
+    chatForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const content = chatInput.value.trim();
+      if (!content) return;
+      messages.push({ role: 'user', content, ts: new Date().toISOString() });
+      appendMessage('user', content);
+      chatInput.value = '';
+    });
 
     // ------------------------------------------------------
     // BOOT
@@ -558,7 +303,11 @@
     registerSW().catch(err => {
       console.error(err);
       statusLine.textContent = 'Kernel: registration error';
-      log('Error registering service worker');
+      appendMessage('system', 'Error registering service worker.');
+    });
+
+    fetchBrainsList().catch(() => {
+      appendMessage('system', 'Unable to reach ΩOS brain registry.');
     });
   </script>
 </body>
