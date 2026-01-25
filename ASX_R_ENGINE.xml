@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<asx-r-engine 
+  xmlns="https://schema.asx-os.org/asx-r"
+  xmlns:geo="https://schema.asx-os.org/geometric-proof"
+  xmlns:π="https://schema.asx-os.org/pi-logic"
+  xmlns:φ="https://schema.asx-os.org/phi-deduction"
+  xmlns:svg3d="https://schema.asx-os.org/svg3d-tensors"
+  version="1.0">
+
+<!-- 
+  ASX-R (Axiomatic System X - Reasoning)
+  Geometric Theorem Prover for SVG-3D Tensor Systems
+  Combines: Geometric intuition + Formal proof + π-φ scaling
+-->
+
+<axiomatic-foundation>
+
+  <!-- CORE AXIOMS (GEOMETRIC) -->
+  <axiom id="a1-manifold-existence">
+    <statement>Every cognitive state is representable as a smooth manifold</statement>
+    <formalization>∀S∈CognitiveStates, ∃M: SmoothManifold such that f: S → M is homeomorphic</formalization>
+    <svg3d-implementation>
+      <representation>SVG group hierarchy with C¹ continuous paths</representation>
+      <constraint>No cusps, no self-intersections (transversality)</constraint>
+    </svg3d-implementation>
+  </axiom>
+
+  <axiom id="a2-π-boundedness">
+    <statement>All inference operations are bounded by π in geometric extent</statement>
+    <formalization>∀operation O, length(geodesic_trace(O)) ≤ π·scale_factor</formalization>
+    <interpretation>No infinite inference chains - bounded rationality</interpretation>
+  </axiom>
+
+  <axiom id="a3-φ-harmony">
+    <statement>Optimal reasoning maintains φ (golden ratio) relationships between evidence weights</statement>
+    <formalization>∀evidence_weights w₁,w₂, optimal implies |w₁/w₂ - φ| &lt; ε</formalization>
+    <geometric-meaning>Self-similar scaling in inference tree</geometric-meaning>
+  </axiom>
+
+  <axiom id="a4-geodesic-completeness">
+    <statement>Between any two justified beliefs, there exists a geodesic of minimal cognitive effort</statement>
+    <formalization>∀b₁,b₂∈JustifiedBeliefs, ∃γ:[0,1]→Manifold such that γ(0)=b₁, γ(1)=b₂ and length(γ) is minimal</formalization>
+    <cognitive-interpretation>Principle of least cognitive action</cognitive-interpretation>
+  </axiom>
+</axiomatic-foundation>
+
+<!-- ============================================= -->
+<!-- GEOMETRIC INFERENCE RULES -->
+<!-- ============================================= -->
+
+<geometric-inference-rules>
+
+  <!-- GEODESIC DEDUCTION -->
+  <rule id="r1-geodesic-transitivity">
+    <premises>
+      <premise>A implies B (geodesic γ₁ from A to B)</premise>
+      <premise>B implies C (geodesic γ₂ from B to C)</premise>
+    </premises>
+    <conclusion>A implies C (geodesic composition γ₁∘γ₂)</conclusion>
+    
+    <geometric-condition>
+      <requirement>γ₁ and γ₂ meet at B with C¹ continuity</requirement>
+      <validation>Check tangent vectors align: T_γ₁(B) ∥ T_γ₂(B)</validation>
+    </geometric-condition>
+    
+    <strength-measure>
+      <formula>strength = exp(-(length(γ₁) + length(γ₂))/π)</formula>
+      <interpretation>Shorter paths = stronger deduction</interpretation>
+    </strength-measure>
+  </rule>
+
+  <!-- CURVATURE-BASED INDUCTION -->
+  <rule id="r2-curvature-induction">
+    <premises>
+      <premise>Pattern P holds at points {p₁,...,pₙ} on manifold</premise>
+      <premise>Points are geodesically convex (no conjugate points between them)</premise>
+    </premises>
+    <conclusion>P holds throughout convex hull</conclusion>
+    
+    <curvature-constraint>
+      <condition>Sectional curvature K ≤ 0 in region</condition>
+      <rationale>Non-positive curvature ensures exponential map is diffeomorphism</rationale>
+    </curvature-constraint>
+    
+    <certainty-measure>
+      <formula>certainty = 1 - (n·max_curvature·area²/π²)</formula>
+      <bound>0 ≤ certainty ≤ 1</bound>
+    </certainty-measure>
+  </rule>
+
+  <!-- HARMONIC ABDUCTION -->
+  <rule id="r3-harmonic-abduction">
+    <premises>
+      <premise>Observation O at boundary ∂Ω</premise>
+      <premise>Manifold Ω with known metric g</premise>
+    </premises>
+    <conclusion>Most likely interior state is harmonic extension of O</conclusion>
+    
+    <mathematical-formulation>
+      <problem>Find u: Ω → ℝ such that Δ₉u = 0 and u|∂Ω = O</problem>
+      <solution>u = harmonic extension (Dirichlet problem)</solution>
+    </mathematical-formulation>
+    
+    <svg3d-implementation>
+      <method>Solve Laplace equation on SVG mesh</method>
+      <discretization>Finite element method on SVG paths</discretization>
+    </svg3d-implementation>
+  </rule>
+
+  <!-- TOPOLOGICAL NECESSITY -->
+  <rule id="r4-topological-necessity">
+    <premises>
+      <premise>Statement S encoded as homology class [S] ∈ Hₖ(M)</premise>
+      <premise>[S] ≠ 0 (non-trivial homology)</premise>
+    </premises>
+    <conclusion>S cannot be false without changing manifold topology</conclusion>
+    
+    <topological-invariants>
+      <invariant>Homology groups Hₖ(M)</invariant>
+      <invariant>Cohomology ring H*(M)</invariant>
+      <invariant>Fundamental group π₁(M)</invariant>
+    </topological-invariants>
+  </rule>
+</geometric-inference-rules>
+
+<!-- ============================================= -->
+<!-- PROOF GEOMETRIES (SVG-3D CONSTRUCTS) -->
+<!-- ============================================= -->
+
+<proof-geometries>
+  
+  <!-- DEDUCTION CHAIN AS GEODESIC -->
+  <geometry id="proof-geodesic">
+    <representation>
+      <path class="deduction-chain" d="M A C B1,B2 C C1,C2 ... Z">
+        <!-- Control points = intermediate inference steps -->
+        <control-point index="1" role="lemma-application" />
+        <control-point index="2" role="modus-ponens" />
+        <control-point index="3" role="universal-instantiation" />
+      </path>
+    </representation>
+    
+    <properties>
+      <property>Length = cognitive effort measure</property>
+      <property>Curvature = inference complexity</property>
+      <property>Torsion = non-monotonic reasoning</property>
+    </properties>
+    
+    <optimization>
+      <goal>Find minimal length geodesic between premises and conclusion</goal>
+      <method>Variational calculus on proof manifold</method>
+    </optimization>
+  </geometry>
+  
+  <!-- PROOF SURFACE (2D REASONING) -->
+  <geometry id="proof-surface">
+    <representation>
+      <g class="proof-surface">
+        <path class="boundary" d="..." />
+        <path class="interior" d="..." />
+        <path class="singularities" d="..." />
+      </g>
+    </representation>
+    
+    <geometric-properties>
+      <gauss-curvature>K(x) = local inference density</gauss-curvature>
+      <mean-curvature>H(x) = argument strength gradient</mean-curvature>
+      <area>Total = proof complexity measure</area>
+    </geometric-properties>
+  </geometry>
+  
+  <!-- PROOF FIBRATION (HIERARCHICAL) -->
+  <geometry id="proof-fibration">
+    <structure>
+      <g class="total-space">
+        <g class="base-space">
+          <g class="fiber-over-point">
+            <!-- Each fiber = subproof bundle -->
+          </g>
+        </g>
+      </g>
+    </structure>
+    
+    <fibration-properties>
+      <projection>π: Total → Base (forget supporting details)</projection>
+      <section>σ: Base → Total (reconstruct full proof)</section>
+      <holonomy>Parallel transport around loops = proof transformations</holonomy>
+    </fibration-properties>
+  </geometry>
+</proof-geometries>
+
+<!-- ============================================= -->
+<!-- REASONING STRATEGIES (GEOMETRIC HEURISTICS) -->
+<!-- ============================================= -->
+
+<reasoning-strategies>
+  
+  <!-- GEODESIC SEARCH (DIRECT PROOF) -->
+  <strategy id="direct-geodesic">
+    <approach>Find shortest path from premises to conclusion</approach>
+    <algorithm>A* on proof manifold with Riemannian metric</algorithm>
+    
+    <heuristics>
+      <heuristic>Curvature guidance: follow low-curvature regions</heuristic>
+      <heuristic>Harmonic potential: move toward conclusion gradient</heuristic>
+      <heuristic>Topological constraints: avoid homology obstacles</heuristic>
+    </heuristics>
+    
+    <svg3d-implementation>
+      <method>Path planning on SVG mesh</method>
+      <optimization>Minimize ∫√(gᵢⱼ dxⁱ dxʲ) dt</optimization>
+    </svg3d-implementation>
+  </strategy>
+  
+  <!-- SURFACE MINIMIZATION (PROOF BY CONTRADICTION) -->
+  <strategy id="contradiction-surface">
+    <approach>Assume negation, show it creates singular surface</approach>
+    <geometric-interpretation>
+      <step-1>Assume ¬C, combine with premises P</step-1>
+      <step-2>Attempt to construct proof surface S with boundary P∪{¬C}</step-2>
+      <step-3>Show S cannot be smooth/non-singular</step-3>
+      <step-4>Conclude C must hold</step-4>
+    </geometric-interpretation>
+    
+    <singularity-detection>
+      <method>Compute Gauss curvature blow-up</method>
+      <method>Detect non-orientable regions</method>
+      <method>Find essential singularities</method>
+    </singularity-detection>
+  </strategy>
+  
+  <!-- HOMOLOGY OBSTRUCTION (IMPOSSIBILITY PROOFS) -->
+  <strategy id="homology-obstruction">
+    <approach>Show desired conclusion represents non-trivial homology class</approach>
+    
+    <procedure>
+      <step>Encode premises as chain complex C_*(M)</step>
+      <step>Compute homology groups H_*(M)</step>
+      <step>Show [conclusion] ≠ 0 in appropriate homology</step>
+      <step>Conclude conclusion cannot be boundary of any combination of premises</step>
+    </procedure>
+    
+    <svg3d-computation>
+      <method>Persistent homology on SVG point cloud</method>
+      <tools>Rips complex, Vietoris-Rips filtration</tools>
+    </svg3d-computation>
+  </strategy>
+  
+  <!-- RICCI FLOW (PROOF SIMPLIFICATION) -->
+  <strategy id="ricci-flow-simplification">
+    <approach>Flow proof geometry toward canonical form</approach>
+    
+    <evolution-equation>
+      <formula>∂g/∂t = -2Ric(g) + λg</formula>
+      <term>Ric(g) = Ricci curvature (removes topological complexity)</term>
+      <term>λ = normalization constant</term>
+    </evolution-equation>
+    
+    <fixed-points>
+      <point>Einstein metrics (Ric = λg)</point>
+      <point>Constant curvature spaces</point>
+      <interpretation>Canonical proof forms</interpretation>
+    </fixed-points>
+  </strategy>
+</reasoning-strategies>
+
+<!-- ============================================= -->
+<!-- PROOF METRICS & VALIDATION -->
+<!-- ============================================= -->
+
+<proof-metrics>
+  
+  <!-- GEOMETRIC EFFICIENCY -->
+  <metric id="geodesic-efficiency">
+    <definition>η = (straight_line_length) / (actual_proof_length)</definition>
+    <range>0 ≤ η ≤ 1 (1 = perfectly direct)</range>
+    <svg3d-computation>Compute arc length of proof path</svg3d-computation>
+  </metric>
+  
+  <!-- CURVATURE COMPLEXITY -->
+  <metric id="integrated-curvature">
+    <definition>C = ∫_proof |K| dA</definition>
+    <interpretation>Total "bending" of reasoning</interpretation>
+    <normalization>C_normalized = C/4π (for closed surfaces)</normalization>
+  </metric>
+  
+  <!-- TOPOLOGICAL ROBUSTNESS -->
+  <metric id="betti-numbers">
+    <definition>βₖ = dim Hₖ(proof_complex)</definition>
+    <interpretation>
+      <β₀>Number of independent argument strands</β₀>
+      <β₁>Number of independent logical loops</β₁>
+      <β₂>Volume of conceptual space covered</β₂>
+    </interpretation>
+  </metric>
+  
+  <!-- π-φ HARMONY SCORE -->
+  <metric id="golden-harmony">
+    <definition>H = 1 - min_ω |ω/ω' - φ| where ω,ω' are adjacent evidence weights</definition>
+    <range>0 ≤ H ≤ 1 (1 = perfect φ-relationships)</range>
+    <significance>Measures aesthetic/optimal reasoning structure</significance>
+  </metric>
+</proof-metrics>
+
+<!-- ============================================= -->
+<!-- AUTOMATED THEOREM PROVING COMPONENTS -->
+<!-- ============================================= -->
+
+<atp-components>
+  
+  <!-- GEOMETRIC UNIFICATION -->
+  <component id="geometric-unification">
+    <purpose>Find common geometric structure for seemingly disparate facts</purpose>
+    
+    <algorithm>
+      <step>Encode facts as geometric patterns on manifolds</step>
+      <step>Compute Gromov-Hausdorff distance between patterns</step>
+      <step>Find isometric embeddings into common space</step>
+      <step>Construct unifying manifold with minimal distortion</step>
+    </algorithm>
+    
+    <svg3d-implementation>
+      <method>Multi-dimensional scaling on SVG point sets</method>
+      <optimization>Minimize stress = Σ(dᵢⱼ - δᵢⱼ)²</optimization>
+    </svg3d-implementation>
+  </component>
+  
+  <!-- HOMOTOPY PROOF SIMPLIFICATION -->
+  <component id="homotopy-simplifier">
+    <purpose>Continuously deform complex proof into simpler equivalent</purpose>
+    
+    <mathematical-basis>
+      <concept>Two proofs are homotopic if one can be continuously deformed into the other</concept>
+      <invariant>Homotopy preserves logical content (homotopy type theory)</invariant>
+    </mathematical-basis>
+    
+    <deformation-process>
+      <move>Remove redundant steps (null-homotopic loops)</move>
+      <move>Simplify complex lemmas (compress high-genus regions)</move>
+      <move>Straighten winding arguments (minimize geodesic length)</move>
+    </deformation-process>
+  </component>
+  
+  <!-- CURVATURE-BASED LEMMA GENERATION -->
+  <component id="curvature-lemma-generation">
+    <purpose>Generate missing lemmas where proof curvature is too high</purpose>
+    
+    <detection>
+      <condition>If sectional curvature K &gt; K_max at point p</condition>
+      <interpretation>Reasoning is too complex at this step</interpretation>
+    </detection>
+    
+    <generation-process>
+      <step>Identify high-curvature region in proof surface</step>
+      <step>Compute parallel transport around small loop</step>
+      <step>Holonomy = missing lemma that would flatten curvature</step>
+      <step>Generate lemma that explains holonomy transformation</step>
+    </generation-process>
+  </component>
+</atp-components>
+
+<!-- ============================================= -->
+<!-- SVG-3D PROOF RENDERING (DIAGNOSTIC ONLY) -->
+<!-- ============================================= -->
+
+<diagnostic-rendering>
+  <!-- NOTE: This is for explanation only, not for visual reasoning -->
+  
+  <proof-visualization type="diagnostic">
+    <elements>
+      <element>
+        <geometry><circle cx="100" cy="100" r="50" /></geometry>
+        <semantic>Premise node (radius = confidence)</semantic>
+      </element>
+      
+      <element>
+        <geometry><path d="M100,100 Q150,50 200,100" /></geometry>
+        <semantic>Inference step (curvature = complexity)</semantic>
+      </element>
+      
+      <element>
+        <geometry><polygon points="100,100 150,150 200,100" /></geometry>
+        <semantic>Proof surface (area = effort)</semantic>
+      </element>
+    </elements>
+    
+    <color-coding>
+      <color hex="#4CAF50">Verified steps (low curvature)</color>
+      <color hex="#FF9800">Uncertain steps (high curvature)</color>
+      <color hex="#F44336">Contradictions (singularities)</color>
+    </color-coding>
+  </proof-visualization>
+  
+  <explanation-generator>
+    <template>
+      Proof of {theorem} requires {geodesic_length} units of cognitive effort.
+      Maximum curvature encountered: {max_curvature}.
+      Topological complexity: Betti numbers = ({β₀}, {β₁}, {β₂}).
+      π-φ harmony score: {harmony_score}/1.0.
+    </template>
+  </explanation-generator>
+</diagnostic-rendering>
+
+<!-- ============================================= -->
+<!-- INTEGRATION WITH SVG-3D TENSOR SYSTEM -->
+<!-- ============================================= -->
+
+<svg3d-tensor-integration>
+  
+  <!-- TENSOR AS PROOF STATE -->
+  <mapping>
+    <svg3d-tensor>Represents current belief state</svg3d-tensor>
+    <proof-geometry>Represents justification for that state</proof-geometry>
+    <relationship>Tensor = point on manifold, Proof = path to that point</relationship>
+  </mapping>
+  
+  <!-- INFERENCE AS TENSOR OPERATION -->
+  <operations>
+    <operation>
+      <inference-rule>Modus Ponens</inference-rule>
+      <tensor-operation>Parallel transport along geodesic</tensor-operation>
+      <svg3d-implementation>Transform group along SVG path</svg3d-implementation>
+    </operation>
+    
+    <operation>
+      <inference-rule>Universal Instantiation</inference-rule>
+      <tensor-operation>Projection from total space to fiber</tensor-operation>
+      <svg3d-implementation>Extract sub-group from SVG hierarchy</svg3d-implementation>
+    </operation>
+  </operations>
+  
+  <!-- LEARNING PROOF STRATEGIES -->
+  <learning-mechanism>
+    <method>Reinforcement learning on proof manifold</method>
+    <reward>Negative of geodesic length (minimize effort)</reward>
+    <state>Current proof geometry as SVG-3D tensor</state>
+    <action>Selection of next inference rule</action>
+  </learning-mechanism>
+</svg3d-tensor-integration>
+
+<!-- ============================================= -->
+<!-- EXAMPLE: PROVING GEOMETRIC THEOREMS -->
+<!-- ============================================= -->
+
+<example-proofs>
+  
+  <!-- PYTHAGOREAN THEOREM (GEOMETRIC PROOF) -->
+  <proof id="pythagoras-geometric">
+    <theorem>a² + b² = c² for right triangle</theorem>
+    
+    <svg3d-representation>
+      <g class="proof-manifold">
+        <!-- Triangle as base manifold -->
+        <polygon points="0,0 3,0 0,4" class="triangle" />
+        
+        <!-- Squares on sides as fiber bundles -->
+        <g class="square-a" transform="...">
+          <rect width="3" height="3" />
+        </g>
+        <g class="square-b" transform="...">
+          <rect width="4" height="4" />
+        </g>
+        <g class="square-c" transform="...">
+          <rect width="5" height="5" />
+        </g>
+        
+        <!-- Area-preserving transformation as geodesic -->
+        <path class="transformation" d="M..." />
+      </g>
+    </svg3d-representation>
+    
+    <proof-steps>
+      <step>Construct squares on all sides (geometric embedding)</step>
+      <step>Show area-preserving shear transformation (geodesic flow)</step>
+      <step>Compute limiting case as transformation completes (boundary analysis)</step>
+    </proof-steps>
+    
+    <metrics>
+      <geodesic-efficiency>0.92</geodesic-efficiency>
+      <integrated-curvature>π/2</integrated-curvature>
+      <betti-numbers>(1,0,0)</betti-numbers>
+      <golden-harmony>0.89</golden-harmony>
+    </metrics>
+  </proof>
+  
+  <!-- INFINITE PRIMES (TOPOLOGICAL PROOF) -->
+  <proof id="infinite-primes-topological">
+    <theorem>There are infinitely many prime numbers</theorem>
+    
+    <svg3d-representation>
+      <!-- Prime spectrum as manifold -->
+      <g class="prime-spectrum">
+        <!-- Each prime = puncture in plane -->
+        <circle class="puncture-2" cx="100" cy="100" r="0.5" />
+        <circle class="puncture-3" cx="150" cy="120" r="0.5" />
+        <circle class="puncture-5" cx="130" cy="80" r="0.5" />
+        <!-- ... -->
+      </g>
+      
+      <!-- Covering space argument -->
+      <g class="covering-space" transform="scale(2)">
+        <!-- Infinite lift of paths -->
+        <path class="infinite-path" d="M..." />
+      </g>
+    </svg3d-representation>
+    
+    <proof-steps>
+      <step>Encode integers as paths on punctured plane (topological encoding)</step>
+      <step>Assume finite primes = finite punctures</step>
+      <step>Show some integer path must be non-trivial in π₁</step>
+      <step>Contradiction by constructing new prime</step>
+    </proof-steps>
+  </proof>
+</example-proofs>
+
+</asx-r-engine>
