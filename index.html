@@ -1,166 +1,564 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0f172a">
-    <title>MX2SVG Experimental Tokenization Inference</title>
-    <link rel="manifest" href="./manifest.json">
-    <style>
-      :root {
-        color-scheme: dark;
-        font-family: "Inter", system-ui, -apple-system, sans-serif;
-        background: #0f172a;
-        color: #e2e8f0;
-      }
-      body {
-        margin: 0;
-        padding: 32px;
-        display: grid;
-        gap: 24px;
-      }
-      header {
-        display: grid;
-        gap: 8px;
-      }
-      .panel {
-        border: 1px solid #1e293b;
-        border-radius: 12px;
-        padding: 16px;
-        background: #111827;
-      }
-      .row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      textarea {
-        width: 100%;
-        min-height: 140px;
-        background: #0f172a;
-        color: #e2e8f0;
-        border: 1px solid #1e293b;
-        border-radius: 8px;
-        padding: 12px;
-      }
-      button {
-        background: #22d3ee;
-        color: #0f172a;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 16px;
-        font-weight: 600;
-        cursor: pointer;
-      }
-      button.secondary {
-        background: #1e293b;
-        color: #e2e8f0;
-      }
-      pre {
-        white-space: pre-wrap;
-        background: #0f172a;
-        border: 1px solid #1e293b;
-        border-radius: 8px;
-        padding: 12px;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>MX2SVG Experimental Tokenization Inference</h1>
-      <p>
-        This PWA routes tokenization requests through a service worker. The manifest holds
-        the SVG/JSON tokenization payloads, while the service worker orchestrates model loading
-        and inference once <code>model.safetensors</code> is available.
-      </p>
-    </header>
-
+<head>
+  <meta charset="utf-8">
+  <title>ULTRA NEURAL GEOMETRY STACK — PRIME COCKPIT</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #050b18;
+      --accent: #16f2aa;
+      --accent-soft: rgba(22,242,170,0.2);
+      --muted: #7f8ea3;
+      --danger: #ff6b6b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at top, #020617 0, #000 55%);
+      color: #e8f5ff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: 16px;
+    }
+    .panel {
+      background: linear-gradient(145deg, #050b18, #050815);
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 16px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+    .panel h2 {
+      font-size: 1rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .badge {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: rgba(15,23,42,0.9);
+    }
+    .badge--accent {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(22,242,170,0.05);
+    }
+    .status-line {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: 4px 0;
+    }
+    select, button {
+      background: #020617;
+      color: #e5f3ff;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+    button {
+      cursor: pointer;
+      border-color: var(--accent);
+      background: radial-gradient(circle at top left, rgba(22,242,170,0.18), #020617);
+    }
+    button:hover {
+      box-shadow: 0 0 18px rgba(22,242,170,0.4);
+    }
+    .ctrl-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 4px;
+      align-items: center;
+    }
+    .log {
+      margin-top: 8px;
+      background: #020617;
+      border-radius: 10px;
+      padding: 8px;
+      font-size: 0.7rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      max-height: 150px;
+      overflow: auto;
+      border: 1px solid rgba(15,23,42,0.9);
+    }
+    #brainContainer {
+      width: 100%;
+      height: 480px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background:
+        radial-gradient(circle at top, rgba(22,242,170,0.06), transparent 55%),
+        radial-gradient(circle at bottom, rgba(56,189,248,0.06), transparent 55%),
+        #020617;
+      position: relative;
+      overflow: hidden;
+    }
+    .brain-title {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      background: rgba(0,0,0,0.65);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      pointer-events: none;
+    }
+    .brain-overlay {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: rgba(3,7,18,0.9);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(22,242,170,0.4);
+      pointer-events: none;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: minmax(0,1fr); }
+      #brainContainer { height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <!-- LEFT: KERNEL + BRAIN CONTROL -->
     <section class="panel">
-      <h2>Framework Critique</h2>
-      <p>
-        The goal is to show where model-first frameworks break down: orchestration, file-based
-        tokenization, and deployment constraints should drive the design, not just model weights.
-        This interface keeps orchestration visible and configurable.
-      </p>
+      <h2>ΩOS TRINITY KERNEL</h2>
+      <div class="badge-row">
+        <span class="badge badge--accent">K'UHUL</span>
+        <span class="badge">KLH</span>
+        <span class="badge">XJSON</span>
+        <span class="badge">SCXQ2</span>
+        <span class="badge">SVG&nbsp;NEURO</span>
+      </div>
+
+      <div class="status-line" id="statusLine">Kernel: probing…</div>
+      <div class="status-line" id="brainCount">Brains: —</div>
+      <div class="status-line" id="procCount">Processes: —</div>
+
+      <div class="ctrl-row">
+        <button id="btnRefresh">Refresh Kernel</button>
+        <button id="btnListBrains">List Brains</button>
+      </div>
+
+      <div class="ctrl-row">
+        <label for="brainSelect" style="font-size:0.75rem;color:var(--muted);">
+          Active Brain:
+        </label>
+        <select id="brainSelect"></select>
+        <button id="btnRenderBrain">Render Brain</button>
+      </div>
+
+      <div class="ctrl-row" style="margin-top:12px;">
+        <span style="font-size:0.75rem;color:var(--muted);letter-spacing:.08em;">
+          SVG-QLoRA Geometry Lab
+        </span>
+      </div>
+      <div class="ctrl-row">
+        <button id="btnGenerateDemo">Generate Demo SVG Brain</button>
+        <button id="btnCompressDemo">Compress Demo Brain</button>
+      </div>
+
+      <div class="log" id="log"></div>
     </section>
 
+    <!-- RIGHT: SVG NEURAL GEOMETRY VIEWPORT -->
     <section class="panel">
-      <h2>Chat + Tokenization</h2>
-      <form id="chat-form" class="row">
-        <textarea id="chat-input" placeholder="Enter SVG or JSON to tokenize..."></textarea>
-        <div class="row">
-          <button type="submit">Send to Service Worker</button>
-          <button type="button" class="secondary" id="load-model">Load model.safetensors</button>
-        </div>
-      </form>
-      <h3>Status</h3>
-      <pre id="status">Waiting for service worker registration...</pre>
+      <h2>NEURAL GEOMETRY VIEWPORT</h2>
+      <div id="brainContainer">
+        <div class="brain-title" id="brainTitle">No brain loaded</div>
+        <div class="brain-overlay" id="brainOverlay">ULTRA NEURAL GEOMETRY STACK</div>
+      </div>
     </section>
+  </div>
 
-    <section class="panel">
-      <h2>Tokenization Output</h2>
-      <pre id="output">No output yet.</pre>
-    </section>
-
-    <script>
-      const statusEl = document.getElementById('status');
-      const outputEl = document.getElementById('output');
-      const form = document.getElementById('chat-form');
-      const input = document.getElementById('chat-input');
-      const loadButton = document.getElementById('load-model');
-
-      function updateStatus(message) {
-        statusEl.textContent = message;
+  <script>
+    // ------------------------------------------------------
+    // SVG BRAIN RENDERER (FRONT-END VISUAL CORTEX)
+    // ------------------------------------------------------
+    class SVGBrainRenderer {
+      constructor(containerId) {
+        this.container = document.getElementById(containerId);
       }
 
-      function updateOutput(payload) {
-        outputEl.textContent = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+      clear() {
+        while (this.container.firstChild) {
+          this.container.removeChild(this.container.firstChild);
+        }
       }
 
-      async function registerServiceWorker() {
-        if (!('serviceWorker' in navigator)) {
-          updateStatus('Service worker unavailable in this environment.');
-          return;
+      render(brain) {
+        this.clear();
+
+        // Re-add overlays
+        const title = document.getElementById('brainTitle');
+        const overlay = document.getElementById('brainOverlay');
+        title.textContent = `${brain.model} — ${brain.id}`;
+        this.container.appendChild(title);
+        this.container.appendChild(overlay);
+
+        const ns = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('width', '100%');
+        svg.setAttribute('height', '100%');
+        svg.setAttribute('viewBox', '0 0 240 140');
+
+        brain.layers.forEach((layer, idx) => {
+          const g = document.createElementNS(ns, 'g');
+          g.setAttribute('class', 'neural-layer');
+          g.setAttribute('transform', `translate(10,${15 + idx * 35})`);
+
+          // label
+          const label = document.createElementNS(ns, 'text');
+          label.setAttribute('x', 0);
+          label.setAttribute('y', -4);
+          label.setAttribute('fill', '#9ca3af');
+          label.setAttribute('font-size', '6');
+          label.setAttribute('font-family', 'monospace');
+          label.textContent = layer.name;
+          g.appendChild(label);
+
+          layer.paths.forEach(p => {
+            const path = document.createElementNS(ns, 'path');
+            path.setAttribute('d', p.d);
+            path.setAttribute('stroke', p.stroke);
+            path.setAttribute('stroke-width', p.width || 1.2);
+            path.setAttribute('fill', 'none');
+            path.style.opacity = 0.75;
+            path.classList.add('weight-path');
+
+            path.addEventListener('mouseenter', () => {
+              path.style.strokeWidth = (p.width || 1.2) * 1.8;
+              path.style.opacity = 1;
+            });
+            path.addEventListener('mouseleave', () => {
+              path.style.strokeWidth = p.width || 1.2;
+              path.style.opacity = 0.75;
+            });
+
+            g.appendChild(path);
+          });
+
+          svg.appendChild(g);
+        });
+
+        this.container.appendChild(svg);
+      }
+    }
+
+    const brainRenderer = new SVGBrainRenderer('brainContainer');
+    const demoState = {
+      brain: null,
+      compressed: null
+    };
+
+    class SVGWeightGeometry {
+      constructor() {
+        this.activationFilters = new Map();
+      }
+
+      weightsToBrain(weights, layerName, config = {}) {
+        const {
+          precision = 2,
+          scale = 120,
+          curveTension = 0.5
+        } = config;
+
+        const rows = weights.length;
+        const cols = weights[0]?.length || 0;
+        const layers = [];
+
+        for (let i = 0; i < rows; i++) {
+          const pathData = this.matrixRowToPath(weights[i], {
+            rowIndex: i,
+            totalRows: rows,
+            scale,
+            precision,
+            curveTension
+          });
+
+          layers.push({
+            name: `${layerName}_row_${i + 1}`,
+            filter: null,
+            paths: [
+              {
+                d: pathData,
+                stroke: this.weightToColor(weights[i][0] || 0),
+                width: this.weightToStroke(weights[i])
+              }
+            ]
+          });
         }
 
-        const registration = await navigator.serviceWorker.register('./sw.js');
-        await navigator.serviceWorker.ready;
-        updateStatus(`Service worker ready: ${registration.active?.state ?? 'unknown'}`);
+        return {
+          id: `${layerName}_${Date.now()}`,
+          model: 'SVG-QLoRA-DEMO',
+          type: 'svg_qlora_scxq2',
+          created: Date.now(),
+          layers
+        };
       }
 
-      function sendMessage(message) {
+      matrixRowToPath(rowWeights, config) {
+        const { rowIndex, totalRows, scale, precision, curveTension } = config;
+        const yBase = (rowIndex / Math.max(1, totalRows)) * scale;
+
+        let pathData = `M 0,${yBase.toFixed(precision)}`;
+        rowWeights.forEach((weight, colIndex) => {
+          const x = (colIndex / Math.max(1, rowWeights.length)) * scale;
+          const y = yBase + (weight * scale * 0.3);
+
+          if (colIndex > 0) {
+            const prevX = ((colIndex - 1) / Math.max(1, rowWeights.length)) * scale;
+            const prevY = yBase + (rowWeights[colIndex - 1] * scale * 0.3);
+            const cp1x = prevX + (x - prevX) * curveTension;
+            const cp1y = prevY;
+            const cp2x = prevX + (x - prevX) * (1 - curveTension);
+            const cp2y = y;
+            pathData += ` C ${cp1x.toFixed(precision)},${cp1y.toFixed(precision)} ${cp2x.toFixed(precision)},${cp2y.toFixed(precision)} ${x.toFixed(precision)},${y.toFixed(precision)}`;
+          } else {
+            pathData += ` L ${x.toFixed(precision)},${y.toFixed(precision)}`;
+          }
+        });
+
+        return pathData;
+      }
+
+      weightToColor(weight) {
+        if (weight < 0) {
+          const intensity = Math.min(1, Math.abs(weight) * 2);
+          return `rgb(80,160,255)`;
+        }
+        const intensity = Math.min(1, weight * 2);
+        return `rgb(${Math.floor(220 * intensity + 35)}, 80, 160)`;
+      }
+
+      weightToStroke(rowWeights) {
+        const norm = rowWeights.reduce((sum, val) => sum + Math.abs(val), 0) / Math.max(1, rowWeights.length);
+        return Math.max(0.8, Math.min(2.8, norm * 3));
+      }
+    }
+
+    class SVGQLoRACompressor {
+      constructor() {
+        this.geometryEngine = new SVGWeightGeometry();
+      }
+
+      compressBrain(brain) {
+        const compressed = {
+          id: `${brain.id}_scxq2`,
+          model: brain.model,
+          type: 'svg_qlora_scxq2',
+          created: Date.now(),
+          layers: brain.layers.map(layer => ({
+            name: layer.name,
+            filter: layer.filter,
+            paths: layer.paths.map(path => ({
+              d: this.scxq2CompressPath(path.d),
+              stroke: path.stroke,
+              width: path.width
+            }))
+          }))
+        };
+
+        return compressed;
+      }
+
+      scxq2CompressPath(pathData) {
+        return pathData
+          .replace(/M /g, '⟁M⟁')
+          .replace(/L /g, '⟁L⟁')
+          .replace(/C /g, '⟁C⟁')
+          .replace(/Z/g, '⟁Z⟁')
+          .replace(/,/g, '⟁')
+          .replace(/\s+/g, '⟁');
+      }
+    }
+
+    // ------------------------------------------------------
+    // SW UTILS
+    // ------------------------------------------------------
+    const logEl = document.getElementById('log');
+    const statusLine = document.getElementById('statusLine');
+    const brainCountEl = document.getElementById('brainCount');
+    const procCountEl = document.getElementById('procCount');
+    const brainSelect = document.getElementById('brainSelect');
+
+    function log(msg) {
+      const time = new Date().toISOString().split('T')[1].replace('Z','');
+      logEl.textContent = `[${time}] ${msg}\n` + logEl.textContent;
+    }
+
+    async function registerSW() {
+      if (!('serviceWorker' in navigator)) {
+        statusLine.textContent = 'Kernel: service workers unsupported';
+        return;
+      }
+      const reg = await navigator.serviceWorker.register('/sw.js');
+      statusLine.textContent = 'Kernel: registering…';
+      log('Service worker registration requested');
+
+      navigator.serviceWorker.addEventListener('message', ev => {
+        if (ev.data?.type === 'ΩOS:kernel_ready') {
+          statusLine.textContent = 'Kernel: ready';
+          brainCountEl.textContent = `Brains: ${ev.data.brains.length}`;
+          procCountEl.textContent = `Processes: 0`;
+          populateBrains(ev.data.brains);
+          log('Kernel broadcast: ready');
+        }
+      });
+
+      await navigator.serviceWorker.ready;
+      statusLine.textContent = 'Kernel: ready (await)';
+      log('Service worker ready');
+
+      await refreshStatus();
+    }
+
+    function sendMessage(type, payload) {
+      return new Promise(resolve => {
         if (!navigator.serviceWorker.controller) {
-          updateStatus('No active service worker controller yet.');
+          resolve(null);
           return;
         }
-        navigator.serviceWorker.controller.postMessage(message);
+        const channel = new MessageChannel();
+        channel.port1.onmessage = ev => resolve(ev.data);
+        navigator.serviceWorker.controller.postMessage({ type, payload }, [channel.port2]);
+      });
+    }
+
+    async function refreshStatus() {
+      const res = await sendMessage('ΩOS:status', {});
+      if (!res) return;
+      statusLine.textContent = 'Kernel: online';
+      brainCountEl.textContent = `Brains: ${res.brains.length}`;
+      procCountEl.textContent = `Processes: ${res.k.processes}`;
+      populateBrains(res.brains);
+      log('Status refreshed from ΩOS');
+    }
+
+    function populateBrains(brains) {
+      brainSelect.innerHTML = '';
+      brains.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `${b.model} (${b.id})`;
+        brainSelect.appendChild(opt);
+      });
+      if (!brains.length) {
+        const opt = document.createElement('option');
+        opt.textContent = 'No brains in registry';
+        opt.disabled = true;
+        opt.selected = true;
+        brainSelect.appendChild(opt);
       }
+    }
 
-      navigator.serviceWorker?.addEventListener('message', (event) => {
-        const { type, payload } = event.data || {};
-        if (type === 'status') {
-          updateStatus(payload);
-        }
-        if (type === 'tokenization') {
-          updateOutput(payload);
-        }
+    async function fetchBrainsList() {
+      const res = await fetch('/api/ΩOS/brains/list').catch(() => null);
+      if (!res || !res.ok) {
+        log('Brains list fetch failed');
+        return;
+      }
+      const json = await res.json();
+      populateBrains(json.brains || []);
+      brainCountEl.textContent = `Brains: ${json.brains.length}`;
+      log(`Brain list updated (${json.brains.length})`);
+    }
+
+    async function renderSelectedBrain() {
+      const id = brainSelect.value;
+      if (!id) return;
+      const res = await fetch(`/api/ΩOS/brains/get/${encodeURIComponent(id)}`).catch(() => null);
+      if (!res || !res.ok) {
+        log(`Failed to fetch brain ${id}`);
+        return;
+      }
+      const json = await res.json();
+      if (!json.brain) {
+        log(`No brain payload for ${id}`);
+        return;
+      }
+      brainRenderer.render(json.brain);
+      log(`Rendered brain: ${json.brain.model} (${json.brain.id})`);
+    }
+
+    function generateDemoWeights(rows = 6, cols = 10) {
+      return Array.from({ length: rows }, (_, i) =>
+        Array.from({ length: cols }, (_, j) =>
+          Math.sin(i * 0.6) * Math.cos(j * 0.4) * 0.8
+        )
+      );
+    }
+
+    function renderDemoBrain() {
+      const geometryEngine = new SVGWeightGeometry();
+      const weights = generateDemoWeights();
+      const brain = geometryEngine.weightsToBrain(weights, 'demo_layer', {
+        precision: 2,
+        scale: 200,
+        curveTension: 0.35
       });
 
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const text = input.value.trim();
-        if (!text) {
-          updateStatus('Input is empty.');
-          return;
-        }
-        sendMessage({ type: 'TOKENIZE', payload: { text } });
-      });
+      demoState.brain = brain;
+      demoState.compressed = null;
+      brainRenderer.render(brain);
+      log(`Generated SVG brain geometry (${brain.layers.length} layers)`);
+    }
 
-      loadButton.addEventListener('click', () => {
-        sendMessage({ type: 'LOAD_MODEL', payload: { weights: 'model.safetensors' } });
-      });
+    function compressDemoBrain() {
+      if (!demoState.brain) {
+        log('No demo brain to compress');
+        return;
+      }
+      const compressor = new SVGQLoRACompressor();
+      demoState.compressed = compressor.compressBrain(demoState.brain);
+      log(`Compressed demo brain to SCXQ2 (${demoState.compressed.layers.length} layers)`);
+    }
 
-      registerServiceWorker();
-    </script>
-  </body>
+    // ------------------------------------------------------
+    // WIRE UI
+    // ------------------------------------------------------
+    document.getElementById('btnRefresh').addEventListener('click', refreshStatus);
+    document.getElementById('btnListBrains').addEventListener('click', fetchBrainsList);
+    document.getElementById('btnRenderBrain').addEventListener('click', renderSelectedBrain);
+    document.getElementById('btnGenerateDemo').addEventListener('click', renderDemoBrain);
+    document.getElementById('btnCompressDemo').addEventListener('click', compressDemoBrain);
+
+    // ------------------------------------------------------
+    // BOOT
+    // ------------------------------------------------------
+    registerSW().catch(err => {
+      console.error(err);
+      statusLine.textContent = 'Kernel: registration error';
+      log('Error registering service worker');
+    });
+  </script>
+</body>
 </html>
