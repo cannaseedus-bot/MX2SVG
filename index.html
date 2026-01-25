@@ -1,166 +1,314 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0f172a">
-    <title>MX2SVG Experimental Tokenization Inference</title>
-    <link rel="manifest" href="./manifest.json">
-    <style>
-      :root {
-        color-scheme: dark;
-        font-family: "Inter", system-ui, -apple-system, sans-serif;
-        background: #0f172a;
-        color: #e2e8f0;
-      }
-      body {
-        margin: 0;
-        padding: 32px;
-        display: grid;
-        gap: 24px;
-      }
-      header {
-        display: grid;
-        gap: 8px;
-      }
-      .panel {
-        border: 1px solid #1e293b;
-        border-radius: 12px;
-        padding: 16px;
-        background: #111827;
-      }
-      .row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      textarea {
-        width: 100%;
-        min-height: 140px;
-        background: #0f172a;
-        color: #e2e8f0;
-        border: 1px solid #1e293b;
-        border-radius: 8px;
-        padding: 12px;
-      }
-      button {
-        background: #22d3ee;
-        color: #0f172a;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 16px;
-        font-weight: 600;
-        cursor: pointer;
-      }
-      button.secondary {
-        background: #1e293b;
-        color: #e2e8f0;
-      }
-      pre {
-        white-space: pre-wrap;
-        background: #0f172a;
-        border: 1px solid #1e293b;
-        border-radius: 8px;
-        padding: 12px;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>MX2SVG Experimental Tokenization Inference</h1>
-      <p>
-        This PWA routes tokenization requests through a service worker. The manifest holds
-        the SVG/JSON tokenization payloads, while the service worker orchestrates model loading
-        and inference once <code>model.safetensors</code> is available.
-      </p>
-    </header>
-
+<head>
+  <meta charset="utf-8">
+  <title>ULTRA NEURAL GEOMETRY STACK — PRIME COCKPIT</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    :root {
+      --bg: #0f1117;
+      --panel: #151821;
+      --accent: #19c37d;
+      --accent-soft: rgba(25,195,125,0.2);
+      --muted: #8b93a7;
+      --danger: #ff6b6b;
+      --border: rgba(148,163,184,0.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0b0d12;
+      color: #e6edf3;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: 16px;
+    }
+    .panel {
+      background: var(--panel);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      box-shadow: 0 24px 40px rgba(0,0,0,0.3);
+    }
+    .panel h2 {
+      font-size: 1rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .badge {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.6);
+    }
+    .badge--accent {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(22,242,170,0.05);
+    }
+    .status-line {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: 4px 0;
+    }
+    select, button {
+      background: #0b0f17;
+      color: #e5f3ff;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+    button {
+      cursor: pointer;
+      border-color: var(--accent);
+      background: rgba(25,195,125,0.12);
+    }
+    button:hover {
+      box-shadow: 0 0 18px rgba(25,195,125,0.35);
+    }
+    .ctrl-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 4px;
+      align-items: center;
+    }
+    .session-meta {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .session-meta span {
+      color: #e6edf3;
+      font-weight: 600;
+    }
+    .chat-history {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 520px;
+      overflow: auto;
+      padding-right: 8px;
+    }
+    .chat-message {
+      background: #0f141e;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .chat-message--user {
+      border-color: rgba(25,195,125,0.4);
+      background: rgba(25,195,125,0.08);
+    }
+    .chat-message__role {
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .chat-form {
+      display: grid;
+      gap: 12px;
+      height: 100%;
+    }
+    .chat-form textarea {
+      width: 100%;
+      min-height: 220px;
+      background: #0b0f17;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      color: #e6edf3;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+    .chat-form__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .chat-form__footer button {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: minmax(0,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <!-- LEFT: SESSION / CHAT HISTORY -->
     <section class="panel">
-      <h2>Framework Critique</h2>
-      <p>
-        The goal is to show where model-first frameworks break down: orchestration, file-based
-        tokenization, and deployment constraints should drive the design, not just model weights.
-        This interface keeps orchestration visible and configurable.
-      </p>
+      <h2>SESSION CONTEXT</h2>
+      <div class="badge-row">
+        <span class="badge badge--accent">K'UHUL</span>
+        <span class="badge">KLH</span>
+        <span class="badge">XJSON</span>
+        <span class="badge">SCXQ2</span>
+        <span class="badge">SVG-3D</span>
+      </div>
+
+      <div class="session-meta">
+        <div>Session ID: <span id="sessionId">—</span></div>
+        <div>Kernel: <span id="statusLine">probing…</span></div>
+        <div>Brains: <span id="brainCount">—</span></div>
+        <div>Processes: <span id="procCount">—</span></div>
+      </div>
+
+      <div class="chat-history" id="chatHistory"></div>
     </section>
 
+    <!-- RIGHT: CHAT INPUT -->
     <section class="panel">
-      <h2>Chat + Tokenization</h2>
-      <form id="chat-form" class="row">
-        <textarea id="chat-input" placeholder="Enter SVG or JSON to tokenize..."></textarea>
-        <div class="row">
-          <button type="submit">Send to Service Worker</button>
-          <button type="button" class="secondary" id="load-model">Load model.safetensors</button>
+      <h2>CHAT CONSOLE</h2>
+      <form class="chat-form" id="chatForm">
+        <textarea id="chatInput" placeholder="Send a message to the SVG-3D tensor inference runtime..."></textarea>
+        <div class="chat-form__footer">
+          <span>Responses are recorded to the session log.</span>
+          <button type="submit">Send Message</button>
         </div>
       </form>
-      <h3>Status</h3>
-      <pre id="status">Waiting for service worker registration...</pre>
     </section>
+  </div>
 
-    <section class="panel">
-      <h2>Tokenization Output</h2>
-      <pre id="output">No output yet.</pre>
-    </section>
+  <script>
+    const chatHistory = document.getElementById('chatHistory');
+    const statusLine = document.getElementById('statusLine');
+    const brainCountEl = document.getElementById('brainCount');
+    const procCountEl = document.getElementById('procCount');
+    const sessionIdEl = document.getElementById('sessionId');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const sessionId = `sess_${Math.random().toString(36).slice(2, 10)}`;
+    const messages = [];
 
-    <script>
-      const statusEl = document.getElementById('status');
-      const outputEl = document.getElementById('output');
-      const form = document.getElementById('chat-form');
-      const input = document.getElementById('chat-input');
-      const loadButton = document.getElementById('load-model');
+    sessionIdEl.textContent = sessionId;
 
-      function updateStatus(message) {
-        statusEl.textContent = message;
+    function appendMessage(role, content) {
+      const container = document.createElement('div');
+      container.className = `chat-message chat-message--${role}`;
+
+      const roleLine = document.createElement('div');
+      roleLine.className = 'chat-message__role';
+      roleLine.textContent = role === 'user' ? 'user' : 'system';
+
+      const body = document.createElement('div');
+      body.textContent = content;
+
+      container.appendChild(roleLine);
+      container.appendChild(body);
+      chatHistory.appendChild(container);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    async function registerSW() {
+      if (!('serviceWorker' in navigator)) {
+        statusLine.textContent = 'Kernel: service workers unsupported';
+        return;
       }
+      const reg = await navigator.serviceWorker.register('/sw.js');
+      statusLine.textContent = 'Kernel: registering…';
+      appendMessage('system', 'Service worker registration requested.');
 
-      function updateOutput(payload) {
-        outputEl.textContent = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
-      }
-
-      async function registerServiceWorker() {
-        if (!('serviceWorker' in navigator)) {
-          updateStatus('Service worker unavailable in this environment.');
-          return;
+      navigator.serviceWorker.addEventListener('message', ev => {
+        if (ev.data?.type === 'ΩOS:kernel_ready') {
+          statusLine.textContent = 'Kernel: ready';
+          brainCountEl.textContent = `Brains: ${ev.data.brains.length}`;
+          procCountEl.textContent = `Processes: 0`;
+          populateBrains(ev.data.brains);
+          appendMessage('system', 'Kernel broadcast: ready.');
         }
+      });
 
-        const registration = await navigator.serviceWorker.register('./sw.js');
-        await navigator.serviceWorker.ready;
-        updateStatus(`Service worker ready: ${registration.active?.state ?? 'unknown'}`);
-      }
+      await navigator.serviceWorker.ready;
+      statusLine.textContent = 'Kernel: ready (await)';
+      appendMessage('system', 'Service worker ready.');
 
-      function sendMessage(message) {
+      await refreshStatus();
+    }
+
+    function sendMessage(type, payload) {
+      return new Promise(resolve => {
         if (!navigator.serviceWorker.controller) {
-          updateStatus('No active service worker controller yet.');
+          resolve(null);
           return;
         }
-        navigator.serviceWorker.controller.postMessage(message);
+        const channel = new MessageChannel();
+        channel.port1.onmessage = ev => resolve(ev.data);
+        navigator.serviceWorker.controller.postMessage({ type, payload }, [channel.port2]);
+      });
+    }
+
+    async function refreshStatus() {
+      const res = await sendMessage('ΩOS:status', {});
+      if (!res) return;
+      statusLine.textContent = 'Kernel: online';
+      brainCountEl.textContent = `Brains: ${res.brains.length}`;
+      procCountEl.textContent = `Processes: ${res.k.processes}`;
+      populateBrains(res.brains);
+      appendMessage('system', 'Status refreshed from ΩOS.');
+    }
+
+    async function fetchBrainsList() {
+      const res = await fetch('/api/ΩOS/brains/list').catch(() => null);
+      if (!res || !res.ok) {
+        appendMessage('system', 'Brains list fetch failed.');
+        return;
       }
+      const json = await res.json();
+      brainCountEl.textContent = `${json.brains.length}`;
+      appendMessage('system', `Brain registry updated (${json.brains.length}).`);
+    }
 
-      navigator.serviceWorker?.addEventListener('message', (event) => {
-        const { type, payload } = event.data || {};
-        if (type === 'status') {
-          updateStatus(payload);
-        }
-        if (type === 'tokenization') {
-          updateOutput(payload);
-        }
-      });
+    chatForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const content = chatInput.value.trim();
+      if (!content) return;
+      messages.push({ role: 'user', content, ts: new Date().toISOString() });
+      appendMessage('user', content);
+      chatInput.value = '';
+    });
 
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const text = input.value.trim();
-        if (!text) {
-          updateStatus('Input is empty.');
-          return;
-        }
-        sendMessage({ type: 'TOKENIZE', payload: { text } });
-      });
+    // ------------------------------------------------------
+    // BOOT
+    // ------------------------------------------------------
+    registerSW().catch(err => {
+      console.error(err);
+      statusLine.textContent = 'Kernel: registration error';
+      appendMessage('system', 'Error registering service worker.');
+    });
 
-      loadButton.addEventListener('click', () => {
-        sendMessage({ type: 'LOAD_MODEL', payload: { weights: 'model.safetensors' } });
-      });
-
-      registerServiceWorker();
-    </script>
-  </body>
+    fetchBrainsList().catch(() => {
+      appendMessage('system', 'Unable to reach ΩOS brain registry.');
+    });
+  </script>
+</body>
 </html>
