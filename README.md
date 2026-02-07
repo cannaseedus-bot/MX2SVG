@@ -8,7 +8,7 @@ MX2SVG is rooted in a signature SVG visualization of the complete brain cluster 
 
 ## Repository contents
 
-All files live in the repository root (there are no subdirectories). The list below documents every file and its role:
+Most assets live in the repository root. The `micronaut/` directory now holds the SCO/1 object layout and PowerShell orchestrator described below. The list below documents every file and its role:
 
 | File | Description |
 | --- | --- |
@@ -30,6 +30,7 @@ All files live in the repository root (there are no subdirectories). The list be
 | `tokenizer.json` | Tokenizer definition (normalization, BPE setup, and added tokens) for MX2SVG-related workflows. |
 | `tokenizer.py` | Script that loads the Qwen2 base model/tokenizer, adds custom tokens, and saves updated artifacts. |
 | `abi.json` | ABI metadata describing the base model, token counts, and compatibility rules. |
+| `micronaut/` | SCO/1 Micronaut object layout, sealed brains, IO records, and PowerShell orchestrator. |
 
 ## Phase list (from repository files)
 
@@ -76,6 +77,10 @@ The tokenizer defines phase tokens in `tokenizer.json`:
 ## Documentation
 
 Start with `MX2SVG_PWA_README.md` for setup and configuration references. Use `MX2SVG_ENHANCEMENT_SUMMARY.md` for a high-level overview of the PWA entries.
+
+## Micronaut SCO/1 object
+
+The `micronaut/` directory collapses the prior placeholder into a file-centric SCO/1 object. PowerShell only orchestrates append-only IO; inference and validation remain sealed inside the object contract. The canonical IO record formats live in `micronaut/semantics.xjson`, with chat appends to `micronaut/io/chat.txt` and semantic emission to `micronaut/io/stream.txt`.
 
 ## Qwen2 1.5B assets
 

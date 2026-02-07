@@ -1,0 +1,26 @@
+{
+  "schema": "KUHUL-TSG",
+  "version": "1.0",
+  "records": {
+    "chat_message": {
+      "delimiter_start": "--- MESSAGE ---",
+      "delimiter_end": "--- END ---",
+      "fields": [
+        "id",
+        "time",
+        "role",
+        "intent",
+        "context",
+        "payload"
+      ],
+      "payload_encoding": "utf-8",
+      "immutability": true,
+      "append_only": true
+    },
+    "stream_emit": {
+      "prefix": ">>",
+      "append_only": true,
+      "ordered": true
+    }
+  }
+}
