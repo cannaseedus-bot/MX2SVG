@@ -1,0 +1,20 @@
+name = "micronaut"
+version = "scxq7"
+object = "SCO/1"
+orchestrator = "powershell"
+layout = "file-centric"
+
+[paths]
+root = "."
+brains = "brains"
+io = "io"
+trace = "trace"
+proof = "proof"
+
+[io]
+chat = "io/chat.txt"
+stream = "io/stream.txt"
+snapshot_dir = "io/snapshot"
+
+[lifecycle]
+states = ["INIT", "READY", "RUNNING", "IDLE", "HALT"]
