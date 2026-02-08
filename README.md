@@ -117,11 +117,11 @@ Start with `docs/MX2SVG_PWA_README.md` for setup and configuration references. U
 
 The `micronaut/` directory collapses the prior placeholder into a file-centric SCO/1 object. PowerShell only orchestrates append-only IO; inference and validation remain sealed inside the object contract. The canonical IO record formats live in `micronaut/semantics.xjson`, with chat appends to `micronaut/io/chat.txt` and semantic emission to `micronaut/io/stream.txt`. See `docs/micronaut/MICRONAUT_SPEC.md` for the full Micronaut layout and design.
 
-## Qwen2 1.5B assets
+## Ollama App model assets
 
-This repository includes tokenizer and configuration artifacts for the Qwen2 1.5B model. Model weights are not stored in this repo.
+MX2SVG targets the Ollama App for local model management and a built-in REST API. On Windows, Ollama provides the default model management layer; on Linux, you can swap in Llama or other backends. MX2SVG treats this environment as the Micronaut "agent" layer, and Qwen models remain supported through the same Ollama pipeline.
 
-### Files included
+### Files included (model-agnostic)
 
 - `tokenizer.json`
 - `config.json`
